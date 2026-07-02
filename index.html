@@ -849,37 +849,84 @@
     <!-- ================= 10 STUDY MATERIALS ================= -->
     <section id="t-materials">
       <h2>10 · Recommended Study Materials <span class="kbd">(Reddit consensus)</span></h2>
-      <p id="materials-note"><i>The community research is being finalized. Below is the strong, well-established consensus; this section is refreshed with the latest sourced Reddit findings once the research pass completes.</i></p>
+      <p class="legend">Synthesized from <b>17 real r/AWSCertifications threads</b> (pass write-ups, course-comparison debates, and the community "master resource list"), weighted by upvotes. The consensus is strikingly consistent across years and experience levels. Source links are in the <a href="#materials-sources">table at the end of this section</a>.</p>
 
-      <div class="consensus"><b>TL;DR consensus stack:</b> 1 video course (<b>Maarek</b> or <b>Cantrill</b>) → drill <b>Tutorials Dojo (Jon Bonso)</b> practice exams to a consistent <b>80%+</b> → review with <b>Tutorials Dojo cheat sheets</b> → finish with the <b>free official AWS practice questions</b>.</div>
+      <div class="consensus"><b>TL;DR consensus stack:</b> <b>one</b> video course (<b>Maarek</b> to pass fast <i>or</i> <b>Cantrill</b> to learn deeply) + <b>Tutorials Dojo / Jon Bonso practice exams</b> drilled in review mode until you're consistently comfortable (~70–80%+), reviewing every wrong answer. Add the <b>AWS Exam Guide</b>, <b>Well-Architected + Reliability/Cost whitepapers</b>, <b>core-service FAQs</b>, and <b>TD cheat sheets</b>; do some <b>hands-on</b>. You need <b>one of each category — not all of them.</b></div>
 
-      <h3>Video courses</h3>
+      <h3>1 · Video courses</h3>
+      <p>Two "kings," and the choice is a well-worn Reddit cliché repeated almost verbatim in nearly every thread: <b>"Stephané Maarek to pass, Adrian Cantrill to learn."</b> Both sit tied at #1 — pick by your goal.</p>
       <table>
-        <tr><th>Course</th><th>Why people pick it</th><th>Trade-off</th></tr>
-        <tr><td><span class="rank">#1</span><b>Stephané Maarek</b> — Ultimate AWS SAA-C03 (Udemy)</td><td>Most-recommended overall. Concise, exam-focused, frequently updated, cheap on Udemy sale (~$15). Great pace to "pass efficiently".</td><td>Less deep hands-on than Cantrill.</td></tr>
-        <tr><td><span class="rank">#1</span><b>Adrian Cantrill</b> — AWS SAA-C03</td><td>Deepest hands-on labs &amp; conceptual understanding; loved by those who want to truly <i>get it</i>, not just pass.</td><td>Longer; more time investment.</td></tr>
-        <tr><td>freeCodeCamp / AWS Skill Builder</td><td>Free options; Skill Builder has the official Exam Prep plan &amp; free practice question set.</td><td>Skill Builder alone is thin; supplement with practice exams.</td></tr>
+        <tr><th>Course</th><th>Profile</th><th>Reddit view (pros / cons)</th></tr>
+        <tr><td><span class="rank">#1</span><b>Adrian Cantrill</b><br><span class="kbd">learn.cantrill.io · ~70h</span></td><td>The "learn it properly" pick. Theory-before-service teaching, extensive hands-on labs, big student Discord, one-time purchase.</td><td><b>+</b> Deepest coverage; teaches <i>why</i> not just <i>what</i>; "one of the best quality IT courses I've ever taken." <b>–</b> Long/tedious; covers more than the exam; easy to burn out or skip labs.</td></tr>
+        <tr><td><span class="rank">#1</span><b>Stephané Maarek</b><br><span class="kbd">Udemy · ~27h</span></td><td>The "fast, efficient pass" pick. Concise, exam-focused, cheap on Udemy sale. <b>Includes a 50%-off exam voucher.</b></td><td><b>+</b> Time-efficient, gets you the paper, great for students/juniors. <b>–</b> "Feels like a cheatsheet"; lighter on deep understanding.</td></tr>
+        <tr><td><span class="rank">Free</span><b>Andrew Brown (ExamPro)</b><br><span class="kbd">freeCodeCamp YouTube</span></td><td>The consensus <b>free</b> video course.</td><td><b>+</b> Completely free, full-length. <b>–</b> "Very unstructured / all over the place."</td></tr>
+        <tr><td><b>Neal Davis</b> (Digital Cloud)<br><span class="kbd">Udemy</span></td><td>Legitimate third option, less discussed.</td><td>Solid but a distant third to Maarek/Cantrill.</td></tr>
       </table>
-      <p class="legend">Consensus: Maarek if you want the fastest efficient path; Cantrill if you want depth/hands-on. Many do <b>Cantrill for learning + Maarek as a fast refresher</b>, or either course + heavy practice exams.</p>
+      <div class="callout tip"><span class="lbl">Consensus takeaways</span> Cantrill for depth &amp; real skills; Maarek for a fast, cheap, exam-targeted pass. A minority do <b>Cantrill first, then Maarek as a cram/summary</b> (~⅓ the length) — effective but expensive and usually unnecessary ("generally, do NOT do both"). <b>Udemy pricing tip:</b> never pay more than ~$20 — wait for a sale or use the author's own site.</div>
+      <div class="callout trap"><span class="lbl">Community says avoid</span> <b>A Cloud Guru</b> and <b>Pluralsight</b> — "used to be leaders but have fallen behind." And <b>ignore bot spam</b>: "Gascelino Rostero's practice exam book" and "SkillCertPro" are repeatedly flagged as astroturf/bot advertising, <i>not</i> genuine recommendations.</div>
 
-      <h3>Practice exams <span class="tag d1">most important</span></h3>
-      <div class="consensus"><b>Near-universal:</b> <b>Tutorials Dojo (Jon Bonso) practice exams</b> are the single most-recommended resource on r/AWSCertifications. Their explanations teach the "why," and the difficulty mirrors (or exceeds) the real exam. Also popular: Maarek's practice tests as a second bank.</div>
-
-      <h3>Review aids &amp; free resources</h3>
+      <h3>2 · Practice exams <span class="tag d1">most important</span></h3>
+      <div class="consensus"><b>Near-unanimous #1:</b> <b>Tutorials Dojo (TD) / Jon Bonso practice exams</b> — recommended in ~15 of 17 threads and repeatedly called "the best money I spent on exam prep." ~$15 for the bundle (also on Udemy, same author). One user: "passed ALL my 7 certs" with them.</div>
       <ul>
-        <li><b>Tutorials Dojo cheat sheets</b> — condensed comparison notes; excellent final-week review.</li>
-        <li><b>AWS Skill Builder</b> — official free digital training + free "Official Practice Question Set" for SAA-C03.</li>
-        <li><b>AWS Whitepapers/FAQs</b> — Well-Architected Framework, plus S3/EC2/VPC/RDS FAQs for edge cases.</li>
-        <li><b>Hands-on</b> — a free-tier account; build a VPC, launch EC2 behind an ALB with an ASG, host a site on S3+CloudFront, spin up RDS Multi-AZ.</li>
+        <li><b>Why it's loved:</b> a <b>"review mode"</b> with detailed per-answer explanations of why each option is right <i>and</i> why the wrong ones are wrong, linked to cheat sheets. Nearly every pass post calls this the killer feature.</li>
+        <li><b>Difficulty:</b> mirrors the real exam's scenario style but runs <b>~10% harder</b> — "wouldn't take the real exam until you're comfortably passing them." Content: 7 timed sets + review/topic/final-test modes, ~<b>467 unique questions</b>.</li>
+        <li><b>Second sources (all legit, less dominant):</b> <b>Stephané Maarek</b> practice tests (Udemy), <b>Neal Davis</b> (Digital Cloud) tests, and the <b>AWS Official Practice Exam</b> (Skill Builder — "nice to have," not essential).</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Never use dumps</span> Real exam questions sold as "guaranteed" matches are <b>brain dumps</b> — high risk of failing <i>and</i> a certification ban. Practice exams (TD/Maarek) are original questions and are fine; dumps are not.</div>
+
+      <h3>3 · Hands-on labs</h3>
+      <p>Recommended at the Associate level (a minority pass without it — and get criticized for it: "you didn't actually learn AWS… making mistakes is how you learn"). Get hands-on via:</p>
+      <ul>
+        <li><b>Cantrill's built-in labs</b> — the most-praised source of practical skill.</li>
+        <li><b>Tutorials Dojo hands-on labs</b> — "don't skip them; some exam questions map to them (RDS replicas, S3 Object Lock)."</li>
+        <li><b>Your own AWS Free Tier account</b> — set a <b>billing budget first</b> to avoid surprise charges. Build: a VPC with public/private subnets, EC2 behind an ALB + Auto Scaling Group, a static site on S3 + CloudFront, and an RDS Multi-AZ instance.</li>
       </ul>
 
-      <h3>How Redditors actually pass</h3>
+      <h3>4 · Free resources</h3>
       <ul>
-        <li>Watch one full course once (don't over-collect courses).</li>
-        <li>Then <b>practice exams are ~70% of the value</b> — take them in review mode and study every explanation, right or wrong.</li>
-        <li>Iterate until you consistently score <b>80%+</b> across fresh sets, then book the exam.</li>
-        <li>Typical timeline: <b>4–8 weeks</b> part-time; faster with prior AWS/IT experience.</li>
+        <li><b>Andrew Brown on freeCodeCamp (YouTube)</b> — flagship free course; ExamPro also gives one free practice exam on sign-up.</li>
+        <li><b>AWS Skill Builder free tier</b> — official "Exam Prep: SAA-C03" course + <b>20 free official practice questions</b>. A widely shared cram hack: the paid tier's <b>7-day free trial</b> unlocks the official practice exam, flashcards, and labs (subscribe, cancel immediately, keep 7 days).</li>
+        <li><b>AWS Whitepapers &amp; Well-Architected Framework</b> — the WAF pillars, plus the <b>Reliability</b> and <b>Cost Optimization</b> whitepapers specifically.</li>
+        <li><b>Core-service FAQs</b> — read the S3, EC2, IAM, and RDS FAQs; "AWS docs are the best resource" recurs often.</li>
+        <li><b>The official AWS Exam Guide PDF</b> — mandatory to know what's in/out of scope.</li>
+        <li><b>AWS's 20 free sample questions</b> (on the cert page) — a good difficulty gauge.</li>
       </ul>
+
+      <h3>5 · Notes, cheat sheets &amp; books</h3>
+      <ul>
+        <li><b>Tutorials Dojo cheat sheets</b> — the standout review aid, repeatedly credited ("I cannot emphasize enough how much the cheat sheets helped").</li>
+        <li><b>Hand-written / condensed personal notes</b> — a strongly endorsed technique: build bullet-point profiles for the 5–10 big services (EC2, S3, DynamoDB, RDS, Aurora, Kinesis, Lambda), flashcard the minor ones, then "funnel" everything down into a short final review sheet.</li>
+        <li><b>Books are generally discouraged</b> — "they get out of date too quickly." (If you must: the official Sybex guide, or Neal Davis / TD ebooks.)</li>
+      </ul>
+
+      <h3>6 · The recommended path &amp; timeline</h3>
+      <ol>
+        <li><b>Pick ONE course</b> and watch it end-to-end, taking notes and doing labs (Cantrill for depth, Maarek for speed, Andrew Brown if free).</li>
+        <li><b>Read the AWS Exam Guide</b> to lock in scope; add the WAF + Reliability/Cost whitepapers.</li>
+        <li><b>Hammer Tutorials Dojo</b> — review mode first (read every explanation), then timed. Review <i>every</i> wrong answer, note <i>why</i> you missed it, and turn gaps into flashcards.</li>
+        <li><b>Book when consistently comfortable.</b> Since TD runs ~10% harder, aim for <b>~70–80%+</b> — but "there's no magic percentage; some pass having maxed out in the low 60s on TD." Trust understanding over the number.</li>
+      </ol>
+      <div class="callout note"><span class="lbl">What the exam is really like</span> 65 scenario questions, ~2 min each, pass = 720/1000. As much a <b>reading-comprehension &amp; endurance test</b> as a knowledge test: two answers are often technically correct and differ by a single qualifier — <b>"MOST cost-effective," "LEAST operational overhead," "MOST resilient."</b> That qualifier picks the winner. <b>Typical study time: 2 weeks (experienced) to ~3 months (thorough, working pro).</b></div>
+      <div class="callout tip"><span class="lbl">Logistics tips</span> Prefer a <b>Pearson VUE test center</b> over at-home proctoring if you can. Get a <b>50% discount voucher</b> (from passing Cloud Practitioner, or bundled with Maarek's course). Results usually arrive 5–10 hours later via Credly/CertMetrics.</div>
+
+      <h4 id="materials-sources">Sources (r/AWSCertifications)</h4>
+      <table>
+        <tr><th>Thread</th><th>Topic (upvotes)</th></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/1d5kkuw/" target="_blank" rel="noopener">1d5kkuw</a></td><td>Master resource list (56)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/1bdcrlf/" target="_blank" rel="noopener">1bdcrlf</a></td><td>Passed in 10 days: Maarek + Quizlet (74)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/114inys/" target="_blank" rel="noopener">114inys</a></td><td>Passed 800+: Maarek + TD + whitepapers (69)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/18tniy1/" target="_blank" rel="noopener">18tniy1</a></td><td>Passed 865: Maarek + Cantrill + TD (44)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/16ycgpy/" target="_blank" rel="noopener">16ycgpy</a></td><td>Passed: TD video course + labs (37)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/10nim6k/" target="_blank" rel="noopener">10nim6k</a></td><td>Non-tech pass: Maarek + TD + cheat sheets (35)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/1daimme/" target="_blank" rel="noopener">1daimme</a></td><td>Passed: WhizLabs / Skill Builder / TD (31)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/11xomik/" target="_blank" rel="noopener">11xomik</a></td><td>Cantrill vs Maarek debate (29)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/1ajfx2c/" target="_blank" rel="noopener">1ajfx2c</a></td><td>Cantrill vs Maarek debate (28)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/128o3du/" target="_blank" rel="noopener">128o3du</a></td><td>Passed: Cantrill + TD + hands-on (25)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/1bcz657/" target="_blank" rel="noopener">1bcz657</a></td><td>Passed: TD + GitHub guide (17)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/xrubpb/" target="_blank" rel="noopener">xrubpb</a></td><td>Study guide: Cantrill + TD (14)</td></tr>
+        <tr><td><a href="https://www.reddit.com/r/AWSCertifications/comments/157o7x3/" target="_blank" rel="noopener">157o7x3</a></td><td>TD scores + Maarek / Neal Davis (14)</td></tr>
+        <tr><td colspan="2"><span class="kbd">Also: 1d6jfd1, 17a0j48, 1cbcaqn, 11e44tg — Cantrill/TD combos, TD exam details &amp; "what score to book."</span></td></tr>
+      </table>
       <p class="backtop"><a href="#top">↑ back to top</a></p>
     </section>
 
