@@ -152,6 +152,16 @@
         <tr><td><b>Technical</b> (tech/logical), <b>Managerial</b> (policy/risk), <b>Operational</b> (people/process), <b>Physical</b> (real-world)</td><td><b>Preventive</b>, <b>Deterrent</b>, <b>Detective</b>, <b>Corrective</b>, <b>Compensating</b>, <b>Directive</b></td></tr>
       </table>
       <p class="legend">Example: a firewall is a <b>technical preventive</b> control; a warning sign is <b>physical deterrent</b>; a backup is <b>technical corrective</b>.</p>
+      <table>
+        <tr><th>Control type</th><th>What it does</th><th>Examples</th></tr>
+        <tr><td><b>Preventive</b></td><td>Stops it before it happens</td><td>Firewall rules, locks, least-privilege ACLs</td></tr>
+        <tr><td><b>Deterrent</b></td><td>Discourages the attempt</td><td>Warning signs, visible cameras, login banners</td></tr>
+        <tr><td><b>Detective</b></td><td>Identifies during/after</td><td>IDS, log review, CCTV recording, SIEM alerts</td></tr>
+        <tr><td><b>Corrective</b></td><td>Fixes after the event</td><td>Restore from backup, patch after exploit, IR playbook</td></tr>
+        <tr><td><b>Compensating</b></td><td>Alternative when the primary control isn't feasible</td><td>Extra monitoring/segmentation for an unpatchable legacy system</td></tr>
+        <tr><td><b>Directive</b></td><td>Tells people what to do</td><td>Policies, procedures, AUP, signage ("authorized personnel only")</td></tr>
+      </table>
+      <div class="callout tip"><span class="lbl">How it's asked</span> The exam gives a scenario ("cameras record the parking lot") and asks you to classify it (detective + physical). Practice mapping <i>both</i> axes — every control is one category <i>and</i> one or more types.</div>
       <h4>Fundamental concepts</h4>
       <ul>
         <li><b>CIA triad</b> — Confidentiality, Integrity, Availability. Plus <b>Non-repudiation</b> (can't deny an action — provided by digital signatures).</li>
@@ -179,10 +189,32 @@
         <li><b>Vectors/attack surfaces:</b> message-based (email/SMS/IM), image/file/voice, removable media, vulnerable/unsupported software, unsecure networks (wireless/wired/Bluetooth), open ports, default credentials, supply chain (MSPs/vendors).</li>
         <li><b>Human/social engineering:</b> phishing, vishing, smishing, pretexting, impersonation, business email compromise (BEC), watering hole, brand impersonation, typosquatting, mis/disinformation.</li>
       </ul>
+      <table>
+        <tr><th>Technique</th><th>Discriminator (how to tell them apart)</th></tr>
+        <tr><td><b>Phishing</b> / <b>spear phishing</b> / <b>whaling</b></td><td>Mass email / targeted at a specific person or group / targeted at an <b>executive</b>.</td></tr>
+        <tr><td><b>Vishing</b> / <b>smishing</b></td><td>Same con by <b>voice call</b> / by <b>SMS text</b>.</td></tr>
+        <tr><td><b>Pretexting</b></td><td>An invented <b>scenario/identity</b> ("IT here, I need your password to fix your account").</td></tr>
+        <tr><td><b>BEC</b></td><td>Compromised or spoofed <b>business email</b> used to redirect payments/data — often after a real mailbox takeover.</td></tr>
+        <tr><td><b>Watering hole</b></td><td>Compromise a site the <b>target group already visits</b> and wait.</td></tr>
+        <tr><td><b>Typosquatting</b> / <b>brand impersonation</b></td><td>Look-alike domain (amaz0n.com) / fake brand identity in messages or sites.</td></tr>
+      </table>
       <h4>Vulnerabilities</h4>
       <p>Application (memory injection, <b>buffer overflow</b>, race condition/<b>TOCTOU</b>, malicious update); OS; web (<b>SQLi</b>, <b>XSS</b>); hardware (firmware, end-of-life, legacy); virtualization (VM escape, resource reuse); cloud; supply chain; cryptographic; misconfiguration; mobile (side-loading, jailbreaking); <b>zero-day</b>.</p>
+      <div class="callout note"><span class="lbl">Definitions that get tested</span> <b>Zero-day</b> = exploited before a patch exists. <b>TOC/TOU race condition</b> = state checked, then changed before use. <b>VM escape</b> = break out of a guest VM to the hypervisor/host. <b>EOL/legacy</b> = no more patches → compensating controls (isolate/segment/monitor).</div>
+      <h4>Malware — know the discriminators</h4>
+      <table>
+        <tr><th>Type</th><th>Key behavior</th></tr>
+        <tr><td><b>Virus</b></td><td>Attaches to files/programs; needs <b>user action</b> to spread.</td></tr>
+        <tr><td><b>Worm</b></td><td><b>Self-replicates across the network</b> — no user action needed.</td></tr>
+        <tr><td><b>Trojan</b></td><td>Malware disguised as legitimate software; <b>RAT</b> = trojan with remote control.</td></tr>
+        <tr><td><b>Ransomware</b></td><td>Encrypts data, demands payment. First move on detection: <b>isolate/contain</b>; recovery: offline/immutable backups.</td></tr>
+        <tr><td><b>Rootkit</b></td><td>Hides at OS/kernel (or firmware) level to <b>conceal presence</b> — hard to detect from inside the OS.</td></tr>
+        <tr><td><b>Logic bomb</b></td><td>Dormant until a <b>trigger</b> (date, event, account deletion) — classic disgruntled-insider scenario.</td></tr>
+        <tr><td><b>Keylogger / Spyware</b></td><td>Captures keystrokes / monitors activity &amp; exfiltrates.</td></tr>
+        <tr><td><b>Bloatware</b></td><td>Unwanted pre-installed software widening the attack surface.</td></tr>
+      </table>
       <h4>Indicators of malicious activity</h4>
-      <p><b>Malware:</b> ransomware, trojan, worm, spyware, virus, keylogger, logic bomb, rootkit, bloatware. <b>Attacks:</b> DDoS (amplified/reflected), DNS/ARP poisoning, on-path (MITM), credential replay, injection, privilege escalation, directory traversal, password spraying/brute force, downgrade, collision/birthday. <b>Indicators:</b> account lockout, impossible travel, concurrent sessions, resource consumption, out-of-cycle or missing logs. (Full attack reference in <a href="#ref-attacks">§7.2</a>.)</p>
+      <p><b>Attacks:</b> DDoS (amplified/reflected), DNS/ARP poisoning, on-path (MITM), credential replay, injection, privilege escalation, directory traversal, password spraying/brute force, downgrade, collision/birthday. <b>Account indicators:</b> lockouts, <b>impossible travel</b> (login from two distant places in an hour), concurrent sessions, resource consumption spikes, <b>out-of-cycle or missing logs</b> (attackers clearing tracks), blocked-content alerts. (Full attack reference in <a href="#ref-attacks">§7.2</a>.)</p>
       <h4>Mitigation &amp; hardening</h4>
       <p>Segmentation, access control (ACL/permissions), application allow-listing, isolation, patching, encryption, monitoring, least privilege, configuration enforcement, decommissioning. <b>Hardening:</b> endpoint protection, host-based firewall/HIPS, disable unused ports/protocols, change default passwords, remove unnecessary software.</p>
     </section>
@@ -198,20 +230,35 @@
       </ul>
       <h4>Securing the enterprise infrastructure</h4>
       <ul>
-        <li>Device placement, security zones, attack surface; <b>fail-open vs fail-closed</b>; active vs passive; <b>inline vs tap/monitor</b>.</li>
-        <li>Appliances: jump server, proxy (forward/reverse), <b>IDS/IPS</b>, load balancer, sensors.</li>
-        <li>Port security: <b>802.1X</b>, EAP. Firewalls: <b>WAF</b>, UTM, <b>NGFW</b>, Layer 4 vs Layer 7.</li>
-        <li>Secure access: <b>VPN</b> (IPSec/TLS), tunneling, <b>SD-WAN</b>, <b>SASE</b>.</li>
+        <li>Device placement, security zones, attack surface; <b>fail-open</b> (availability wins — traffic flows if the device dies) vs <b>fail-closed</b> (security wins — traffic blocked); <b>inline</b> (in the traffic path, can block) vs <b>tap/monitor</b> (copy of traffic, detect only).</li>
+        <li><b>IDS vs IPS:</b> IDS <b>detects &amp; alerts</b> (passive/tap); IPS sits <b>inline and blocks</b>. Detection methods: <b>signature-based</b> (known patterns, misses novel attacks) vs <b>anomaly/behavior-based</b> (baselines, catches novel attacks, more false positives).</li>
+        <li>Appliances: <b>jump server</b> (single hardened admin entry point into a secure zone), <b>proxy</b> (forward = controls user egress; reverse = fronts/protects servers), load balancer, sensors/collectors.</li>
+        <li>Port security: <b>802.1X</b> port-based network authentication with <b>EAP</b> + RADIUS — devices must authenticate before getting network access.</li>
+        <li>Firewalls: <b>WAF</b> (protects web apps — SQLi/XSS), <b>NGFW</b> (deep packet inspection, application-aware, IPS built in), <b>UTM</b> (all-in-one bundle), <b>Layer 4</b> (ports/IPs) vs <b>Layer 7</b> (application content).</li>
+        <li>Secure access: <b>VPN</b> — IPSec (<b>AH</b> integrity/auth, <b>ESP</b> adds encryption; tunnel vs transport mode) or TLS; <b>site-to-site</b> (network↔network, always-on) vs <b>client/remote-access</b>; <b>full tunnel</b> (all traffic through VPN — more secure) vs <b>split tunnel</b> (only corporate traffic — faster, less oversight).</li>
+        <li><b>SD-WAN</b> = software-defined WAN routing across links; <b>SASE</b> = SD-WAN + cloud-delivered security stack (SWG, CASB, ZTNA, firewall) as a service.</li>
       </ul>
       <h4>Protecting data</h4>
       <ul>
         <li><b>Data states:</b> at rest, in transit, in use. Classifications: public, private, sensitive, confidential, restricted, critical. Types: regulated, trade secret, IP, financial, PII/PHI.</li>
-        <li><b>Methods:</b> encryption, hashing, masking, tokenization, obfuscation, segmentation, permission restrictions, geographic restrictions; sovereignty/geolocation.</li>
+        <li><b>Data roles:</b> <b>owner</b> (accountable), <b>custodian/steward</b> (handles day-to-day protection), <b>controller</b> (decides why/how processed) vs <b>processor</b> (processes on the controller's behalf).</li>
       </ul>
+      <table>
+        <tr><th>Method</th><th>What it does — and when it's the answer</th></tr>
+        <tr><td><b>Encryption</b></td><td>Reversible with the key; protects confidentiality in any state.</td></tr>
+        <tr><td><b>Hashing</b></td><td>One-way; verifies <b>integrity</b> (and stores passwords) — not for retrieval.</td></tr>
+        <tr><td><b>Masking</b></td><td>Hides part of the value for display (<code>****-****-1234</code>) — original intact underneath.</td></tr>
+        <tr><td><b>Tokenization</b></td><td>Replaces the value with a <b>token</b>; real value lives in a separate vault. No math relationship — common for card data (PCI).</td></tr>
+        <tr><td><b>Obfuscation / steganography</b></td><td>Makes data hard to interpret / hides data inside other files.</td></tr>
+        <tr><td><b>Segmentation + permissions</b></td><td>Limit where data lives and who reaches it; add <b>geographic restrictions</b> for sovereignty.</td></tr>
+      </table>
       <h4>Resilience &amp; recovery</h4>
       <ul>
-        <li>High availability (<b>load balancing vs clustering</b>); sites (<b>hot/warm/cold</b>), geographic dispersion, platform diversity, multi-cloud.</li>
-        <li>Backups (onsite/offsite, frequency, encryption, snapshots, replication, journaling); power (UPS, generators); testing (<b>tabletop</b>, failover, simulation, parallel processing).</li>
+        <li>High availability: <b>load balancing</b> (distribute across active nodes) vs <b>clustering</b> (nodes act as one system with failover); geographic dispersion, platform diversity (avoid vendor monoculture), multi-cloud.</li>
+        <li><b>Site types:</b> <b>Hot</b> = fully equipped + near-real-time data, minutes to switch, most expensive. <b>Warm</b> = equipment ready, data restored on activation, hours–days. <b>Cold</b> = space/power only, days–weeks, cheapest.</li>
+        <li><b>Backup types:</b> <b>Full</b> (everything; slow to make, fastest restore) · <b>Incremental</b> (changes since <i>last any backup</i>; fastest to make, restore needs full + every incremental) · <b>Differential</b> (changes since <i>last full</i>; restore needs full + latest differential only). Also: snapshots, replication, <b>journaling</b>, offsite/immutable copies for ransomware.</li>
+        <li>Power: <b>UPS</b> (bridges seconds–minutes) → <b>generator</b> (long outages). Testing: <b>tabletop</b> (talk-through), simulation, <b>failover test</b>, parallel processing.</li>
+        <li><b>Capacity planning</b> covers people, technology, and infrastructure — not just servers.</li>
       </ul>
     </section>
 
@@ -219,17 +266,32 @@
     <section id="t-d4">
       <h2>5 · Security Operations <span class="tag d4">28% — biggest</span></h2>
       <h4>Hardening &amp; secure baselines</h4>
-      <p>Establish/deploy/maintain secure baselines; harden targets (mobile, workstations, switches/routers, servers, cloud, ICS/SCADA, embedded, RTOS, IoT). Wireless: site surveys, heat maps, <b>WPA3</b>, <b>802.1X + RADIUS/EAP</b>. Mobile: <b>MDM</b>, BYOD/COPE/CYOD. App security: input validation, secure cookies, static code analysis, <b>code signing</b>, sandboxing.</p>
+      <ul>
+        <li><b>Secure baselines:</b> establish → deploy → maintain. Harden mobile, workstations, switches/routers, servers, cloud, ICS/SCADA, embedded, RTOS, IoT: disable unused ports/services, change defaults, patch, endpoint protection, host firewall/HIPS.</li>
+        <li><b>Wireless:</b> <b>WPA3</b> uses <b>SAE</b> (replaces WPA2's crackable PSK 4-way handshake). <b>Enterprise mode = 802.1X + RADIUS</b> (per-user credentials) vs Personal (shared passphrase). <b>EAP-TLS</b> = certificate-based (strongest); PEAP wraps EAP in TLS. Site surveys/heat maps for placement.</li>
+        <li><b>Mobile deployment:</b> <b>BYOD</b> (user-owned — hardest to control), <b>COPE</b> (corporate-owned, personal use allowed), <b>CYOD</b> (user picks from an approved list). Manage all via <b>MDM</b> (enforce encryption, remote wipe, containerization).</li>
+        <li><b>App security:</b> <b>input validation</b> (the #1 defense against injection/XSS), secure cookies, <b>static analysis</b> (source code, pre-run) vs dynamic analysis (running app), <b>code signing</b> (proves integrity/origin), sandboxing.</li>
+      </ul>
       <h4>Asset &amp; vulnerability management</h4>
       <ul>
-        <li>Asset lifecycle: acquisition → assignment/classification → tracking/inventory → disposal (sanitization, destruction, certification, retention).</li>
-        <li><b>Vulnerability management:</b> identification (vuln scan, static/dynamic analysis, threat feeds/OSINT, pen testing, responsible disclosure/bug bounty); analysis (false positive/negative, <b>CVE</b>, <b>CVSS</b>, prioritization, exposure factor); response (patching, segmentation, compensating controls, exceptions); validation (rescan, audit).</li>
+        <li>Asset lifecycle: acquisition → assignment/classification → tracking/inventory → disposal. <b>Sanitization:</b> overwrite/wipe (reusable), <b>degauss</b> (destroys magnetic media), physical <b>destruction</b> (shred/pulverize) + <b>certification</b> of destruction. Deleting/formatting is <b>not</b> sanitization.</li>
+        <li><b>Vulnerability management cycle:</b> identify (scans, static/dynamic analysis, threat feeds/OSINT, pen tests, <b>responsible disclosure / bug bounty</b>) → analyze → respond (patch, segment, compensating controls, exceptions, insurance) → <b>validate (rescan!)</b> → report.</li>
+        <li><b>CVE</b> = the catalog ID of a vulnerability; <b>CVSS</b> = its 0–10 severity score — prioritize by CVSS <i>plus</i> exposure and environment (an internet-facing 7.5 can outrank an isolated 9.8).</li>
+        <li><b>False positive</b> = flagged but not real (wastes time); <b>false negative</b> = real but missed (dangerous). Confirm scanner findings before acting.</li>
       </ul>
       <h4>Monitoring &amp; tooling</h4>
       <ul>
-        <li>Activities: log aggregation, alerting, scanning, reporting, archiving, quarantine, <b>alert tuning</b>.</li>
-        <li>Tools: <b>SIEM</b> (aggregate/correlate logs), <b>SOAR</b> (automation/playbooks), antivirus, <b>DLP</b>, SNMP traps, NetFlow, vulnerability scanners, <b>SCAP</b>/benchmarks, <b>EDR/XDR</b>, DNS filtering, web filtering, email security (<b>DMARC/DKIM/SPF</b>), file integrity monitoring, NAC, UBA.</li>
+        <li>Activities: log aggregation, alerting, scanning, reporting, archiving, quarantine, <b>alert tuning</b> (reduce false positives so real alerts aren't drowned out).</li>
+        <li><b>SIEM</b> = collect/correlate/alert on logs (detection); <b>SOAR</b> = automate the response with playbooks. <b>EDR</b> = endpoint detect &amp; respond; <b>XDR</b> extends across endpoint + network + cloud. <b>UBA</b> flags abnormal user behavior.</li>
+        <li>Also: antivirus, <b>DLP</b> (blocks sensitive data exfiltration — email/USB/uploads), SNMP traps, <b>NetFlow</b> (traffic metadata), vulnerability scanners, <b>SCAP</b> (automates config/vuln checking against benchmarks), <b>FIM</b> (alerts on changed system files), <b>NAC</b> (posture-check devices before admitting them), DNS/web filtering.</li>
       </ul>
+      <h4>Email security — SPF vs DKIM vs DMARC</h4>
+      <table>
+        <tr><th>Record</th><th>What it proves</th></tr>
+        <tr><td><b>SPF</b></td><td>The sending <b>server/IP</b> is authorized to send for the domain (DNS TXT list).</td></tr>
+        <tr><td><b>DKIM</b></td><td>The message is <b>signed</b> by the domain and unaltered (crypto signature in headers).</td></tr>
+        <tr><td><b>DMARC</b></td><td><b>Policy</b> telling receivers what to do when SPF/DKIM fail (none/quarantine/reject) + reporting. Builds on the other two.</td></tr>
+      </table>
       <h4>Identity &amp; Access Management</h4>
       <p>Provisioning/de-provisioning, identity proofing, federation, <b>SSO</b> (LDAP, OAuth, SAML), attestation; access-control models (MAC, DAC, RBAC, rule-based, ABAC); <b>MFA</b> factors; password policy &amp; managers, passwordless; <b>PAM</b> (just-in-time, vaulting, ephemeral credentials). Full detail in <a href="#ref-iam">§7.3</a>.</p>
       <h4>Automation &amp; orchestration</h4>
@@ -238,7 +300,19 @@
       <ul>
         <li><b>IR process (7 steps):</b> Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned.</li>
         <li>Testing: tabletop, simulation. <b>Root cause analysis</b>, threat hunting.</li>
-        <li><b>Digital forensics:</b> legal hold, <b>chain of custody</b>, acquisition, preservation, order of volatility, e-discovery, reporting.</li>
+      </ul>
+      <table>
+        <tr><th>Phase</th><th>"Which phase is this?" — the scenario clue</th></tr>
+        <tr><td><b>Preparation</b></td><td>Writing playbooks, training, deploying tooling <i>before</i> anything happens.</td></tr>
+        <tr><td><b>Detection / Analysis</b></td><td>Alert fires; determining scope, validity, and severity.</td></tr>
+        <tr><td><b>Containment</b></td><td><b>Isolate the infected host / disable the account / segment</b> — stop the spread <i>first</i>, before cleanup. Almost always the answer to "what do you do FIRST?"</td></tr>
+        <tr><td><b>Eradication</b></td><td>Remove the malware/root cause, patch the hole.</td></tr>
+        <tr><td><b>Recovery</b></td><td>Restore systems/data, return to production, monitor closely.</td></tr>
+        <tr><td><b>Lessons Learned</b></td><td>Post-incident review; feed improvements back into Preparation.</td></tr>
+      </table>
+      <ul>
+        <li><b>Digital forensics:</b> <b>legal hold</b> (preserve everything once litigation is anticipated), <b>chain of custody</b> (documented who-handled-what — breaks admissibility if broken), acquisition &amp; preservation (image, hash the image to prove integrity, work on copies), <b>e-discovery</b>, reporting.</li>
+        <li><b>Order of volatility</b> — collect most-volatile first: <b>CPU registers/cache → RAM → swap/pagefile → disk → remote logs → archived/backup media</b>. A running machine's memory dies with the power — capture it before pulling the plug.</li>
         <li><b>Investigation data sources:</b> firewall/application/endpoint/OS/IDS-IPS/network logs, metadata, vuln scans, dashboards, packet captures.</li>
       </ul>
     </section>
@@ -259,7 +333,17 @@
         <li><b>Risk register</b> (KRIs, risk owners, thresholds); risk tolerance &amp; appetite (expansionary/neutral/conservative); strategies: <b>Accept, Avoid, Transfer, Mitigate</b>.</li>
       </ul>
       <h4>Third-party risk</h4>
-      <p>Vendor assessment (pen testing, right-to-audit, independent assessments, supply-chain analysis); agreements — <b>SLA, MOA, MOU, MSA, SOW/WO, NDA, BPA</b>; ongoing monitoring &amp; questionnaires; rules of engagement.</p>
+      <p>Vendor assessment (pen testing, <b>right-to-audit clause</b>, independent assessments, supply-chain analysis); due diligence &amp; conflict-of-interest checks; ongoing monitoring &amp; questionnaires; rules of engagement.</p>
+      <table>
+        <tr><th>Agreement</th><th>What it is — pick the right one</th></tr>
+        <tr><td><b>SLA</b></td><td>Measurable <b>service levels</b> (uptime %, response time) + penalties.</td></tr>
+        <tr><td><b>MOU</b></td><td>Informal statement of mutual intent — <b>usually not binding</b>.</td></tr>
+        <tr><td><b>MOA</b></td><td>More formal than MOU — specific responsibilities agreed.</td></tr>
+        <tr><td><b>MSA</b></td><td><b>Master</b> agreement setting umbrella terms for a long relationship; individual jobs attach to it…</td></tr>
+        <tr><td><b>SOW / WO</b></td><td>…as a <b>Statement/Work Order</b> defining one specific project's deliverables.</td></tr>
+        <tr><td><b>NDA</b></td><td>Confidentiality — keep shared info secret.</td></tr>
+        <tr><td><b>BPA</b></td><td>Business partners agreement — profit/responsibility split between partners.</td></tr>
+      </table>
       <h4>Compliance &amp; audits</h4>
       <ul>
         <li>Compliance reporting (internal/external); consequences (fines, sanctions, reputational/contractual/license loss); privacy (data subject, controller vs processor, right to be forgotten, retention).</li>
@@ -285,7 +369,9 @@
         <li><b>Digital signature</b> = hash of the message encrypted with the <b>sender's private key</b> → integrity + authentication + <b>non-repudiation</b>. Encrypt for confidentiality with the <b>recipient's public key</b>.</li>
         <li><b>Password protection:</b> <b>salt</b> (defeats rainbow tables) + key stretching (<b>bcrypt, PBKDF2, Argon2</b>).</li>
         <li><b>PKI:</b> CA, RA, <b>CSR</b>, X.509 certs, <b>CRL</b> (revocation list) vs <b>OCSP</b> (real-time status), root of trust, wildcard/SAN certs, key escrow. TLS/HTTPS is <b>hybrid</b> — asymmetric to exchange a symmetric session key.</li>
-        <li><b>Other:</b> TPM (on-device key storage), <b>HSM</b> (dedicated key hardware), secure enclave; obfuscation via steganography, tokenization, data masking; blockchain/open public ledger.</li>
+        <li><b>Other:</b> TPM (on-device key storage), <b>HSM</b> (dedicated key hardware), secure enclave; obfuscation via steganography, tokenization, data masking; blockchain/open public ledger; <b>key escrow</b> (trusted third party holds a key copy); <b>key stretching</b> makes brute force slow by design.</li>
+        <li><b>Certificate types:</b> <b>wildcard</b> (<code>*.example.com</code> — all first-level subdomains), <b>SAN</b> (multiple specific names in one cert), <b>self-signed</b> (free, but not trusted by browsers — internal use), <b>third-party/CA-signed</b> (publicly trusted). Getting one: generate a <b>CSR</b> (contains the public key + identity) → CA validates → issues the cert. Private key never leaves you.</li>
+        <li><b>Encryption levels</b> (asked as "which scope?"): full-disk (FDE/SED) → partition → volume → file → database → record/column. Finer scope = protection stays while the system runs; FDE only protects data <i>at rest on a powered-off device</i>.</li>
       </ul>
 
       <h3 id="ref-attacks">7.2 · Attacks</h3>
