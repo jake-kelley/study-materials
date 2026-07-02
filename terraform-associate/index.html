@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HashiCorp Terraform Associate (003) — Study Guide</title>
+<title>HashiCorp Terraform Associate (004) — Study Guide</title>
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body class="theme-terraform">
@@ -13,15 +13,14 @@
     <div class="brand">
       <span class="logo">HASHICORP · TERRAFORM</span>
       <h1>Certified: Terraform Associate</h1>
-      <div class="sub">003 (→ 004) · Overview + Study Guide</div>
+      <div class="sub">004 · Overview + Study Guide</div>
       <a class="home" href="../index.html">← All certifications</a> &nbsp;·&nbsp; <a class="home" href="cram.html">⚡ Cram Jam</a>
     </div>
     <div class="toc" id="toc">
       <div class="group-label">Overview</div>
       <a href="#ov-intro">What &amp; Why</a>
-      <a href="#ov-version">003 vs 004</a>
       <a href="#ov-glance">Exam at a Glance</a>
-      <a href="#ov-objectives">The 9 Objectives</a>
+      <a href="#ov-objectives">The 8 Objectives</a>
       <a href="#ov-snapshot">CLI Snapshot</a>
       <a href="#ov-materials">Recommended Materials</a>
       <a href="#ov-plan">Study Plan (Quick)</a>
@@ -61,23 +60,11 @@
       <p>The <b>Terraform Associate</b> proves you understand Infrastructure as Code and can operate Terraform's core workflow confidently — initialize a project, plan and apply changes, manage state, use modules, write HCL, and understand what HCP Terraform (the SaaS platform) adds. It's vendor-neutral (works with AWS, Azure, GCP, and hundreds of providers) and widely respected in DevOps hiring.</p>
     </section>
 
-    <section id="ov-version">
-      <h2>⚠️ 003 vs 004 — read this first</h2>
-      <div class="callout trap"><span class="lbl">Version note</span> The <b>Terraform Associate 003</b> exam was <b>retired in January 2026</b>. The currently sittable exam is <b>Terraform Associate 004</b> (launched Jan 2026). The two are <b>~90% identical</b> — this guide is built for 003 (as requested) and is almost entirely valid for 004. <b>If you're booking now, book 004.</b></div>
-      <table>
-        <tr><th></th><th>003</th><th>004</th></tr>
-        <tr><td>Objectives</td><td>9 objective areas</td><td>8 (restructured)</td></tr>
-        <tr><td>Target Terraform</td><td>~v1.3</td><td>~v1.12</td></tr>
-        <tr><td>Notably adds</td><td>—</td><td>Explicit <b>lifecycle rules</b>, <b>custom validation conditions</b>, <b>ephemeral / write-only values</b>, config-driven <code>import</code> block</td></tr>
-      </table>
-      <p>Everything else — IaC concepts, providers, core workflow, state, modules, and HCP Terraform — transfers directly. Study this guide, then skim HashiCorp's official 004 study path for the few additions.</p>
-    </section>
-
     <section id="ov-glance">
       <h2>Exam at a Glance</h2>
       <table>
         <tr><th>Attribute</th><th>Value</th></tr>
-        <tr><td>Exam</td><td>HashiCorp Certified: Terraform Associate (003 → 004)</td></tr>
+        <tr><td>Exam</td><td>HashiCorp Certified: Terraform Associate (004)</td></tr>
         <tr><td>Questions</td><td>57</td></tr>
         <tr><td>Question types</td><td>Multiple choice, multiple answer, true/false, <b>text-match (fill-in-the-blank)</b></td></tr>
         <tr><td>Time</td><td>60 minutes</td></tr>
@@ -90,20 +77,19 @@
     </section>
 
     <section id="ov-objectives">
-      <h2>The 9 Objectives (003)</h2>
+      <h2>The 8 Objectives</h2>
       <table>
         <tr><th>#</th><th>Objective</th><th>Deep dive</th></tr>
-        <tr><td>1</td><td>Understand Infrastructure as Code (IaC) concepts</td><td><a class="jump" href="#t-iac">→ §2</a></td></tr>
-        <tr><td>2</td><td>Understand the purpose of Terraform (vs other IaC)</td><td><a class="jump" href="#t-iac">→ §2</a></td></tr>
-        <tr><td>3</td><td>Understand Terraform basics (providers, plugins)</td><td><a class="jump" href="#t-basics">→ §3</a></td></tr>
-        <tr><td>4</td><td>Use Terraform outside the core workflow (import, state, logging)</td><td><a class="jump" href="#t-state">→ §5</a></td></tr>
-        <tr><td>5</td><td>Interact with Terraform modules</td><td><a class="jump" href="#t-modules">→ §6</a></td></tr>
-        <tr><td>6</td><td>Use the core Terraform workflow (init/plan/apply)</td><td><a class="jump" href="#t-workflow">→ §4</a></td></tr>
-        <tr><td>7</td><td>Implement and maintain state</td><td><a class="jump" href="#t-state">→ §5</a></td></tr>
-        <tr><td>8</td><td>Read, generate, and modify configuration</td><td><a class="jump" href="#t-config">→ §7</a></td></tr>
-        <tr><td>9</td><td>Understand HCP Terraform capabilities</td><td><a class="jump" href="#t-hcp">→ §8</a></td></tr>
+        <tr><td>1</td><td>Infrastructure as Code (IaC) with Terraform</td><td><a class="jump" href="#t-iac">→ §2</a></td></tr>
+        <tr><td>2</td><td>Terraform fundamentals (providers, how state is used)</td><td><a class="jump" href="#t-basics">→ §3</a></td></tr>
+        <tr><td>3</td><td>Core Terraform workflow (init / plan / apply / destroy)</td><td><a class="jump" href="#t-workflow">→ §4</a></td></tr>
+        <tr><td>4</td><td>Terraform configuration (resources, variables, expressions, custom conditions, secrets)</td><td><a class="jump" href="#t-config">→ §7</a></td></tr>
+        <tr><td>5</td><td>Terraform modules</td><td><a class="jump" href="#t-modules">→ §6</a></td></tr>
+        <tr><td>6</td><td>Terraform state management</td><td><a class="jump" href="#t-state">→ §5</a></td></tr>
+        <tr><td>7</td><td>Maintain infrastructure (import, inspect state, verbose logging)</td><td><a class="jump" href="#t-state">→ §5</a></td></tr>
+        <tr><td>8</td><td>HCP Terraform</td><td><a class="jump" href="#t-hcp">→ §8</a></td></tr>
       </table>
-      <p class="legend">Rough (unofficial) emphasis: Basics ~30%, State ~23%, IaC concepts ~16%, Purpose ~10%, Modules ~9%, HCP ~9%.</p>
+      <p class="legend">Terraform version tested: <b>1.12</b>. The exam is heaviest on configuration, the core workflow, and state — spend your time there.</p>
     </section>
 
     <section id="ov-snapshot">
@@ -146,6 +132,7 @@
         <li><b>Passing score ~70%</b> (~40/57); HashiCorp doesn't publish the exact cut score.</li>
         <li><b>$70.50</b>, online webcam-proctored, English only, results near-instant by email. Cert valid <b>2 years</b>.</li>
         <li><b>No hard prerequisite.</b> Recommended: basic terminal skills, cloud familiarity, and hands-on Terraform.</li>
+        <li><b>Tested against Terraform 1.12</b> — questions reflect current CLI behavior, HCL features (custom conditions, dynamic expressions), and HCP Terraform.</li>
       </ul>
     </section>
 
@@ -208,8 +195,13 @@
         <tr><td><code>state show ADDR</code></td><td>Show attributes of one resource.</td></tr>
         <tr><td><code>state mv</code></td><td>Rename/move a resource in state — refactor <b>without</b> destroy/recreate.</td></tr>
         <tr><td><code>state rm ADDR</code></td><td>Remove from state; the <b>real resource is NOT destroyed</b> — Terraform just "forgets" it.</td></tr>
-        <tr><td><code>import ADDR ID</code></td><td>Bring existing infra <b>into state</b>. Does <b>NOT generate configuration</b> — you must write the resource block yourself. (Config-driven <code>import {}</code> + <code>-generate-config-out</code> is a 004 emphasis.)</td></tr>
+        <tr><td><code>import ADDR ID</code></td><td>Bring existing infra <b>into state</b>. The CLI form does <b>NOT generate configuration</b> — you must write the resource block yourself.</td></tr>
       </table>
+      <h4>Config-driven import (the modern way)</h4>
+      <ul>
+        <li>Declare an <code>import { to = aws_x.this, id = "…" }</code> block in your configuration, then run <code>terraform plan</code> / <code>apply</code>. Unlike the CLI command, this is reviewable in a plan and version-controlled.</li>
+        <li><code>terraform plan -generate-config-out=generated.tf</code> will <b>scaffold the resource configuration</b> for imported resources so you don't hand-write it.</li>
+      </ul>
     </section>
 
     <section id="t-modules">
@@ -232,11 +224,20 @@
         <li><code>*.auto.tfvars</code> / <code>*.auto.tfvars.json</code> (alphabetical)</li>
         <li><code>-var</code> and <code>-var-file</code> on the CLI (<b>highest</b>; last one wins)</li>
       </ol>
-      <p>Types: primitives (<code>string</code>, <code>number</code>, <code>bool</code>); <b>collection</b> (<code>list</code>, <code>set</code>, <code>map</code>); <b>structural</b> (<code>object</code>, <code>tuple</code>). Modifiers: <code>default</code>, <code>sensitive</code>, <code>nullable</code>, <code>validation</code>.</p>
-      <h4>Resources, data sources &amp; dependencies</h4>
+      <p><b>Variable types.</b> Primitives (<code>string</code>, <code>number</code>, <code>bool</code>); <b>complex types</b> — collection (<code>list</code>, <code>set</code>, <code>map</code>) and structural (<code>object</code>, <code>tuple</code>). Modifiers: <code>default</code>, <code>sensitive</code>, <code>nullable</code>, <code>validation</code>.</p>
+      <h4>Resources, data sources &amp; references</h4>
       <ul>
         <li><code>resource "type" "name" {}</code> manages infra; <code>data "type" "name" {}</code> is a read-only lookup refreshed during plan.</li>
-        <li><b>Implicit dependencies</b> form when one resource references another (<code>aws_x.id</code>); <b>explicit</b> via <code>depends_on</code>. Terraform builds a dependency graph (DAG) and parallelizes independent resources.</li>
+        <li><b>Cross-resource references</b> connect resources: refer to another resource's attribute as <code>type.name.attribute</code> (e.g. <code>aws_vpc.main.id</code>).</li>
+        <li><b>Implicit dependencies</b> form automatically when one resource references another; add an <b>explicit</b> <code>depends_on</code> only when there's no reference. Terraform builds a dependency graph (DAG) and parallelizes independent resources.</li>
+      </ul>
+      <h4>Dynamic configuration — expressions &amp; functions</h4>
+      <ul>
+        <li><b>Built-in functions</b> transform values: string (<code>join</code>, <code>split</code>, <code>format</code>, <code>replace</code>), collection (<code>length</code>, <code>lookup</code>, <code>merge</code>, <code>concat</code>, <code>flatten</code>), numeric, encoding (<code>jsonencode</code>), and more. Test them in <code>terraform console</code>.</li>
+        <li><b>Conditional expression:</b> <code>condition ? true_val : false_val</code>.</li>
+        <li><b><code>for</code> expressions</b> transform lists/maps: <code>[for s in var.list : upper(s)]</code>.</li>
+        <li><b><code>dynamic</code> blocks</b> generate repeated nested blocks from a collection (e.g. many <code>ingress</code> rules) instead of copy-paste.</li>
+        <li>Splat expressions (<code>aws_x.this[*].id</code>) collect an attribute across all instances.</li>
       </ul>
       <h4>count vs for_each</h4>
       <table>
@@ -251,6 +252,18 @@
         <li><code>prevent_destroy = true</code> — hard-block deletion (plan errors out).</li>
         <li><code>ignore_changes = [attr]</code> (or <code>all</code>) — ignore drift on specific attributes.</li>
         <li>Also meta-args: <code>depends_on</code>, <code>count</code>, <code>for_each</code>, <code>provider</code>.</li>
+      </ul>
+      <h4>Custom conditions &amp; validation</h4>
+      <ul>
+        <li><b>Variable validation:</b> a <code>validation { condition = … , error_message = … }</code> block inside a <code>variable</code> rejects bad input early (e.g. enforce an instance-type prefix or a CIDR shape).</li>
+        <li><b>Preconditions &amp; postconditions:</b> a <code>lifecycle { precondition {…} / postcondition {…} }</code> block on a resource/data source asserts assumptions <i>before</i> and guarantees <i>after</i> apply — failing the plan/apply with your message if violated.</li>
+        <li><b><code>check</code> blocks</b> define scoped assertions (with optional <code>data</code> sources) that report warnings without blocking apply — good for continuous validation of a deployment.</li>
+      </ul>
+      <h4>Managing sensitive data</h4>
+      <ul>
+        <li>Mark inputs/outputs <code>sensitive = true</code> to keep them out of CLI output — but remember they are still stored in state, so protect state itself.</li>
+        <li><b>Don't hard-code secrets</b> in <code>.tf</code> files or commit <code>.tfvars</code> with secrets. Inject them at runtime via environment variables (<code>TF_VAR_*</code>) or a secrets manager.</li>
+        <li>Best practice is to pull secrets from a dedicated store — e.g. the <b>Vault provider</b> / data sources — rather than storing them in configuration. <b>Ephemeral</b> values/resources let sensitive data flow through a run <i>without</i> being persisted to state.</li>
       </ul>
       <h4>Provisioners — last resort</h4>
       <ul>
@@ -297,7 +310,7 @@
 
       <h3>4 · Books / notes</h3>
       <ul>
-        <li><b>"HashiCorp Terraform Associate (003) Exam Guide"</b> (Packt) — the main dedicated book. Community cheat-sheet write-ups (codingnconcepts, Hakan Bayraktar) are widely shared. Keep your own notes — that's this guide's <a href="cram.html">Cram Jam</a>.</li>
+        <li>The <b>Packt "HashiCorp Terraform Associate Exam Guide"</b> is the main dedicated book. Community cheat-sheet write-ups (codingnconcepts, Hakan Bayraktar) are widely shared. Keep your own notes — that's this guide's <a href="cram.html">Cram Jam</a>.</li>
       </ul>
 
       <h4>Sources</h4>
@@ -342,10 +355,10 @@
         <li><b>Fill-in-the-blank questions</b> mean you must know exact command spelling — practice typing them.</li>
         <li><b>Pace:</b> 57 Q / 60 min ≈ 63 s each. Flag-and-return on scenarios.</li>
       </ul>
-      <div class="callout trap"><span class="lbl">Ignore</span> Exam dumps (ExamTopics "actual questions", etc.) — they violate HashiCorp's certification agreement and risk decertification, are often outdated, and are unnecessary given Krausen/ExamPro. Also verify any course is refreshed for 003/004 (avoid 2021/2022 titles).</div>
+      <div class="callout trap"><span class="lbl">Ignore</span> Exam dumps (ExamTopics "actual questions", etc.) — they violate HashiCorp's certification agreement and risk decertification, are often outdated, and are unnecessary given Krausen/ExamPro. Also make sure any course you pick is current (aligned to the latest objectives and Terraform 1.12 — avoid stale 2021/2022 titles).</div>
 
       <div class="footer">
-        <p><b>Sources:</b> HashiCorp official Terraform Associate objectives &amp; developer tutorials, and community consensus (Reddemy Reddit-comment ranking + first-hand pass write-ups). Note: the 003 exam retired Jan 2026; 004 is current and ~90% identical. Verify the current objectives on developer.hashicorp.com before your exam. Not affiliated with or endorsed by HashiCorp.</p>
+        <p><b>Sources:</b> HashiCorp official Terraform Associate (004) exam objectives &amp; developer tutorials, and community consensus (Reddemy Reddit-comment ranking + first-hand pass write-ups). Verify the current objectives on developer.hashicorp.com before your exam. Not affiliated with or endorsed by HashiCorp.</p>
       </div>
       <p class="backtop"><a href="#top">↑ back to top</a></p>
     </section>

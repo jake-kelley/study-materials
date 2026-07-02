@@ -10,8 +10,8 @@
 <div class="wrap">
   <div class="topbar">
     <div>
-      <h1>⚡ Terraform Associate (003/004) — Cram Jam</h1>
-      <div class="sub">Dense recall · pairs with the <a href="index.html" style="color:#fff;text-decoration:underline;">full guide</a> · 003 retired Jan 2026 → 004 current (~90% same).</div>
+      <h1>⚡ Terraform Associate (004) — Cram Jam</h1>
+      <div class="sub">Dense recall · pairs with the <a href="index.html" style="color:#fff;text-decoration:underline;">full guide</a> · tested on Terraform 1.12.</div>
     </div>
     <div class="meta">
       <b>57 Q</b> · 60 min · pass <b>~70%</b><br>
@@ -49,6 +49,7 @@
         <tr><td><b>import ADDR ID</b></td><td>add to state; <span class="bad">does NOT write config</span></td></tr>
       </table>
       <div class="warn">Memorize these 3 — the #1 exam trap.</div>
+      <p>Config-driven: <span class="mono">import { to=…, id=… }</span> block + <span class="mono">plan -generate-config-out=f.tf</span> scaffolds config.</p>
     </div>
 
     <div class="box">
@@ -125,6 +126,25 @@
     </div>
 
     <div class="box">
+      <h2 class="alt">Expressions &amp; Conditions</h2>
+      <ul>
+        <li>Types: primitives + <b>complex</b> (list/set/map, object/tuple).</li>
+        <li>Functions (join/split/lookup/merge/length…); test in <span class="mono">console</span>.</li>
+        <li>Conditional <span class="mono">c ? a : b</span>; <span class="mono">for</span> expr; <b>dynamic</b> blocks; splat <span class="mono">[*]</span>.</li>
+        <li><b>validation</b> block on variable; <b>precondition/postcondition</b> in lifecycle; <b>check</b> blocks (warn, non-blocking).</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Secrets</h2>
+      <ul>
+        <li><span class="mono">sensitive=true</span> hides CLI output only — <b>still in state</b>.</li>
+        <li>Never hard-code secrets / commit secret .tfvars. Inject via <span class="mono">TF_VAR_*</span> or a secrets store.</li>
+        <li>Pull from <b>Vault</b> provider; <b>ephemeral</b> values don't persist to state.</li>
+      </ul>
+    </div>
+
+    <div class="box">
       <h2 class="alt">HCP Terraform</h2>
       <ul>
         <li>Remote runs + remote state (auto lock/encrypt).</li>
@@ -152,7 +172,7 @@
     </div>
 
   </div>
-  <div class="footnote">Cram Jam · Terraform Associate 003/004 · pairs with the full guide · verify objectives on developer.hashicorp.com · not affiliated with HashiCorp.</div>
+  <div class="footnote">Cram Jam · Terraform Associate 004 · pairs with the full guide · verify objectives on developer.hashicorp.com · not affiliated with HashiCorp.</div>
 </div>
 </body>
 </html>

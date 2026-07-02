@@ -12,7 +12,7 @@ A personal, research-backed hub of exam study guides — each with a high-level 
 | Splunk Core Certified Power User | SPLK-1002 | [guide](splunk-power-user/index.html) | [cram](splunk-power-user/cram.html) |
 | CompTIA Security+ | SY0-701 | [guide](security-plus/index.html) | [cram](security-plus/cram.html) |
 | Microsoft Azure — Designing Infrastructure Solutions | AZ-305 | [guide](az-305/index.html) | [cram](az-305/cram.html) |
-| HashiCorp Terraform Associate | 003 → 004 | [guide](terraform-associate/index.html) | [cram](terraform-associate/cram.html) |
+| HashiCorp Terraform Associate | 004 | [guide](terraform-associate/index.html) | [cram](terraform-associate/cram.html) |
 
 ## What each guide contains
 
@@ -44,7 +44,7 @@ study-materials/
 Guides are compiled from official exam guides/objectives and community consensus (r/AWSCertifications, r/Splunk, r/CompTIA, r/AzureCertification, r/Terraform + first-hand pass write-ups). A few notes:
 
 - **Verify service limits, pricing, and the current exam version** against official vendor documentation before your exam — figures are study aids, not guarantees.
-- **Terraform 003** retired in January 2026; **004** is current and ~90% identical (the guide flags the deltas).
+- **Terraform Associate 004** is built against Terraform 1.12.
 - **Security+ SY0-701** domain weightings and objectives were verified verbatim against the official CompTIA objectives PDF.
 
 > Not affiliated with or endorsed by AWS, Splunk, CompTIA, Microsoft, or HashiCorp.
