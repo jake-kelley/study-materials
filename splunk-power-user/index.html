@@ -114,7 +114,7 @@
 
     <section id="ov-materials">
       <h2>Recommended Materials <span class="kbd">(community consensus)</span></h2>
-      <div class="consensus"><b>The consensus stack:</b> Splunk's <b>free official eLearning modules</b> (they're enough to pass on their own) → <b>hands-on</b> in a free Splunk instance with the tutorial data / Boss of the SOC → <b>Splunk Docs</b> (Search Reference) to fill gaps → optional practice questions (verify every answer against docs). <b>Avoid braindumps.</b></div>
+      <div class="consensus"><b>The consensus stack:</b> <b>"Splunk Zero to Power User"</b> (Udemy) as the #1 structured course → Splunk's <b>free official eLearning modules</b> to reinforce → <b>hands-on</b> in a free Splunk instance with the tutorial data / Boss of the SOC → <b>Splunk Docs</b> (Search Reference) to fill gaps → optional practice questions (verify every answer against docs). <b>Avoid braindumps.</b></div>
       <p><a class="jump" href="#t-materials">→ Full breakdown with sources (§14)</a></p>
     </section>
 
@@ -332,13 +332,14 @@
       <h2>14 · Study Materials <span class="kbd">(community consensus)</span></h2>
       <p class="legend">Reddit (r/Splunk) is hard to crawl, so this is triangulated from the official Splunk Community forum, two detailed first-hand "how I passed" write-ups, and the official blueprint — which all converge on the same advice.</p>
 
-      <div class="consensus"><b>TL;DR:</b> Splunk's <b>free official eLearning</b> is the backbone and is enough to pass. Pair it with <b>hands-on</b> in a real Splunk instance and <b>Splunk Docs</b>. Practice questions help, but <b>verify every answer against docs</b> and avoid braindumps.</div>
+      <div class="consensus"><b>TL;DR:</b> <b>"Splunk Zero to Power User"</b> (Udemy) is the #1 training pick — it takes you from beginner through exactly what SPLK-1002 tests. Back it with Splunk's <b>free official eLearning</b> modules, <b>hands-on</b> in a real Splunk instance, and <b>Splunk Docs</b>. Practice questions help, but <b>verify every answer against docs</b> and avoid braindumps.</div>
 
       <h3>1 · Training / courses</h3>
       <ul>
-        <li><span class="rank">#1</span><b>Splunk's free official eLearning modules</b> — the consensus backbone, and the same modules the blueprint lists. Work through: <i>Intro to Knowledge Objects, Creating Knowledge Objects, Creating Field Extractions, Statistical Processing, Comparing Values, Working with Time, Result Modification, Correlation Analysis, Data Models,</i> and <i>Search Under the Hood</i>. All free &amp; self-paced.</li>
+        <li><span class="rank">#1</span><b><a href="https://www.udemy.com/course/splunk-zero-to-power-user/" target="_blank" rel="noopener">Splunk Zero to Power User</a></b> (Udemy) — the top community training pick: a single structured course that takes you from no Splunk experience through the full Power User blueprint (SPL, knowledge objects, field extractions, data models, CIM), with hands-on demos you can follow in your own instance. Grab it on a Udemy sale like any Udemy course.</li>
+        <li><b>Splunk's free official eLearning modules</b> — the free backbone, and the same modules the blueprint lists. Work through: <i>Intro to Knowledge Objects, Creating Knowledge Objects, Creating Field Extractions, Statistical Processing, Comparing Values, Working with Time, Result Modification, Correlation Analysis, Data Models,</i> and <i>Search Under the Hood</i>. All free &amp; self-paced — great on their own or as reinforcement alongside Zero to Power User.</li>
         <li><b>Naming note:</b> older posts say "do Splunk Fundamentals 1 &amp; 2" — that series was retired and replaced by individual free modules + "Fast Start" bundles. Same content.</li>
-        <li><b>Pluralsight — "Splunk Core Certified Power User (SPLK-1002)" path</b> (~9 hrs, 7 courses) for those who want structured video.</li>
+        <li><b>Pluralsight — "Splunk Core Certified Power User (SPLK-1002)" path</b> (~9 hrs, 7 courses) as an alternative structured-video option.</li>
         <li><b>YouTube:</b> the official <b>Splunk How-To</b> channel (recommended in the blueprint) and community favorite <b>"Splunk With Praveen"</b> (called out for workflow actions &amp; macros).</li>
       </ul>
 
@@ -385,7 +386,7 @@
       </table>
       <table>
         <tr><th>Phase</th><th>Focus</th><th>Actions</th></tr>
-        <tr><td><b>Week 1</b></td><td>Search + transforming + filtering</td><td>Free eLearning for basics, chart/timechart/stats, eval/where/fillnull. Load tutorial data; reproduce every example yourself.</td></tr>
+        <tr><td><b>Week 1</b></td><td>Search + transforming + filtering</td><td>Start <b>Zero to Power User</b> (or the free eLearning) for basics, chart/timechart/stats, eval/where/fillnull. Load tutorial data; reproduce every example yourself.</td></tr>
         <tr><td><b>Week 2</b></td><td>Correlation + fields + knowledge objects</td><td>Deep-dive Correlating Events (15%): build transactions and stats equivalents. Create FX extractions, aliases, calculated fields, tags, event types, macros, workflow actions.</td></tr>
         <tr><td><b>Week 3</b></td><td>Data models, pivot, CIM</td><td>Build a data model + pivot; explore the CIM add-on and map fields. These are the most abstract topics — hands-on makes them concrete.</td></tr>
         <tr><td><b>Week 4</b></td><td>Practice + gaps + taper</td><td>Practice questions (verify vs docs), interleaved review, re-drill weak areas. Light review + good sleep before exam day; skim the <a href="cram.html">Cram Jam</a>.</td></tr>
