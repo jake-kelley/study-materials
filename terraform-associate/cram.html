@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terraform Associate — Cram Jam (1-page)</title>
+<link rel="stylesheet" href="../assets/cram.css">
+</head>
+<body class="theme-terraform">
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1>⚡ Terraform Associate (003/004) — Cram Jam</h1>
+      <div class="sub">Dense recall · pairs with the <a href="index.html" style="color:#fff;text-decoration:underline;">full guide</a> · 003 retired Jan 2026 → 004 current (~90% same).</div>
+    </div>
+    <div class="meta">
+      <b>57 Q</b> · 60 min · pass <b>~70%</b><br>
+      $70.50 · online proctored · English · 2-yr valid<br>
+      Types: MC · multi · T/F · fill-in-the-blank
+    </div>
+    <div class="btns">
+      <a class="btn ghost" href="index.html">Full guide</a>
+      <button class="btn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <div class="box">
+      <h2>Core Workflow</h2>
+      <p><b>Write → Plan → Apply</b> (→ Destroy)</p>
+      <ul>
+        <li><span class="mono">init</span> download providers/modules, config backend (-upgrade, -reconfigure, -migrate-state).</li>
+        <li><span class="mono">plan</span> dry run; -out=file; -refresh-only (drift).</li>
+        <li><span class="mono">apply file</span> = no prompt; -auto-approve; -replace=ADDR.</li>
+        <li><span class="mono">destroy</span> = apply -destroy.</li>
+        <li><span class="mono">fmt</span> reformat only; <span class="mono">validate</span> syntax only, <b>no creds/API</b>.</li>
+        <li><span class="mono">console</span> REPL for expressions.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">State Commands ★</h2>
+      <table class="mini">
+        <tr><th>Cmd</th><th>Effect</th></tr>
+        <tr><td>state list/show</td><td>view state</td></tr>
+        <tr><td><b>state mv</b></td><td>refactor, NO destroy/recreate</td></tr>
+        <tr><td><b>state rm</b></td><td>forget; <span class="bad">does NOT destroy</span></td></tr>
+        <tr><td><b>import ADDR ID</b></td><td>add to state; <span class="bad">does NOT write config</span></td></tr>
+      </table>
+      <div class="warn">Memorize these 3 — the #1 exam trap.</div>
+    </div>
+
+    <div class="box">
+      <h2>State Concepts</h2>
+      <ul>
+        <li>Default = <b>local</b> tfstate. Remote: s3, azurerm, gcs, consul, pg, k8s, HCP (cloud block).</li>
+        <li><b>Locking</b> prevents concurrent corruption (S3+DynamoDB; HCP auto). force-unlock, -lock=false.</li>
+        <li>State = <b>plaintext incl secrets</b> → never commit; encrypt remote. <span class="mono">sensitive=true</span> only hides CLI output.</li>
+        <li><span class="mono">terraform_remote_state</span> reads another config's outputs.</li>
+        <li>Drift → plan / apply -refresh-only.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Providers</h2>
+      <ul>
+        <li>Plugin architecture; from public <b>Registry</b>; init downloads to .terraform/.</li>
+        <li><span class="mono">required_providers { aws = { source="hashicorp/aws", version="~&gt; 5.0" } }</span></li>
+        <li>Constraints: = != &gt;= &lt;= <b>~&gt;</b>. <span class="mono">~&gt; 5.1</span>=5.x≥5.1 (not 6.0); <span class="mono">~&gt; 5.1.2</span>=5.1.x only.</li>
+        <li><b>.terraform.lock.hcl</b> pins exact versions — commit it. required_version pins CLI.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Modules</h2>
+      <ul>
+        <li>root module calls child modules; vars <b>scoped</b> (no globals).</li>
+        <li>Sources: local <span class="mono">./x</span>, Registry <span class="mono">ns/name/provider</span>, Git <span class="mono">git::…?ref=v1.2.0</span>, S3/GCS/HTTP.</li>
+        <li><b>version</b> only for Registry; Git uses <span class="mono">?ref=</span>; local = no version.</li>
+        <li>Inputs = variable blocks; outputs expose to parent.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Variable Precedence</h2>
+      <p>low → high:</p>
+      <ol style="margin:2px 0;padding-left:16px;">
+        <li>env <span class="mono">TF_VAR_*</span></li>
+        <li>terraform.tfvars</li>
+        <li>terraform.tfvars.json</li>
+        <li>*.auto.tfvars (alpha)</li>
+        <li><b>-var / -var-file</b> (last wins)</li>
+      </ol>
+      <p>Types: string/number/bool · <b>collection</b> list/set/map · <b>structural</b> object/tuple. validation, sensitive, nullable.</p>
+    </div>
+
+    <div class="box">
+      <h2>count vs for_each</h2>
+      <table class="mini">
+        <tr><th>count</th><th>for_each</th></tr>
+        <tr><td>index [0]</td><td>key ["k"]</td></tr>
+        <tr><td>N identical</td><td>distinguishable items</td></tr>
+        <tr><td>middle remove = <b>reindex churn</b></td><td>stable keys (each.key/value)</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">lifecycle</h2>
+      <ul>
+        <li><span class="mono">create_before_destroy</span> build new before kill old.</li>
+        <li><span class="mono">prevent_destroy</span> block deletion (plan errors).</li>
+        <li><span class="mono">ignore_changes=[attr]</span> ignore drift.</li>
+        <li>meta: depends_on, count, for_each, provider.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Resources / Deps</h2>
+      <ul>
+        <li><span class="mono">resource</span> manages; <span class="mono">data</span> read-only lookup (refreshed on plan).</li>
+        <li>Implicit dep = reference <span class="mono">aws_x.id</span>; explicit = <span class="mono">depends_on</span>. DAG parallelizes independents.</li>
+        <li><b>Provisioners</b> (local-exec/remote-exec/file) = <b>last resort</b>; prefer native resources. on_failure=continue|fail.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">HCP Terraform</h2>
+      <ul>
+        <li>Remote runs + remote state (auto lock/encrypt).</li>
+        <li>VCS integration → PR speculative plans, run triggers.</li>
+        <li>Private module/provider registry; org workspaces + projects.</li>
+        <li><b>Sentinel</b>/OPA policy, cost estimation, SSO/RBAC, variable sets.</li>
+        <li>Editions Free/Standard/Plus — know <b>Cloud/Ent-only</b>: Sentinel, cost est, run triggers, SSO, state sharing.</li>
+      </ul>
+      <div class="tip">CLI workspace (multi state per config, terraform.workspace) ≠ HCP workspace.</div>
+    </div>
+
+    <div class="box">
+      <h2>IaC / Why Terraform</h2>
+      <ul>
+        <li>IaC = declarative, versioned, repeatable infra → consistency, less human error.</li>
+        <li>Terraform: cloud-agnostic, huge provider ecosystem, <b>state</b> for precise planning.</li>
+        <li>Declarative (desired state) vs imperative (steps).</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Top Traps</h2>
+      <div class="warn">state rm≠destroy · import≠config · state mv=refactor · count reindex vs for_each keys · ~&gt; constraint · Cloud-only(Sentinel/cost/run triggers/SSO) · provisioners last resort · validate no creds · apply savedplan no prompt · TF_LOG=TRACE debug</div>
+      <div class="tip">57 Q/60 min ≈ 63s. Fill-in-the-blank → know exact command spelling. Flag &amp; return. Avoid dumps.</div>
+    </div>
+
+  </div>
+  <div class="footnote">Cram Jam · Terraform Associate 003/004 · pairs with the full guide · verify objectives on developer.hashicorp.com · not affiliated with HashiCorp.</div>
+</div>
+</body>
+</html>

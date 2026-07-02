@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Splunk Core Certified Power User (SPLK-1002) — Study Guide</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="theme-splunk">
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo">SPLUNK · SPLK-1002</span>
+      <h1>Core Certified Power User</h1>
+      <div class="sub">Overview + Thorough Study Guide</div>
+      <a class="home" href="../index.html">← All certifications</a> &nbsp;·&nbsp; <a class="home" href="cram.html">⚡ Cram Jam</a>
+    </div>
+    <div class="toc" id="toc">
+      <div class="group-label">Overview</div>
+      <a href="#ov-intro">What &amp; Why</a>
+      <a href="#ov-glance">Exam at a Glance</a>
+      <a href="#ov-domains">The 10 Domains</a>
+      <a href="#ov-spl">SPL Snapshot</a>
+      <a href="#ov-materials">Recommended Materials</a>
+      <a href="#ov-plan">Study Plan (Quick)</a>
+
+      <div class="group-label">Thorough Guide</div>
+      <a href="#t-exam">1 · Exam Details</a>
+      <a href="#t-basics">2 · Search Fundamentals</a>
+      <a href="#t-transform">3 · Transforming Commands <span class="kbd">5%</span></a>
+      <a href="#t-filter">4 · Filtering &amp; Formatting <span class="kbd">10%</span></a>
+      <a href="#t-correlate">5 · Correlating Events <span class="kbd">15%</span></a>
+      <a href="#t-fields">6 · Creating/Managing Fields <span class="kbd">10%</span></a>
+      <a href="#t-alias">7 · Aliases &amp; Calculated Fields <span class="kbd">10%</span></a>
+      <a href="#t-tags">8 · Tags &amp; Event Types <span class="kbd">10%</span></a>
+      <a href="#t-macros">9 · Macros <span class="kbd">10%</span></a>
+      <a href="#t-workflow">10 · Workflow Actions <span class="kbd">10%</span></a>
+      <a href="#t-datamodels">11 · Data Models &amp; Pivot <span class="kbd">10%</span></a>
+      <a href="#t-cim">12 · CIM Add-On <span class="kbd">10%</span></a>
+      <a href="#t-order">13 · Knowledge Object Order</a>
+      <a href="#t-materials">14 · Study Materials</a>
+      <a href="#t-plan">15 · Study Plan (Retention)</a>
+      <a href="#t-tips">16 · Tips &amp; Traps</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="hero">
+      <h1>Splunk Core Certified Power User</h1>
+      <p><b>Exam SPLK-1002.</b> Validates that you can build and use Splunk knowledge objects and write intermediate SPL — transforming commands, fields, tags, event types, macros, workflow actions, data models, pivot, and the Common Information Model. This page is a fast overview plus a thorough, domain-by-domain guide.</p>
+      <span class="pill"><b>65</b> questions</span>
+      <span class="pill"><b>60</b> minutes</span>
+      <span class="pill">pass <b>~70%</b></span>
+      <span class="pill"><b>$130</b> USD</span>
+      <span class="pill"><b>No</b> prerequisite</span>
+      <div><a class="crambtn" href="cram.html">⚡ Open the 1-page Cram Jam sheet</a></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <h2 class="part">Part 1 — High-Level Overview</h2>
+
+    <section id="ov-intro">
+      <h2>What &amp; Why</h2>
+      <p>The <b>Power User</b> is the second rung of the Splunk Core track (after the entry <b>Core Certified User</b>, SPLK-1001). It proves you can go beyond basic searching to <b>create the reusable "knowledge objects"</b> that make Splunk data useful for a team: extracted fields, tags, event types, macros, data models, and normalized data via the CIM.</p>
+      <div class="callout note"><span class="lbl">Prerequisite myth</span> Older posts claim you must pass SPLK-1001 first. The <b>current official blueprint states there are NO prerequisite exams</b> — SPLK-1001 is a recommended stepping stone, not a gate. Anyone can register for SPLK-1002 directly. Full detail in <a href="#t-exam">§1</a>.</div>
+    </section>
+
+    <section id="ov-glance">
+      <h2>Exam at a Glance</h2>
+      <table>
+        <tr><th>Attribute</th><th>Value</th></tr>
+        <tr><td>Exam code</td><td>SPLK-1002</td></tr>
+        <tr><td>Questions</td><td>65 multiple choice / multiple response</td></tr>
+        <tr><td>Time</td><td>60 minutes (includes ~3 min agreement → ~57 min to answer)</td></tr>
+        <tr><td>Passing score</td><td>Not officially published; community estimate ~70%</td></tr>
+        <tr><td>Cost</td><td>$130 USD per attempt</td></tr>
+        <tr><td>Delivery</td><td>Pearson VUE — online proctored or test center</td></tr>
+        <tr><td>Prerequisite</td><td>None (SPLK-1001 recommended)</td></tr>
+        <tr><td>Validity</td><td>3 years</td></tr>
+      </table>
+      <p><a class="jump" href="#t-exam">→ Deep dive: §1 Exam Details</a></p>
+    </section>
+
+    <section id="ov-domains">
+      <h2>The 10 Domains</h2>
+      <p>Splunk publishes exact weightings. <b>Correlating Events (15%) is the single biggest domain</b> and hides the most-tested trap (<code>transaction</code> vs <code>stats</code>). Almost everything else is a flat 10%.</p>
+      <table>
+        <tr><th>#</th><th>Domain</th><th>Weight</th><th>Deep dive</th></tr>
+        <tr><td>1</td><td>Transforming commands for visualizations (chart, timechart)</td><td>5%</td><td><a class="jump" href="#t-transform">→ §3</a></td></tr>
+        <tr><td>2</td><td>Filtering &amp; formatting results (eval, search/where, fillnull)</td><td>10%</td><td><a class="jump" href="#t-filter">→ §4</a></td></tr>
+        <tr><td>3</td><td><b>Correlating events (transaction vs stats)</b></td><td><b>15%</b></td><td><a class="jump" href="#t-correlate">→ §5</a></td></tr>
+        <tr><td>4</td><td>Creating &amp; managing fields (Field Extractor)</td><td>10%</td><td><a class="jump" href="#t-fields">→ §6</a></td></tr>
+        <tr><td>5</td><td>Field aliases &amp; calculated fields</td><td>10%</td><td><a class="jump" href="#t-alias">→ §7</a></td></tr>
+        <tr><td>6</td><td>Tags &amp; event types</td><td>10%</td><td><a class="jump" href="#t-tags">→ §8</a></td></tr>
+        <tr><td>7</td><td>Macros</td><td>10%</td><td><a class="jump" href="#t-macros">→ §9</a></td></tr>
+        <tr><td>8</td><td>Workflow actions (GET/POST/Search)</td><td>10%</td><td><a class="jump" href="#t-workflow">→ §10</a></td></tr>
+        <tr><td>9</td><td>Data models</td><td>10%</td><td><a class="jump" href="#t-datamodels">→ §11</a></td></tr>
+        <tr><td>10</td><td>Common Information Model (CIM) add-on</td><td>10%</td><td><a class="jump" href="#t-cim">→ §12</a></td></tr>
+      </table>
+    </section>
+
+    <section id="ov-spl">
+      <h2>SPL Snapshot</h2>
+      <div class="grid">
+        <div class="card"><h4>Transforming</h4><code>chart</code>, <code>timechart</code>, <code>stats</code>, <code>top</code>, <code>rare</code> — build result tables for viz. <a class="jump" href="#t-transform">→</a></div>
+        <div class="card"><h4>Filter / eval</h4><code>search</code>, <code>where</code>, <code>eval</code>, <code>fillnull</code> — refine &amp; compute. <a class="jump" href="#t-filter">→</a></div>
+        <div class="card"><h4>Correlate</h4><code>transaction</code> (maxspan/maxpause) vs <code>stats … by</code>. <a class="jump" href="#t-correlate">→</a></div>
+        <div class="card"><h4>Enrich</h4><code>rex</code>, <code>erex</code>, <code>lookup</code>, field aliases, calculated fields. <a class="jump" href="#t-fields">→</a></div>
+        <div class="card"><h4>Knowledge objects</h4>tags, event types, macros, workflow actions. <a class="jump" href="#t-tags">→</a></div>
+        <div class="card"><h4>Model</h4>data models → <b>pivot</b>; accelerate → <code>tstats</code>; CIM normalization. <a class="jump" href="#t-datamodels">→</a></div>
+      </div>
+    </section>
+
+    <section id="ov-materials">
+      <h2>Recommended Materials <span class="kbd">(community consensus)</span></h2>
+      <div class="consensus"><b>The consensus stack:</b> Splunk's <b>free official eLearning modules</b> (they're enough to pass on their own) → <b>hands-on</b> in a free Splunk instance with the tutorial data / Boss of the SOC → <b>Splunk Docs</b> (Search Reference) to fill gaps → optional practice questions (verify every answer against docs). <b>Avoid braindumps.</b></div>
+      <p><a class="jump" href="#t-materials">→ Full breakdown with sources (§14)</a></p>
+    </section>
+
+    <section id="ov-plan">
+      <h2>Study Plan (Quick Version)</h2>
+      <ol>
+        <li><b>Map to weightings:</b> put extra time on Correlating Events (15%) and the abstract topics (data models, CIM).</li>
+        <li><b>Learn by doing:</b> work the free eLearning modules and <b>build every knowledge object yourself</b> in a free Splunk instance.</li>
+        <li><b>Active recall:</b> after each topic, reproduce the search from memory; drill the confusable pairs (alias vs calc field, tags vs event types, transaction vs stats).</li>
+        <li><b>Practice + docs:</b> take practice questions, verify answers in Splunk Docs, patch gaps, then book.</li>
+      </ol>
+      <p><a class="jump" href="#t-plan">→ Detailed retention-based plan (§15)</a> · <a class="jump" href="cram.html">⚡ Cram Jam</a></p>
+    </section>
+
+    <!-- THOROUGH -->
+    <h2 class="part">Part 2 — Thorough Study Guide</h2>
+
+    <section id="t-exam">
+      <h2>1 · Exam Details</h2>
+      <ul>
+        <li><b>65 questions in 60 minutes</b> (about 3 minutes goes to the exam agreement, leaving ~57 minutes). That's ~52 seconds per question — pace yourself and <b>flag-and-return</b> on hard ones.</li>
+        <li><b>Multiple choice &amp; multiple response.</b> Some questions have more than one correct answer; read the stem for "select two."</li>
+        <li><b>$130 per attempt</b>, delivered via Pearson VUE online-proctored or at a test center. Certification is valid <b>3 years</b>.</li>
+        <li><b>No prerequisite exam.</b> Splunk recommends the free Core Certified User path first, and about a year of hands-on Splunk use, but nothing blocks you from registering.</li>
+        <li>Splunk does not publish the exact cut score; community consensus is <b>around 70%</b> (miss ~18–20 of 65).</li>
+      </ul>
+    </section>
+
+    <section id="t-basics">
+      <h2>2 · Search Fundamentals</h2>
+      <ul>
+        <li><b>The search pipeline:</b> SPL flows left-to-right through pipes (<code>|</code>). Each command transforms the results and passes them on.</li>
+        <li><b>Index-time vs search-time:</b> most Power User work (field extraction, aliases, calculated fields, tags, event types) happens at <b>search time</b> — it's schema-on-read, applied when you run the search, not when data is indexed.</li>
+        <li><b>Time is king:</b> the time range picker bounds every search; <code>_time</code> is the default time field. Narrowing time is the biggest performance lever.</li>
+        <li><b>Fields:</b> default fields include <code>_time</code>, <code>host</code>, <code>source</code>, <code>sourcetype</code>, <code>index</code>. <code>sourcetype</code> classifies the data format and drives extractions.</li>
+        <li><b>Knowledge objects</b> = reusable artifacts you create to enrich/categorize data: saved searches/reports, extracted fields, aliases, calculated fields, tags, event types, macros, workflow actions, data models, lookups.</li>
+      </ul>
+    </section>
+
+    <section id="t-transform">
+      <h2>3 · Transforming Commands for Visualizations <span class="tag d1">5%</span></h2>
+      <p><b>Transforming commands</b> order results into a statistical table (rows/columns) that Splunk can turn into a chart. The transforming commands: <code>chart</code>, <code>timechart</code>, <code>stats</code>, <code>top</code>, <code>rare</code>, <code>contingency</code>. (<code>table</code>, <code>fields</code>, and <code>eval</code> are <b>not</b> transforming.)</p>
+      <table>
+        <tr><th>Command</th><th>Behavior</th></tr>
+        <tr><td><code>chart</code></td><td>Builds a 2-D table: <code>chart &lt;func&gt; over &lt;fieldA&gt; by &lt;fieldB&gt;</code>. One <code>over</code> + one <code>by</code> max. <code>over</code> sets the x-axis.</td></tr>
+        <tr><td><code>timechart</code></td><td>x-axis is <b>always</b> <code>_time</code>; buckets by time with <code>span=</code>; only <b>one</b> split <code>by</code> field allowed.</td></tr>
+        <tr><td><code>stats</code></td><td>The workhorse aggregation: <code>stats &lt;func&gt; by &lt;field&gt;</code>. No implicit time axis.</td></tr>
+        <tr><td><code>top</code> / <code>rare</code></td><td>Most/least common values; <code>top</code> auto-adds <code>count</code> &amp; <code>percent</code>; default <code>limit=10</code>.</td></tr>
+      </table>
+      <p>Common <code>stats</code> functions: <code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code>, <code>max</code>, <code>values</code> (unique, multivalue), <code>list</code> (all, ordered), <code>dc</code>/<code>distinct_count</code>, <code>first</code>, <code>last</code>, <code>stdev</code>, <code>perc95</code>.</p>
+      <div class="callout note"><span class="lbl">Exam signal</span> Trend over time → <b>timechart</b>. Compare one field split by another → <b>chart … over … by</b>. Aggregate without a time axis → <b>stats</b>.</div>
+    </section>
+
+    <section id="t-filter">
+      <h2>4 · Filtering &amp; Formatting Results <span class="tag d2">10%</span></h2>
+      <ul>
+        <li><b><code>eval</code></b> — computes a new (or overwrites a) field with an expression. Functions include <code>if()</code>, <code>case()</code>, <code>coalesce()</code>, <code>round()</code>, <code>len()</code>, <code>lower()/upper()</code>, <code>tostring()</code>, <code>strftime()</code>. <code>eval</code> does <b>not</b> filter — it creates fields.</li>
+        <li><b><code>search</code></b> — matches keywords/literal terms; can appear again mid-pipeline to filter results.</li>
+        <li><b><code>where</code></b> — evaluates a <b>boolean eval expression</b>. It's the one that can compare <b>field-to-field</b> (e.g. <code>| where bytes_in &gt; bytes_out</code>) and use eval functions like <code>like()</code>, <code>cidrmatch()</code>, <code>isnull()</code>.</li>
+        <li><b><code>fillnull</code></b> — replaces null values; <b>default replacement is <code>0</code></b>. Override: <code>| fillnull value="N/A"</code>.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">search vs where</span> Use <b>search</b> to match values/keywords; use <b>where</b> to compare <b>two fields</b> or use eval functions. "Keep events where field A &gt; field B" → <b>where</b>.</div>
+    </section>
+
+    <section id="t-correlate">
+      <h2>5 · Correlating Events <span class="tag d3">15% — biggest domain</span></h2>
+      <p>Grouping related events (e.g. all events of one session/transaction). The central decision is <b><code>transaction</code> vs <code>stats</code></b>.</p>
+      <h4>transaction</h4>
+      <ul>
+        <li>Groups events into a single multivalue event. Key options: <code>maxspan</code> (max total duration), <code>maxpause</code> (max gap between events), <code>startswith</code> / <code>endswith</code> (boundary conditions).</li>
+        <li>Auto-creates two fields: <code>duration</code> (first→last event) and <code>eventcount</code>.</li>
+        <li><b>Resource-expensive and does not scale well.</b></li>
+      </ul>
+      <h4>stats</h4>
+      <ul>
+        <li><code>stats … by &lt;id&gt;</code> groups by a common field and is <b>far faster / scalable</b>.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">The #1 exam trap</span> Prefer <b>stats</b> for performance. Use <b>transaction</b> ONLY when you truly need to: (a) keep the raw event text, (b) group by <b>start/end</b> conditions, or (c) constrain a group by time (<code>maxspan</code>/<code>maxpause</code>). Otherwise <code>stats ... by</code> is the correct answer.</div>
+    </section>
+
+    <section id="t-fields">
+      <h2>6 · Creating &amp; Managing Fields <span class="tag d4">10%</span></h2>
+      <p>The <b>Field Extractor (FX)</b> creates search-time field extractions with two methods:</p>
+      <table>
+        <tr><th>Method</th><th>Use for</th><th>Inline SPL</th></tr>
+        <tr><td><b>Regular Expression</b></td><td>Unstructured data — highlight sample values and Splunk builds the regex.</td><td><code>rex</code> (and <code>erex</code> for example-based)</td></tr>
+        <tr><td><b>Delimiters</b></td><td>Structured data — pick a delimiter (comma/tab/space/pipe) then name the fields.</td><td>—</td></tr>
+      </table>
+      <ul>
+        <li><code>rex field=_raw "(?&lt;user&gt;\w+)"</code> extracts on the fly with a named capture group.</li>
+        <li><code>erex</code> lets you give example values and generates the regex for you.</li>
+        <li>Extractions can be private (personal) or shared to an app/all users with appropriate permissions.</li>
+      </ul>
+    </section>
+
+    <section id="t-alias">
+      <h2>7 · Field Aliases &amp; Calculated Fields <span class="tag d1">10%</span></h2>
+      <table>
+        <tr><th></th><th>Field Alias</th><th>Calculated Field</th></tr>
+        <tr><td>What it does</td><td>Gives an <b>alternate name</b> for an existing field</td><td>Creates a <b>new field</b> from an <code>eval</code> expression</td></tr>
+        <tr><td>New data?</td><td>No — same values, another name</td><td>Yes — computed at search time</td></tr>
+        <tr><td>Example</td><td><code>src_ip</code> ⇄ <code>clientip</code></td><td><code>bandwidth = bytes/1024</code></td></tr>
+      </table>
+      <div class="callout note"><span class="lbl">Remember</span> Alias = <b>rename</b> an existing field. Calculated field = <b>eval a new field</b>. A calculated field is essentially a saved <code>eval</code> applied automatically.</div>
+    </section>
+
+    <section id="t-tags">
+      <h2>8 · Tags &amp; Event Types <span class="tag d2">10%</span></h2>
+      <table>
+        <tr><th></th><th>Event Type</th><th>Tag</th></tr>
+        <tr><td>Definition</td><td>A saved <b>search string</b> that categorizes events; matches get an <code>eventtype</code> field value.</td><td>A <b>label</b> applied to a <code>field=value</code> pair (or to an event type).</td></tr>
+        <tr><td>Cardinality</td><td>Essentially a named search (no time range, no pipes/transforming cmds).</td><td>One <code>field=value</code> can carry <b>many tags</b>; one-to-many.</td></tr>
+        <tr><td>Use</td><td>Classify events, e.g. <code>eventtype=failed_login</code>.</td><td>Normalize across sources, e.g. tag all auth events <code>authentication</code>.</td></tr>
+      </table>
+      <div class="callout trap"><span class="lbl">Trap</span> Event type = <b>a search that names events</b>. Tag = <b>a label on a field/value</b>. Event types can't contain pipes or transforming commands or a time range.</div>
+    </section>
+
+    <section id="t-macros">
+      <h2>9 · Macros <span class="tag d3">10%</span></h2>
+      <ul>
+        <li>A <b>macro</b> is reusable SPL saved under <b>Settings ▸ Advanced Search ▸ Search macros</b> (backed by <code>macros.conf</code>).</li>
+        <li><b>Invoke with backticks:</b> <code>`mymacro`</code> or with arguments <code>`mymacro(arg1,arg2)`</code>.</li>
+        <li><b>Arguments</b> are referenced inside the definition as <code>$argname$</code>. Set the number of args in the macro name, e.g. <code>mymacro(2)</code>.</li>
+        <li>Macros can include a <b>validation expression</b> to check argument values before running.</li>
+      </ul>
+      <div class="callout note"><span class="lbl">Signals</span> Backticks = a macro call. <code>$arg$</code> = a macro argument placeholder. Macro name <code>foo(2)</code> means it takes two arguments.</div>
+    </section>
+
+    <section id="t-workflow">
+      <h2>10 · Workflow Actions <span class="tag d4">10%</span></h2>
+      <p>Configured under <b>Settings ▸ Fields ▸ Workflow actions</b>; scoped to specific fields/sourcetypes. Three types:</p>
+      <table>
+        <tr><th>Type</th><th>Does</th></tr>
+        <tr><td><b>GET</b></td><td>Opens a URL/link, passing field values in the query string (e.g. look up an IP on a threat-intel site).</td></tr>
+        <tr><td><b>POST</b></td><td>Sends an HTTP POST request with field values.</td></tr>
+        <tr><td><b>Search</b></td><td>Launches a secondary Splunk search built from field values.</td></tr>
+      </table>
+    </section>
+
+    <section id="t-datamodels">
+      <h2>11 · Data Models &amp; Pivot <span class="tag d1">10%</span></h2>
+      <ul>
+        <li>A <b>data model</b> is a hierarchical, semantic mapping of your data, made of <b>datasets/objects</b> (types: <b>event</b>, <b>search</b>, <b>transaction</b>) with <b>attributes</b> (auto-extracted, eval-based, lookup, regex, or geo-IP). Child objects inherit the parent's <b>constraints</b>.</li>
+        <li><b>Pivot</b> is the point-and-click reporting/visualization UI that runs <b>on top of a data model</b> — no SPL required.</li>
+        <li><b>The relationship (heavily tested):</b> a <b>data model is required to use Pivot</b>; Pivot is the front-end for the model.</li>
+        <li><b>Acceleration</b> builds a high-performance summary; accelerated models are queried with <code>tstats</code> for speed.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Trap</span> You <b>cannot use Pivot without a data model.</b> Object types are <b>event, search, transaction</b>. Acceleration → query with <code>tstats</code>.</div>
+    </section>
+
+    <section id="t-cim">
+      <h2>12 · Common Information Model (CIM) <span class="tag d2">10%</span></h2>
+      <ul>
+        <li>The <b>CIM (Splunk_SA_CIM add-on)</b> is a shared, standardized set of <b>field names + tags + prebuilt data models</b> (e.g. Authentication, Network Traffic, Web, Malware).</li>
+        <li>Purpose: <b>normalize data at search time</b> so dashboards and apps (like Enterprise Security) work across many different data sources.</li>
+        <li>You make data CIM-compliant by <b>mapping your fields to CIM field names</b> and applying the CIM <b>tags</b>.</li>
+      </ul>
+      <div class="callout note"><span class="lbl">Why it matters</span> CIM = a common vocabulary. Normalize once, and any CIM-aware dashboard/app understands your data regardless of its original format.</div>
+    </section>
+
+    <section id="t-order">
+      <h2>13 · Knowledge Object Search-Time Order</h2>
+      <p>Search-time operations apply in a set order — a favorite exam topic:</p>
+      <p style="font-size:15px;"><b>Field extraction → Field aliases → Calculated fields (eval) → Lookups → Event types → Tags</b></p>
+      <div class="callout note"><span class="lbl">Why order matters</span> An alias exists before calculated fields run, so a calculated field can reference an aliased name; tags are applied last, on top of everything (including event types).</div>
+    </section>
+
+    <!-- MATERIALS -->
+    <section id="t-materials">
+      <h2>14 · Study Materials <span class="kbd">(community consensus)</span></h2>
+      <p class="legend">Reddit (r/Splunk) is hard to crawl, so this is triangulated from the official Splunk Community forum, two detailed first-hand "how I passed" write-ups, and the official blueprint — which all converge on the same advice.</p>
+
+      <div class="consensus"><b>TL;DR:</b> Splunk's <b>free official eLearning</b> is the backbone and is enough to pass. Pair it with <b>hands-on</b> in a real Splunk instance and <b>Splunk Docs</b>. Practice questions help, but <b>verify every answer against docs</b> and avoid braindumps.</div>
+
+      <h3>1 · Training / courses</h3>
+      <ul>
+        <li><span class="rank">#1</span><b>Splunk's free official eLearning modules</b> — the consensus backbone, and the same modules the blueprint lists. Work through: <i>Intro to Knowledge Objects, Creating Knowledge Objects, Creating Field Extractions, Statistical Processing, Comparing Values, Working with Time, Result Modification, Correlation Analysis, Data Models,</i> and <i>Search Under the Hood</i>. All free &amp; self-paced.</li>
+        <li><b>Naming note:</b> older posts say "do Splunk Fundamentals 1 &amp; 2" — that series was retired and replaced by individual free modules + "Fast Start" bundles. Same content.</li>
+        <li><b>Pluralsight — "Splunk Core Certified Power User (SPLK-1002)" path</b> (~9 hrs, 7 courses) for those who want structured video.</li>
+        <li><b>YouTube:</b> the official <b>Splunk How-To</b> channel (recommended in the blueprint) and community favorite <b>"Splunk With Praveen"</b> (called out for workflow actions &amp; macros).</li>
+      </ul>
+
+      <h3>2 · Practice questions</h3>
+      <div class="consensus"><b>Use with caution.</b> Practice questions are great for gauging style and finding weak spots, but community stance is firm: <b>braindumps (ExamTopics "actual questions", etc.) are often outdated or wrong</b> and using them to memorize is cheating that undermines the cert. Named paid banks: Udemy SPLK-1002 practice tests, Gururo. <b>Independently verify every answer against Splunk Docs</b> — sample banks contain errors.</div>
+
+      <h3>3 · Hands-on (everyone's #1 tip after the free courses)</h3>
+      <ul>
+        <li><b>Build a real Splunk instance:</b> Splunk Enterprise <b>free license</b> (500 MB/day) or a <b>Splunk Cloud free trial</b>. Load the official <b>tutorial data</b>.</li>
+        <li><b>Boss of the SOC (BOTS)</b> datasets (GitHub) — the community's favorite realistic SPL playground.</li>
+        <li><b>Do-it-yourself checklist:</b> create a regex FX, a delimiter FX, a field alias, a calculated field, a tag, an event type, a macro (with and without arguments), all three workflow-action types, and a data model — then run a <code>transaction</code> with <code>maxspan</code>/<code>maxpause</code> and reproduce it with <code>stats</code>.</li>
+      </ul>
+
+      <h3>4 · Free reference</h3>
+      <ul>
+        <li><b>Splunk Docs</b> (docs.splunk.com), especially the <b>Search Reference</b> — the go-to for any SPL command gap.</li>
+        <li><b>Official Test Blueprint</b> + Splunk Certification Study Guide — map your time to the weightings.</li>
+        <li>Splunk How-To YouTube, Splunk4Rookies workshops, community office hours.</li>
+      </ul>
+
+      <h3>5 · Notes / cheat sheets</h3>
+      <ul>
+        <li>No book is commonly recommended (course-driven exam). Use the <b>SPL Quick Reference / cheat sheet</b> from Splunk Docs and build your own notes on the confusable pairs — the <a href="cram.html">Cram Jam</a> here is exactly that.</li>
+      </ul>
+
+      <h4>Sources</h4>
+      <ul class="legend">
+        <li><a href="https://www.splunk.com/en_us/pdfs/training/splunk-test-blueprint-power-user.pdf" target="_blank" rel="noopener">Official Test Blueprint PDF</a> · <a href="https://www.splunk.com/en_us/training/free-courses/overview.html" target="_blank" rel="noopener">Splunk free courses</a> · <a href="https://community.splunk.com/t5/Training-Certification/Study-materials-for-Splunk-Certified-Core-User-certification/m-p/712162" target="_blank" rel="noopener">Splunk Community forum</a></li>
+        <li>First-hand write-ups: <a href="https://tmc222.medium.com/splunk-core-certified-power-user-splk-1002-certification-experience-8b59dfc6f353" target="_blank" rel="noopener">Hacktivities</a> · <a href="https://medium.com/@pritdammani30121998/splunk-core-certified-power-user-splk-1002-preparation-and-exam-experience-da1b2803ce01" target="_blank" rel="noopener">Pritesh Dammani</a> · <a href="https://techpracticeexams.com/blog/how-hard-is-the-splk-1002-exam" target="_blank" rel="noopener">difficulty/tips guide</a></li>
+      </ul>
+    </section>
+
+    <!-- PLAN -->
+    <section id="t-plan">
+      <h2>15 · Study Plan (Retention-Based, ≈2–4 weeks)</h2>
+      <p>Splunk is a <b>skill</b>, not trivia — which makes it perfect for evidence-based, hands-on learning. Passive video-watching is the weakest approach here; <b>doing the searches yourself</b> is both the fastest way to pass and the way to actually retain SPL.</p>
+      <table>
+        <tr><th>Principle</th><th>How to apply it to Splunk</th></tr>
+        <tr><td><b>Learn by doing</b> (generation effect)</td><td>For every concept, build it in a live instance — don't just watch. Typing the SPL yourself encodes it far better.</td></tr>
+        <tr><td><b>Active recall</b></td><td>After each module, write the search from memory, then check. Quiz yourself on the confusable pairs.</td></tr>
+        <tr><td><b>Spaced repetition</b></td><td>Re-drill older commands daily (5–10 min) before new material; flashcard the pairs (alias/calc, tags/eventtype, transaction/stats).</td></tr>
+        <tr><td><b>Interleaving</b></td><td>Mix domains in practice rather than finishing one 100% before the next — mirrors the exam.</td></tr>
+        <tr><td><b>Elaboration (Feynman)</b></td><td>Explain out loud <i>why</i> stats beats transaction, or what CIM is for. Stumbles = restudy targets.</td></tr>
+      </table>
+      <table>
+        <tr><th>Phase</th><th>Focus</th><th>Actions</th></tr>
+        <tr><td><b>Week 1</b></td><td>Search + transforming + filtering</td><td>Free eLearning for basics, chart/timechart/stats, eval/where/fillnull. Load tutorial data; reproduce every example yourself.</td></tr>
+        <tr><td><b>Week 2</b></td><td>Correlation + fields + knowledge objects</td><td>Deep-dive Correlating Events (15%): build transactions and stats equivalents. Create FX extractions, aliases, calculated fields, tags, event types, macros, workflow actions.</td></tr>
+        <tr><td><b>Week 3</b></td><td>Data models, pivot, CIM</td><td>Build a data model + pivot; explore the CIM add-on and map fields. These are the most abstract topics — hands-on makes them concrete.</td></tr>
+        <tr><td><b>Week 4</b></td><td>Practice + gaps + taper</td><td>Practice questions (verify vs docs), interleaved review, re-drill weak areas. Light review + good sleep before exam day; skim the <a href="cram.html">Cram Jam</a>.</td></tr>
+      </table>
+      <p class="legend">Typical prep: daily Splunk user 1–2 weeks · regular user 2–3 weeks · newer 3–5 weeks. Compress/stretch the phases accordingly.</p>
+      <div class="callout tip"><span class="lbl">Readiness bar</span> You're ready when you can, from memory, write a <code>stats</code> that replaces a given <code>transaction</code>, explain alias vs calculated field and tag vs event type, and describe what a data model gives Pivot.</div>
+    </section>
+
+    <!-- TIPS -->
+    <section id="t-tips">
+      <h2>16 · Tips &amp; Common Traps</h2>
+      <ul>
+        <li><b>transaction vs stats</b> — the #1 trap. Default to <b>stats</b>; use transaction only for raw text / start-end / time-bounded grouping. Know <code>maxspan</code>, <code>maxpause</code>, <code>startswith</code>, <code>endswith</code>, and the auto fields <code>duration</code> &amp; <code>eventcount</code>.</li>
+        <li><b>Field alias vs calculated field</b> — rename existing vs eval-a-new-field.</li>
+        <li><b>Tags vs event types</b> — label-on-value vs named-search categorization.</li>
+        <li><b>Workflow actions</b> — GET (link/URL) vs POST (HTTP POST) vs Search (secondary search).</li>
+        <li><b>Macros</b> — backtick invocation, <code>$arg$</code> placeholders, arg count in the name <code>name(2)</code>.</li>
+        <li><b>Data models &amp; pivot</b> — pivot requires a data model; object types are event/search/transaction; accelerate → <code>tstats</code>.</li>
+        <li><b>chart vs timechart vs stats</b> — timechart's x-axis is always <code>_time</code>; chart uses <code>over … by</code>.</li>
+        <li><b>search vs where</b> — where compares field-to-field &amp; uses eval functions.</li>
+        <li><b>Pace:</b> ~52 sec/question. Flag-and-return; don't stall.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Ignore</span> "Guaranteed pass" dump sites (validexamdumps, certempire, dumpsgate, itexams, etc.) — outdated content and a cert-integrity risk. Official free training + Docs + hands-on is the reliable path.</div>
+
+      <div class="footer">
+        <p><b>Sources:</b> official Splunk Test Blueprint (SPLK-1002), Splunk free-course catalog &amp; Docs, the Splunk Community forum, and first-hand community exam write-ups. Verify the current blueprint &amp; pricing on splunk.com before your exam. Not affiliated with or endorsed by Splunk.</p>
+      </div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+  </main>
+</div>
+<a id="top"></a>
+<script src="../assets/scrollspy.js"></script>
+</body>
+</html>

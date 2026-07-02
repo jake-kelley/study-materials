@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-305 Designing Azure Infrastructure Solutions — Study Guide</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="theme-azure">
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo">AZURE · AZ-305</span>
+      <h1>Designing Azure Infrastructure Solutions</h1>
+      <div class="sub">Solutions Architect Expert · Overview + Guide</div>
+      <a class="home" href="../index.html">← All certifications</a> &nbsp;·&nbsp; <a class="home" href="cram.html">⚡ Cram Jam</a>
+    </div>
+    <div class="toc" id="toc">
+      <div class="group-label">Overview</div>
+      <a href="#ov-intro">What &amp; Why</a>
+      <a href="#ov-glance">Exam at a Glance</a>
+      <a href="#ov-domains">The 4 Domains</a>
+      <a href="#ov-services">Service Snapshot</a>
+      <a href="#ov-materials">Recommended Materials</a>
+      <a href="#ov-plan">Study Plan (Quick)</a>
+
+      <div class="group-label">Thorough Guide</div>
+      <a href="#t-exam">1 · Exam Details &amp; Case Studies</a>
+      <a href="#t-frameworks">2 · WAF &amp; Cloud Adoption Framework</a>
+      <a href="#t-d1">3 · Identity, Governance &amp; Monitoring <span class="kbd">25–30%</span></a>
+      <a href="#d1-identity" class="lvl2">3.1 Identity (Entra ID)</a>
+      <a href="#d1-gov" class="lvl2">3.2 Governance</a>
+      <a href="#d1-mon" class="lvl2">3.3 Monitoring</a>
+      <a href="#t-d2">4 · Data Storage <span class="kbd">20–25%</span></a>
+      <a href="#d2-storage" class="lvl2">4.1 Storage accounts</a>
+      <a href="#d2-rel" class="lvl2">4.2 Relational</a>
+      <a href="#d2-nosql" class="lvl2">4.3 Cosmos DB &amp; NoSQL</a>
+      <a href="#t-d3">5 · Business Continuity <span class="kbd">15–20%</span></a>
+      <a href="#t-d4">6 · Infrastructure <span class="kbd">30–35%</span></a>
+      <a href="#d4-compute" class="lvl2">6.1 Compute &amp; app hosting</a>
+      <a href="#d4-network" class="lvl2">6.2 Networking &amp; LB</a>
+      <a href="#d4-app" class="lvl2">6.3 Messaging &amp; app arch</a>
+      <a href="#d4-migrate" class="lvl2">6.4 Migration</a>
+      <a href="#t-decision">7 · Decision Tables</a>
+      <a href="#t-materials">8 · Study Materials</a>
+      <a href="#t-plan">9 · Study Plan (Retention)</a>
+      <a href="#t-tips">10 · Tips &amp; Traps</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="hero">
+      <h1>AZ-305: Designing Microsoft Azure Infrastructure Solutions</h1>
+      <p>Passing AZ-305 (plus holding <b>AZ-104</b>) earns the <b>Azure Solutions Architect Expert</b> certification. The exam is design-oriented: given business/technical requirements, choose the <b>best</b> Azure service and configuration — across identity/governance, storage, business continuity, and infrastructure. Heavy on <b>case studies</b>.</p>
+      <span class="pill"><b>~40–60</b> questions</span>
+      <span class="pill"><b>~100–120</b> min</span>
+      <span class="pill">pass <b>700</b>/1000</span>
+      <span class="pill"><b>$165</b> USD</span>
+      <span class="pill">AZ-104 prereq (for cert)</span>
+      <div><a class="crambtn" href="cram.html">⚡ Open the 1-page Cram Jam sheet</a></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <h2 class="part">Part 1 — High-Level Overview</h2>
+
+    <section id="ov-intro">
+      <h2>What &amp; Why</h2>
+      <p>AZ-305 validates your ability to <b>design</b> solutions on Azure that meet requirements — it's the architect-level companion to the administrator-level AZ-104. You won't be clicking through the portal; you'll be reading a scenario and picking the right service, tier, and topology. The mental model is Microsoft's <b>Well-Architected Framework (WAF)</b> and <b>Cloud Adoption Framework (CAF)</b>.</p>
+      <div class="callout note"><span class="lbl">Cert requirement</span> The <b>Azure Solutions Architect Expert</b> certification requires <b>both</b> AZ-104 (Administrator) <b>and</b> passing AZ-305. You <i>can</i> sit AZ-305 first, but the Expert cert isn't awarded until AZ-104 is earned — and AZ-104's knowledge is assumed. Detail in <a href="#t-exam">§1</a>.</div>
+    </section>
+
+    <section id="ov-glance">
+      <h2>Exam at a Glance</h2>
+      <table>
+        <tr><th>Attribute</th><th>Value</th></tr>
+        <tr><td>Exam code</td><td>AZ-305 (Designing Microsoft Azure Infrastructure Solutions)</td></tr>
+        <tr><td>Questions</td><td>~40–60 (not officially published), incl. a case-study block of ~6–8</td></tr>
+        <tr><td>Question types</td><td>Multiple choice, <b>case studies</b>, drag-and-drop/build-list, hot area, dropdown, yes/no repeated-answer series</td></tr>
+        <tr><td>Time</td><td>~100–120 min answering (~140 min appointment)</td></tr>
+        <tr><td>Passing score</td><td>700 / 1000 (scaled — not a raw 70%)</td></tr>
+        <tr><td>Cost</td><td>$165 USD</td></tr>
+        <tr><td>Validity</td><td>1 year — renew <b>free</b> via an online assessment on Microsoft Learn</td></tr>
+      </table>
+      <p><a class="jump" href="#t-exam">→ Deep dive: §1 Exam Details &amp; Case Studies</a></p>
+    </section>
+
+    <section id="ov-domains">
+      <h2>The 4 Domains</h2>
+      <p><b>Infrastructure (30–35%) is the biggest</b>, closely followed by Identity/Governance/Monitoring (25–30%). Data storage and business continuity round it out.</p>
+      <div class="domain-band">
+        <div class="db"><div class="pct">25–30%</div><div class="nm">Identity, Governance &amp; Monitoring</div></div>
+        <div class="db"><div class="pct">20–25%</div><div class="nm">Data Storage Solutions</div></div>
+        <div class="db"><div class="pct">15–20%</div><div class="nm">Business Continuity</div></div>
+        <div class="db"><div class="pct">30–35%</div><div class="nm">Infrastructure Solutions</div></div>
+      </div>
+      <table>
+        <tr><th>Domain</th><th>What it tests</th><th>Deep dive</th></tr>
+        <tr><td><b>1 · Identity/Gov/Monitor</b> <span class="tag d1">25–30%</span></td><td>Entra ID auth, RBAC, management-group/subscription hierarchy, Azure Policy, Key Vault, logging/Monitor.</td><td><a class="jump" href="#t-d1">→ §3</a></td></tr>
+        <tr><td><b>2 · Data Storage</b> <span class="tag d2">20–25%</span></td><td>Blob/Files/Disk, Azure SQL vs MI vs SQL-on-VM, Cosmos DB APIs &amp; consistency, data integration.</td><td><a class="jump" href="#t-d2">→ §4</a></td></tr>
+        <tr><td><b>3 · Business Continuity</b> <span class="tag d3">15–20%</span></td><td>Backup vs Site Recovery, HA for compute/data, RTO/RPO.</td><td><a class="jump" href="#t-d3">→ §5</a></td></tr>
+        <tr><td><b>4 · Infrastructure</b> <span class="tag d4">30–35%</span></td><td>Compute/app hosting, networking &amp; load balancing, messaging/event architectures, migration (CAF).</td><td><a class="jump" href="#t-d4">→ §6</a></td></tr>
+      </table>
+    </section>
+
+    <section id="ov-services">
+      <h2>Service Snapshot</h2>
+      <div class="grid">
+        <div class="card"><h4>Identity &amp; Governance</h4>Entra ID (P1/P2), RBAC, Management Groups, Azure Policy, Blueprints, Key Vault, PIM, Conditional Access. <a class="jump" href="#t-d1">→</a></div>
+        <div class="card"><h4>Storage</h4>Blob (Hot/Cool/Cold/Archive), Files, Managed Disks, ADLS Gen2, LRS/ZRS/GRS/GZRS. <a class="jump" href="#d2-storage">→</a></div>
+        <div class="card"><h4>Databases</h4>Azure SQL DB, SQL Managed Instance, SQL on VM, Cosmos DB, Azure Database for MySQL/PostgreSQL. <a class="jump" href="#d2-rel">→</a></div>
+        <div class="card"><h4>Compute</h4>VMs, App Service, AKS, Container Apps, Functions, Batch, ACI, VM Scale Sets. <a class="jump" href="#d4-compute">→</a></div>
+        <div class="card"><h4>Networking</h4>VNet, Load Balancer, App Gateway, Front Door, Traffic Manager, VPN Gateway, ExpressRoute. <a class="jump" href="#d4-network">→</a></div>
+        <div class="card"><h4>Continuity &amp; Integration</h4>Azure Backup, Site Recovery, Availability Zones/Sets; Service Bus, Event Grid, Event Hubs. <a class="jump" href="#t-d3">→</a></div>
+      </div>
+    </section>
+
+    <section id="ov-materials">
+      <h2>Recommended Materials <span class="kbd">(community consensus)</span></h2>
+      <div class="consensus"><b>The consensus stack:</b> earn/refresh <b>AZ-104</b> first → one structured course (<b>Scott Duffy</b> Udemy or Microsoft Learn paths) → <b>John Savill's free AZ-305 Study Cram</b> to connect the dots (re-watch 24–48h before) → practice exams (<b>MeasureUp</b> official and/or <b>Tutorials Dojo</b>) to 80%+ → deep-dive weak spots in Microsoft Learn docs. <b>Avoid dumps.</b></div>
+      <p><a class="jump" href="#t-materials">→ Full breakdown with sources (§8)</a></p>
+    </section>
+
+    <section id="ov-plan">
+      <h2>Study Plan (Quick Version)</h2>
+      <ol>
+        <li><b>Foundation:</b> AZ-104 knowledge is assumed — shore it up first.</li>
+        <li><b>Learn the decisions:</b> one course + Savill's cram; focus on "which service for these requirements."</li>
+        <li><b>Active recall:</b> build decision trees (Blob/Files/Disk; LB/AppGw/FrontDoor/TM; Backup/ASR) from memory.</li>
+        <li><b>Practice:</b> drill case-study technique + practice exams to consistent 80%+; re-watch Savill's cram right before.</li>
+      </ol>
+      <p><a class="jump" href="#t-plan">→ Detailed retention-based plan (§9)</a> · <a class="jump" href="cram.html">⚡ Cram Jam</a></p>
+    </section>
+
+    <!-- THOROUGH -->
+    <h2 class="part">Part 2 — Thorough Study Guide</h2>
+
+    <section id="t-exam">
+      <h2>1 · Exam Details &amp; Case Studies</h2>
+      <ul>
+        <li><b>Passing score is 700/1000</b>, a <i>scaled</i> score — not "70% of questions right." Sections are weighted.</li>
+        <li><b>Question count is not officially published</b>; recent candidates report ~49–54, in ~100–120 minutes of answering time.</li>
+        <li>Question formats: standard multiple choice, <b>case studies</b>, drag-and-drop / build-list ordering, hot area, dropdown, and <b>yes/no repeated-answer series</b> ("does this solution meet the goal?" — the same scenario asked 3 ways, each independent).</li>
+        <li><b>Renewal:</b> the cert expires after 1 year but renews <b>free</b> via an unproctored online assessment on Microsoft Learn (available 6 months before expiry).</li>
+      </ul>
+      <h4>Case-study technique (heavily repeated by passers)</h4>
+      <ul>
+        <li>A case study is a scenario with tabs: <b>Overview, Business Requirements, Technical Requirements, Existing Environment</b>, then ~6–8 questions.</li>
+        <li><b>Read the question first</b>, then scan the tabs hunting for <b>constraint keywords</b> — <b>RTO, RPO, cost, region/data-sovereignty, compliance, latency, availability %</b>. Those constraints usually determine the single "best" answer among several that would technically work.</li>
+        <li><b>Watch out:</b> in some formats you <b>cannot return to a case study</b> once you finish its block and move on — don't rush past it.</li>
+        <li>Use the official <b>exam sandbox</b> (aka.ms/examdemo) beforehand so the drag-and-drop/hot-area UI isn't new on the day.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Mindset trap</span> AZ-305 is <b>not</b> AZ-104. It tests <b>design decisions</b> ("which service, which tier, which topology"), not portal/CLI procedures. Several answers will "work"; the requirements pick the best one.</div>
+    </section>
+
+    <section id="t-frameworks">
+      <h2>2 · Well-Architected &amp; Cloud Adoption Frameworks</h2>
+      <p>Every AZ-305 answer is graded against Microsoft's frameworks. Know them as the "why" behind the right choice.</p>
+      <table>
+        <tr><th>Framework</th><th>Purpose</th></tr>
+        <tr><td><b>Well-Architected Framework (WAF)</b></td><td>Five pillars for good workloads: <b>Reliability, Security, Cost Optimization, Operational Excellence, Performance Efficiency</b>.</td></tr>
+        <tr><td><b>Cloud Adoption Framework (CAF)</b></td><td>End-to-end cloud journey: <b>Strategy → Plan → Ready (landing zones) → Adopt (Migrate/Innovate) → Govern → Manage → Secure</b>. Migration questions map here.</td></tr>
+      </table>
+      <p><b>Migration "R" strategies:</b> Rehost (lift-and-shift), Refactor, Rearchitect, Rebuild (and Replace). Assess with <b>Azure Migrate</b>.</p>
+    </section>
+
+    <!-- DOMAIN 1 -->
+    <section id="t-d1">
+      <h2>3 · Identity, Governance &amp; Monitoring <span class="tag d1">25–30%</span></h2>
+
+      <h3 id="d1-identity">3.1 · Identity — Microsoft Entra ID</h3>
+      <ul>
+        <li><b>Microsoft Entra ID</b> (formerly Azure AD) is Azure's cloud identity provider. Tiers: <b>Free / P1 / P2</b>.</li>
+        <li><b>P1</b> adds Conditional Access, dynamic groups, self-service password reset writeback, and hybrid identity features. <b>P2</b> adds <b>Identity Protection</b>, <b>Privileged Identity Management (PIM)</b>, Access Reviews, and entitlement management.</li>
+        <li><b>Hybrid identity sync</b> (Entra Connect): <b>Password Hash Sync</b> (simplest), <b>Pass-through Authentication</b>, or <b>Federation (AD FS)</b>.</li>
+        <li><b>Authorization:</b> use <b>RBAC</b> to grant least-privilege access to Azure resources; use <b>Conditional Access</b> for context-aware sign-in (MFA, device/location).</li>
+        <li><b>B2B</b> (guest collaboration) vs <b>B2C</b> (customer-facing identity).</li>
+      </ul>
+
+      <h3 id="d1-gov">3.2 · Governance</h3>
+      <ul>
+        <li><b>Hierarchy (top→bottom):</b> <b>Management Groups → Subscriptions → Resource Groups → Resources</b>. Apply policy/RBAC at the right scope; children inherit.</li>
+        <li><b>Azure Policy</b> — enforce/audit rules (allowed regions/SKUs, required tags, enforce encryption). <b>Initiatives</b> group policies. <b>Effects</b>: Deny, Audit, Append, DeployIfNotExists.</li>
+        <li><b>RBAC vs Policy:</b> RBAC = <b>who can do what</b>; Policy = <b>what resources/config are allowed</b>. Different questions, don't conflate.</li>
+        <li><b>Resource locks</b> (CanNotDelete / ReadOnly) and <b>tags</b> (cost/organization). <b>Azure Blueprints</b> package policies/RBAC/templates for repeatable environments.</li>
+        <li><b>Azure Key Vault</b> — store secrets, keys, certificates (Standard vs Premium/HSM-backed). Use managed identities so apps fetch secrets without credentials.</li>
+      </ul>
+
+      <h3 id="d1-mon">3.3 · Monitoring</h3>
+      <ul>
+        <li><b>Azure Monitor</b> is the umbrella. <b>Log Analytics workspace</b> stores logs; query with <b>KQL</b>. <b>Application Insights</b> for app telemetry/APM.</li>
+        <li><b>Diagnostic settings</b> route resource logs/metrics to Log Analytics, a Storage Account (archive), or Event Hubs (stream to SIEM).</li>
+        <li><b>Alerts + Action Groups</b> for notification/automation. <b>Microsoft Sentinel</b> = cloud SIEM/SOAR built on Log Analytics.</li>
+      </ul>
+    </section>
+
+    <!-- DOMAIN 2 -->
+    <section id="t-d2">
+      <h2>4 · Data Storage Solutions <span class="tag d2">20–25%</span></h2>
+
+      <h3 id="d2-storage">4.1 · Storage accounts</h3>
+      <table>
+        <tr><th>Type</th><th>Use for</th></tr>
+        <tr><td><b>Blob</b></td><td>Object/unstructured (images, logs, backups); data lake via <b>ADLS Gen2</b> (hierarchical namespace).</td></tr>
+        <tr><td><b>Azure Files</b></td><td>Managed <b>SMB/NFS</b> file share; lift-and-shift shared drives / cloud file server (+ Azure File Sync for hybrid).</td></tr>
+        <tr><td><b>Managed Disks</b></td><td>Block storage attached to a <b>single VM</b> (OS/data disks).</td></tr>
+        <tr><td><b>Queue / Table</b></td><td>Simple message store / NoSQL key-value.</td></tr>
+      </table>
+      <ul>
+        <li><b>Blob access tiers:</b> <b>Hot → Cool → Cold → Archive</b> (Archive = cheapest storage, but rehydration latency + retrieval cost). Lifecycle management auto-tiers.</li>
+        <li><b>Redundancy (cheapest→most resilient):</b> <b>LRS</b> (1 datacenter) → <b>ZRS</b> (across zones) → <b>GRS</b> (paired region, async) → <b>GZRS</b> (zones + region). <b>RA-GRS/RA-GZRS</b> add read access to the secondary.</li>
+      </ul>
+
+      <h3 id="d2-rel">4.2 · Relational databases</h3>
+      <table>
+        <tr><th>Option</th><th>Best for</th></tr>
+        <tr><td><b>Azure SQL Database</b></td><td>New cloud apps; fully PaaS (single DB or elastic pool); no OS/instance access; most managed.</td></tr>
+        <tr><td><b>SQL Managed Instance</b></td><td><b>Lift-and-shift</b> — near-100% SQL Server compatibility (SQL Agent, cross-DB queries, CLR); VNet support.</td></tr>
+        <tr><td><b>SQL Server on a VM (IaaS)</b></td><td>Full OS + instance control; unsupported/legacy features; you patch &amp; manage.</td></tr>
+        <tr><td><b>Azure DB for MySQL / PostgreSQL</b></td><td>Managed open-source engines.</td></tr>
+      </table>
+      <ul>
+        <li><b>Purchasing:</b> DTU vs <b>vCore</b>. vCore tiers: <b>General Purpose</b>, <b>Business Critical</b> (local SSD + built-in HA replica, lowest latency), <b>Hyperscale</b> (up to 100 TB, fast scale/restore). <b>Serverless</b> auto-pause for intermittent load.</li>
+        <li><b>HA/scale:</b> active geo-replication, auto-failover groups, read replicas.</li>
+      </ul>
+
+      <h3 id="d2-nosql">4.3 · Cosmos DB &amp; NoSQL</h3>
+      <ul>
+        <li><b>Azure Cosmos DB</b> — globally distributed, multi-model, single-digit-ms latency, elastic. <b>APIs:</b> NoSQL (Core), MongoDB, Cassandra, Gremlin (graph), Table. Pick the API to match an existing app/driver.</li>
+        <li><b>5 consistency levels</b> (strongest→weakest): <b>Strong → Bounded Staleness → Session</b> (default) <b>→ Consistent Prefix → Eventual</b>. Stronger = more latency/cost; weaker = faster.</li>
+        <li><b>Multi-region writes</b> + global distribution for low-latency global apps.</li>
+      </ul>
+    </section>
+
+    <!-- DOMAIN 3 -->
+    <section id="t-d3">
+      <h2>5 · Business Continuity <span class="tag d3">15–20%</span></h2>
+      <table>
+        <tr><th>Need</th><th>Service</th></tr>
+        <tr><td><b>Backup / point-in-time restore</b> (data protection, RPO)</td><td><b>Azure Backup</b> (Recovery Services vault) — VMs, files, SQL, etc.</td></tr>
+        <tr><td><b>Disaster recovery / regional failover</b> (RTO, near-zero data loss)</td><td><b>Azure Site Recovery (ASR)</b> — replicate + orchestrated failover.</td></tr>
+      </table>
+      <ul>
+        <li><b>RTO</b> = how fast you must recover; <b>RPO</b> = how much data loss is acceptable. Case-study answers hinge on these words.</li>
+        <li><b>HA building blocks:</b> <b>Availability Sets</b> (fault + update domains, single datacenter, 99.95%) vs <b>Availability Zones</b> (physically separate datacenters in a region, 99.99%) vs <b>Region pairs</b> (cross-region DR). <b>VM Scale Sets</b> for autoscaling identical VMs.</li>
+        <li><b>Data HA:</b> zone-redundant storage (ZRS/GZRS), SQL geo-replication/failover groups, Cosmos multi-region.</li>
+      </ul>
+      <div class="callout note"><span class="lbl">Backup vs Site Recovery</span> <b>Backup</b> = keep restorable copies (protects against corruption/deletion; RPO). <b>Site Recovery</b> = replicate a running workload and fail it over to another region fast (RTO). They solve different problems and are often used together.</div>
+    </section>
+
+    <!-- DOMAIN 4 -->
+    <section id="t-d4">
+      <h2>6 · Infrastructure Solutions <span class="tag d4">30–35% — biggest</span></h2>
+
+      <h3 id="d4-compute">6.1 · Compute &amp; app hosting</h3>
+      <table>
+        <tr><th>Service</th><th>Use for</th></tr>
+        <tr><td><b>Virtual Machines</b></td><td>Full control / IaaS / legacy lift-and-shift.</td></tr>
+        <tr><td><b>App Service</b></td><td>Managed web apps/APIs — easiest PaaS hosting.</td></tr>
+        <tr><td><b>AKS</b></td><td>Full Kubernetes for complex microservices needing orchestration control.</td></tr>
+        <tr><td><b>Container Apps</b></td><td>Serverless containers/microservices with KEDA event scaling — no K8s to manage.</td></tr>
+        <tr><td><b>Azure Functions</b></td><td>Event-driven, short-lived, per-execution serverless.</td></tr>
+        <tr><td><b>Container Instances (ACI)</b></td><td>Simplest single-container / burst.</td></tr>
+        <tr><td><b>Batch</b></td><td>Large-scale parallel/HPC batch jobs.</td></tr>
+      </table>
+
+      <h3 id="d4-network">6.2 · Networking &amp; load balancing</h3>
+      <p>Memorize the <b>Layer × Scope 2×2</b> — the most-tested networking decision:</p>
+      <table>
+        <tr><th></th><th>Regional</th><th>Global</th></tr>
+        <tr><td><b>Layer 4 (TCP/UDP)</b></td><td><b>Azure Load Balancer</b></td><td><b>Traffic Manager</b> (DNS-based routing)</td></tr>
+        <tr><td><b>Layer 7 (HTTP/S)</b></td><td><b>Application Gateway</b> (URL routing, WAF, SSL offload)</td><td><b>Azure Front Door</b> (global HTTP LB + CDN + WAF)</td></tr>
+      </table>
+      <ul>
+        <li><b>Hybrid connectivity:</b> <b>VPN Gateway</b> (encrypted over internet; cheaper; site-to-site / point-to-site) vs <b>ExpressRoute</b> (private dedicated circuit, higher bandwidth/SLA, predictable latency, bypasses public internet). Combine ExpressRoute + VPN for failover.</li>
+        <li><b>VNet</b> segmentation, NSGs (network security groups), Azure Firewall, Private Endpoints/Private Link, VNet peering + hub-spoke.</li>
+      </ul>
+
+      <h3 id="d4-app">6.3 · Messaging &amp; application architecture</h3>
+      <table>
+        <tr><th>Service</th><th>Use for</th></tr>
+        <tr><td><b>Service Bus</b></td><td>Enterprise messaging — queues/topics, ordering (FIFO), transactions, dead-letter.</td></tr>
+        <tr><td><b>Event Grid</b></td><td>Reactive routing of <b>discrete events</b> (e.g. blob created) to handlers.</td></tr>
+        <tr><td><b>Event Hubs</b></td><td>High-throughput <b>streaming/telemetry</b> ingestion (big data, IoT).</td></tr>
+        <tr><td><b>Storage Queues</b></td><td>Simple, large-volume queueing.</td></tr>
+      </table>
+      <p><b>Caching:</b> Azure Cache for Redis. <b>API integration:</b> API Management. <b>Config:</b> App Configuration + Key Vault.</p>
+
+      <h3 id="d4-migrate">6.4 · Migration</h3>
+      <ul>
+        <li><b>Azure Migrate</b> — central hub to assess &amp; migrate servers, databases, and apps.</li>
+        <li><b>Database Migration Service (DMS)</b> for databases; <b>Data Box</b> for offline bulk data transfer.</li>
+        <li>Frame with the <b>CAF</b> and the <b>"R" strategies</b> (rehost/refactor/rearchitect/rebuild).</li>
+      </ul>
+    </section>
+
+    <!-- DECISION -->
+    <section id="t-decision">
+      <h2>7 · Decision Tables</h2>
+      <h4>Storage</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>Object/unstructured, data lake</td><td>Blob / ADLS Gen2</td></tr>
+        <tr><td>Shared file drive (SMB)</td><td>Azure Files</td></tr>
+        <tr><td>Disk for one VM</td><td>Managed Disk</td></tr>
+        <tr><td>Cheapest archive</td><td>Blob Archive tier</td></tr>
+        <tr><td>Survive a region loss</td><td>GRS / GZRS</td></tr>
+      </table>
+      <h4>Relational vs NoSQL</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>New cloud relational app</td><td>Azure SQL Database</td></tr>
+        <tr><td>Lift-and-shift SQL Server (full compat)</td><td>SQL Managed Instance</td></tr>
+        <tr><td>OS/instance control, legacy features</td><td>SQL on a VM</td></tr>
+        <tr><td>Global, low-latency, flexible schema</td><td>Cosmos DB</td></tr>
+        <tr><td>MongoDB/Cassandra app to Azure</td><td>Cosmos DB (matching API)</td></tr>
+      </table>
+      <h4>Networking</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>L7 URL routing + WAF, one region</td><td>Application Gateway</td></tr>
+        <tr><td>Global HTTP LB + CDN + WAF</td><td>Front Door</td></tr>
+        <tr><td>L4 TCP/UDP, one region</td><td>Load Balancer</td></tr>
+        <tr><td>DNS-based global routing</td><td>Traffic Manager</td></tr>
+        <tr><td>Private, dedicated on-prem link</td><td>ExpressRoute</td></tr>
+        <tr><td>Encrypted tunnel over internet</td><td>VPN Gateway</td></tr>
+      </table>
+      <h4>Compute</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>Managed web app, least effort</td><td>App Service</td></tr>
+        <tr><td>Full K8s control</td><td>AKS</td></tr>
+        <tr><td>Serverless microservices, no K8s</td><td>Container Apps</td></tr>
+        <tr><td>Event-driven short functions</td><td>Azure Functions</td></tr>
+        <tr><td>Full OS control / legacy</td><td>Virtual Machines</td></tr>
+      </table>
+    </section>
+
+    <!-- MATERIALS -->
+    <section id="t-materials">
+      <h2>8 · Study Materials <span class="kbd">(community consensus)</span></h2>
+      <p class="legend">Averaged across r/AzureCertification &amp; r/Azure "passed AZ-305" threads and community study plans. The dominant pattern: <b>one course + John Savill's free cram + a quality practice-exam bank + Microsoft Learn deep-dives.</b></p>
+
+      <h3>1 · Video courses</h3>
+      <table>
+        <tr><th>Resource</th><th>Why</th></tr>
+        <tr><td><span class="rank">#1</span><b>John Savill's YouTube</b> (free)</td><td>Mentioned in essentially every pass thread. Watch the <b>AZ-305 Study Cram</b> (~3h) early and again 1–2 days before; go deeper with his <b>AZ-305 playlist</b> and <b>Azure Master Class</b>. Free <b>whiteboards/notes on GitHub</b> (johnthebrit/CertificationMaterials).</td></tr>
+        <tr><td><b>Scott Duffy</b> (Udemy)</td><td>Most-recommended paid, structured course — a linear curriculum. Caveat: "good but low-energy."</td></tr>
+        <tr><td><b>Alan Rodrigues / Thomas Mitchell</b> (Udemy)</td><td>Alan includes hands-on labs; both are solid alternatives.</td></tr>
+        <tr><td><b>Microsoft Learn</b> paths (free/official)</td><td>Authoritative but <b>text-heavy</b> — best as reference/deep-dive, not sole primary course.</td></tr>
+      </table>
+
+      <h3>2 · Practice exams</h3>
+      <div class="consensus"><b>Drive a practice bank to 80%+ before booking.</b> Top picks: <b>MeasureUp</b> (the official Microsoft practice test) and <b>Tutorials Dojo (Jon Bonso)</b> — which now has an AZ-305 bank (155+ Q, timed/review/final modes, free 20-Q sampler) with strong explanations. <b>Whizlabs</b> is mixed (some outdated). Use the <b>Microsoft Learn free Practice Assessment</b> as a baseline. <span class="tag d3">Caveat</span> practice tests skew <b>easier</b> than the real exam and heavy on Entra ID — use them to find weak spots, not as a pass predictor.</div>
+
+      <h3>3 · Hands-on &amp; free</h3>
+      <ul>
+        <li><b>Free Azure account</b> ($200 credit / 30 days) + <b>Microsoft Learn sandbox</b> modules. AZ-305 is design-heavy so hands-on matters less than for AZ-104 — but AZ-104's hands-on foundation is assumed.</li>
+        <li><b>Azure Architecture Center</b> (learn.microsoft.com/azure/architecture/browse) — reference patterns; great for "which pattern" reasoning.</li>
+        <li><b>WAF + CAF docs</b> — the mental model the exam grades against.</li>
+        <li><b>Exam sandbox</b> (aka.ms/examdemo) — practice the UI.</li>
+      </ul>
+
+      <h3>4 · Notes / cheat sheets</h3>
+      <ul>
+        <li>No single book dominates. The de-facto cheat sheet is <b>John Savill's AZ-305 whiteboard PDFs</b> (GitHub). Keep your own decision-tree notes (Blob/Files/Disk, LB/AppGw/FrontDoor/TM, Backup/ASR) — that's exactly this guide's <a href="cram.html">Cram Jam</a>.</li>
+      </ul>
+
+      <h4>Sources</h4>
+      <ul class="legend">
+        <li>Official: <a href="https://learn.microsoft.com/en-us/credentials/certifications/exams/az-305/" target="_blank" rel="noopener">AZ-305 exam</a> · <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-305" target="_blank" rel="noopener">study guide</a> · <a href="https://learn.microsoft.com/en-us/azure/architecture/browse/" target="_blank" rel="noopener">Architecture Center</a></li>
+        <li>Community: <a href="https://youtu.be/vq9LuCM4YP4" target="_blank" rel="noopener">Savill Study Cram</a> · <a href="https://github.com/johnthebrit/CertificationMaterials" target="_blank" rel="noopener">Savill GitHub</a> · <a href="https://tutorialsdojo.com/courses/az-305-microsoft-azure-infrastructure-solutions-practice-exams/" target="_blank" rel="noopener">Tutorials Dojo AZ-305</a> · r/AzureCertification passed threads (txo2cr, 1j8o4rs, 170q1o9, v8cx8c, 1adl68i)</li>
+      </ul>
+    </section>
+
+    <!-- PLAN -->
+    <section id="t-plan">
+      <h2>9 · Study Plan (Retention-Based, ≈3–6 weeks after AZ-104)</h2>
+      <p>AZ-305 rewards <b>understanding trade-offs</b>, not memorizing facts — so lean hard on <b>active recall</b> and <b>elaboration</b>. Reproducing decision trees from memory and explaining <i>why</i> a service fits a constraint is exactly what the case studies test.</p>
+      <table>
+        <tr><th>Principle</th><th>How to apply it to AZ-305</th></tr>
+        <tr><td><b>Active recall</b></td><td>After each domain, redraw its decision tree (e.g. SQL DB vs MI vs VM) from a blank page; self-quiz on tiers &amp; SKUs.</td></tr>
+        <tr><td><b>Spaced repetition</b></td><td>Flashcard the "which service" pairs and consistency levels/redundancy tiers; review daily at growing intervals.</td></tr>
+        <tr><td><b>Elaboration (Feynman)</b></td><td>Explain out loud why ExpressRoute beats VPN here, or Backup vs ASR there. Tie every choice to a WAF pillar.</td></tr>
+        <tr><td><b>Interleaving</b></td><td>Mix domains in practice; case studies deliberately blend identity + storage + network + continuity.</td></tr>
+        <tr><td><b>Concrete practice</b></td><td>Do case-study-style questions early; the format is the hard part as much as the content.</td></tr>
+      </table>
+      <table>
+        <tr><th>Phase</th><th>Focus</th><th>Actions</th></tr>
+        <tr><td><b>Week 0</b></td><td>Foundation</td><td>Confirm AZ-104-level knowledge (VNets, storage, identity, VMs). Fill gaps before starting AZ-305 design content.</td></tr>
+        <tr><td><b>Week 1–2</b></td><td>Course + framing</td><td>Work a structured course (Scott Duffy / MS Learn). Watch Savill's Study Cram once to connect the dots. Build decision trees as you go.</td></tr>
+        <tr><td><b>Week 3</b></td><td>Depth on biggest domains</td><td>Deep-dive Infrastructure (30–35%) &amp; Identity/Gov (25–30%). Teach each decision out loud; read Architecture Center patterns.</td></tr>
+        <tr><td><b>Week 4</b></td><td>Practice + case studies</td><td>MeasureUp / Tutorials Dojo in review mode; practice the case-study "read question first, hunt constraints" technique. Re-study weak areas.</td></tr>
+        <tr><td><b>Week 5</b></td><td>Consistency + taper</td><td>Fresh sets to consistent 80%+. <b>Re-watch Savill's cram 24–48h before.</b> Do the exam sandbox. Sleep well.</td></tr>
+      </table>
+      <p class="legend">Reported times: ~1 week (experienced, MS Learn + Savill) to ~1 month at a few hrs/day after AZ-104; ~100 total hours if newer.</p>
+      <div class="callout tip"><span class="lbl">Readiness bar</span> You're ready when you can, from memory, pick the right service for a given constraint set and justify it against a WAF pillar — and you're consistently 80%+ on fresh practice sets.</div>
+    </section>
+
+    <!-- TIPS -->
+    <section id="t-tips">
+      <h2>10 · Tips &amp; Common Traps</h2>
+      <ul>
+        <li><b>It's a design exam.</b> Multiple answers "work" — the <b>constraints</b> (RTO/RPO, cost, region/compliance, latency, HA%) pick the best one. Hunt those keywords.</li>
+        <li><b>Case studies:</b> read the question first, then the tabs. You may <b>not be able to return</b> to a case-study block — don't rush it.</li>
+        <li><b>Backup vs Site Recovery</b> — restore copies (RPO) vs region failover (RTO).</li>
+        <li><b>SQL DB vs Managed Instance vs SQL-on-VM</b> — PaaS-new vs lift-and-shift-compat vs full-control.</li>
+        <li><b>LB vs App Gateway vs Front Door vs Traffic Manager</b> — L4/L7 × regional/global.</li>
+        <li><b>VPN vs ExpressRoute</b> — internet-encrypted vs private-dedicated.</li>
+        <li><b>Entra ID P1 vs P2</b> — P2 adds PIM, Identity Protection, Access Reviews.</li>
+        <li><b>Availability Set (99.95%, one DC) vs Zone (99.99%, separate DCs).</b></li>
+        <li><b>Cosmos consistency:</b> Strong→Bounded→Session(default)→Consistent Prefix→Eventual.</li>
+        <li><b>Storage redundancy:</b> LRS &lt; ZRS &lt; GRS &lt; GZRS.</li>
+        <li><b>Know tiers/SKUs</b> — questions hinge on feature differences between tiers.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Ignore</span> Exam dumps (ExamTopics "discussions", DumpsGate, etc.) — often outdated/wrong, violate the NDA, and can void your cert. <b>Legit</b> practice tests (MeasureUp, Tutorials Dojo, Whizlabs) teach reasoning and are fine; dumps just leak stolen answers.</div>
+
+      <div class="footer">
+        <p><b>Sources:</b> official Microsoft Learn AZ-305 exam page &amp; skills-measured study guide, Azure Architecture Center, and r/AzureCertification community pass write-ups. Microsoft doesn't publish exact question count/time; those figures come from consistent candidate reports. Verify the current skills outline (updated periodically) before your exam. Not affiliated with or endorsed by Microsoft.</p>
+      </div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+  </main>
+</div>
+<a id="top"></a>
+<script src="../assets/scrollspy.js"></script>
+</body>
+</html>

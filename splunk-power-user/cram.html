@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPLK-1002 — Cram Jam (1-page)</title>
+<link rel="stylesheet" href="../assets/cram.css">
+</head>
+<body class="theme-splunk">
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1>⚡ Splunk Power User (SPLK-1002) — Cram Jam</h1>
+      <div class="sub">Dense last-minute recall · pairs with the <a href="index.html" style="color:#fff;text-decoration:underline;">full guide</a>.</div>
+    </div>
+    <div class="meta">
+      <b>65 Q</b> · 60 min (~57 to answer) · pass <b>~70%</b><br>
+      $130 · Pearson VUE · no prereq · valid 3 yr<br>
+      Correlating Events = 15% (biggest); rest ~10%
+    </div>
+    <div class="btns">
+      <a class="btn ghost" href="index.html">Full guide</a>
+      <button class="btn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <div class="box">
+      <h2>Transforming Cmds (5%)</h2>
+      <ul>
+        <li>Transforming: <span class="mono">chart timechart stats top rare contingency</span>. NOT: table, fields, eval.</li>
+        <li><span class="k">chart</span> <span class="mono">&lt;fn&gt; over A by B</span> (1 over + 1 by; over=x-axis).</li>
+        <li><span class="k">timechart</span> x-axis <b>always _time</b>; <span class="mono">span=</span>; only ONE by.</li>
+        <li><span class="k">top</span>=most common (+count+percent, limit=10); <span class="k">rare</span>=least.</li>
+        <li>stats fns: count sum avg min max <b>values</b>(uniq mv) <b>list</b>(all) <b>dc</b> first last perc95 stdev.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Filter/Format (10%)</h2>
+      <ul>
+        <li><span class="k">eval</span> = make/overwrite a field (if, case, coalesce, round, tostring, strftime). Does NOT filter.</li>
+        <li><span class="k">search</span> = match keywords/values (can repeat mid-pipe).</li>
+        <li><span class="k">where</span> = boolean eval expr; only one that compares <b>field-to-field</b> + eval fns (like, cidrmatch, isnull).</li>
+        <li><span class="k">fillnull</span> default replace = <b>0</b>; <span class="mono">fillnull value="N/A"</span>.</li>
+      </ul>
+      <div class="warn">"A &gt; B (two fields)" → <b>where</b>, not search.</div>
+    </div>
+
+    <div class="box">
+      <h2>Correlating (15% ★)</h2>
+      <h3>transaction</h3>
+      <ul>
+        <li>Groups events → 1 mv event. Opts: <span class="mono">maxspan maxpause startswith endswith</span>.</li>
+        <li>Auto fields: <b>duration</b>, <b>eventcount</b>.</li>
+        <li><b>Expensive, doesn't scale.</b></li>
+      </ul>
+      <h3>stats</h3>
+      <ul><li><span class="mono">stats … by id</span> = fast, scalable. <b>Default choice.</b></li></ul>
+      <div class="warn">Use transaction ONLY for: keep raw text · start/end conditions · time-bound group. Else → <b>stats</b>.</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Fields (10%)</h2>
+      <ul>
+        <li>Field Extractor (FX): <b>Regex</b> (unstructured, highlight samples) vs <b>Delimiter</b> (structured, comma/tab/pipe).</li>
+        <li>Inline: <span class="mono">rex field=_raw "(?&lt;u&gt;\w+)"</span>; <span class="mono">erex</span> = example-based.</li>
+        <li>Search-time (schema-on-read).</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Alias vs Calc Field (10%)</h2>
+      <table class="mini">
+        <tr><th>Alias</th><th>Calculated</th></tr>
+        <tr><td>alt <b>name</b> for existing field</td><td><b>new</b> field via eval</td></tr>
+        <tr><td>no new data</td><td>computed at search time</td></tr>
+        <tr><td>src_ip⇄clientip</td><td>bw = bytes/1024</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Tags vs Event Types (10%)</h2>
+      <table class="mini">
+        <tr><th>Event type</th><th>Tag</th></tr>
+        <tr><td>saved <b>search string</b></td><td><b>label</b> on field=value</td></tr>
+        <tr><td>→ eventtype=failed_login</td><td>many tags per value</td></tr>
+        <tr><td>no pipes/time/transforming</td><td>normalize across sources</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2>Macros (10%)</h2>
+      <ul>
+        <li>Settings ▸ Advanced Search ▸ Search macros (macros.conf).</li>
+        <li>Call with <b>backticks</b>: <span class="mono">`m`</span> / <span class="mono">`m(a,b)`</span>.</li>
+        <li>Args inside def = <span class="mono">$arg$</span>; count in name <span class="mono">m(2)</span>.</li>
+        <li>Optional validation expression.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Workflow Actions (10%)</h2>
+      <table class="mini">
+        <tr><th>Type</th><th>Does</th></tr>
+        <tr><td><b>GET</b></td><td>open URL/link, field vals in query string</td></tr>
+        <tr><td><b>POST</b></td><td>HTTP POST with field vals</td></tr>
+        <tr><td><b>Search</b></td><td>launch secondary Splunk search</td></tr>
+      </table>
+      <p>Settings ▸ Fields ▸ Workflow actions; scoped to fields/sourcetypes.</p>
+    </div>
+
+    <div class="box">
+      <h2>Data Models + Pivot (10%)</h2>
+      <ul>
+        <li>Data model = hierarchical semantic map; datasets/objects of type <b>event / search / transaction</b>; attributes (auto, eval, lookup, regex, geo). Children inherit constraints.</li>
+        <li><b>Pivot</b> = point-click UI <b>on top of a data model</b> (no SPL).</li>
+        <li><span class="bad">Can't use Pivot without a data model.</span></li>
+        <li>Accelerate → query with <span class="mono">tstats</span>.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">CIM (10%)</h2>
+      <ul>
+        <li>Splunk_SA_CIM add-on = standard <b>field names + tags + models</b> (Auth, Network, Web, Malware).</li>
+        <li>Purpose: <b>normalize at search time</b> so apps (ES) work across sources.</li>
+        <li>Make compliant: map fields → CIM names + apply CIM tags.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Search-Time Order</h2>
+      <p><b>Extraction → Aliases → Calculated fields → Lookups → Event types → Tags</b></p>
+      <div class="tip">Alias before calc field (calc can use alias); tags applied last.</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Top Traps</h2>
+      <div class="warn">transaction vs stats (default stats) · alias(rename) vs calc(eval-new) · tag(label) vs eventtype(search) · GET/POST/Search · macro backticks+$arg$ · pivot needs data model · timechart x=_time · where compares fields</div>
+      <div class="tip">65 Q / 57 min ≈ 52s each. Flag &amp; return. Some Q = multi-answer. Avoid dumps.</div>
+    </div>
+
+  </div>
+  <div class="footnote">Cram Jam · Splunk SPLK-1002 · pairs with the full guide · verify against splunk.com blueprint · not affiliated with Splunk.</div>
+</div>
+</body>
+</html>

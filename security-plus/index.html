@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompTIA Security+ (SY0-701) — Study Guide</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="theme-security">
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo">COMPTIA · SY0-701</span>
+      <h1>Security+</h1>
+      <div class="sub">Overview + Thorough Study Guide</div>
+      <a class="home" href="../index.html">← All certifications</a> &nbsp;·&nbsp; <a class="home" href="cram.html">⚡ Cram Jam</a>
+    </div>
+    <div class="toc" id="toc">
+      <div class="group-label">Overview</div>
+      <a href="#ov-intro">What &amp; Why</a>
+      <a href="#ov-glance">Exam at a Glance</a>
+      <a href="#ov-domains">The 5 Domains</a>
+      <a href="#ov-snapshot">Concept Snapshot</a>
+      <a href="#ov-materials">Recommended Materials</a>
+      <a href="#ov-plan">Study Plan (Quick)</a>
+
+      <div class="group-label">Thorough Guide</div>
+      <a href="#t-exam">1 · Exam Details &amp; PBQs</a>
+      <a href="#t-d1">2 · General Security Concepts <span class="kbd">12%</span></a>
+      <a href="#t-d2">3 · Threats, Vulns &amp; Mitigations <span class="kbd">22%</span></a>
+      <a href="#t-d3">4 · Security Architecture <span class="kbd">18%</span></a>
+      <a href="#t-d4">5 · Security Operations <span class="kbd">28%</span></a>
+      <a href="#t-d5">6 · Program Management <span class="kbd">20%</span></a>
+      <a href="#t-ref">7 · High-Yield Reference</a>
+      <a href="#ref-crypto" class="lvl2">7.1 Cryptography</a>
+      <a href="#ref-attacks" class="lvl2">7.2 Attacks</a>
+      <a href="#ref-iam" class="lvl2">7.3 IAM</a>
+      <a href="#ref-ports" class="lvl2">7.4 Ports &amp; Protocols</a>
+      <a href="#ref-risk" class="lvl2">7.5 Risk &amp; Frameworks</a>
+      <a href="#t-materials">8 · Study Materials</a>
+      <a href="#t-plan">9 · Study Plan (Retention)</a>
+      <a href="#t-tips">10 · Tips &amp; Traps</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="hero">
+      <h1>CompTIA Security+ (SY0-701)</h1>
+      <p>The industry-standard <b>baseline cybersecurity certification</b> — vendor-neutral, DoD 8140/8570 approved, and the most common "you know security fundamentals" credential for analysts, admins, and anyone entering infosec. It validates core skills across threats, cryptography, architecture, operations, and governance/risk.</p>
+      <span class="pill"><b>≤90</b> questions</span>
+      <span class="pill"><b>90</b> minutes</span>
+      <span class="pill">pass <b>750</b>/900</span>
+      <span class="pill">MC + <b>PBQs</b></span>
+      <span class="pill">Valid <b>3 years</b></span>
+      <div><a class="crambtn" href="cram.html">⚡ Open the 1-page Cram Jam sheet</a></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <h2 class="part">Part 1 — High-Level Overview</h2>
+
+    <section id="ov-intro">
+      <h2>What &amp; Why</h2>
+      <p><b>Security+</b> proves you can assess an organization's security posture, monitor and secure environments, understand threats and cryptography, and operate within governance/risk/compliance frameworks. It's often the <b>first "real" security cert</b> people earn and satisfies DoD baseline requirements — which is why it's so widely required in job postings.</p>
+      <div class="callout note"><span class="lbl">Prerequisites</span> None required. CompTIA <b>recommends Network+ and ~2 years</b> of security/systems-admin experience, but anyone can sit it. Detail in <a href="#t-exam">§1</a>.</div>
+    </section>
+
+    <section id="ov-glance">
+      <h2>Exam at a Glance</h2>
+      <table>
+        <tr><th>Attribute</th><th>Value</th></tr>
+        <tr><td>Exam code</td><td>SY0-701 (objectives v5.0; launched Nov 2023)</td></tr>
+        <tr><td>Questions</td><td>Up to <b>90</b> — multiple choice/response + <b>3–6 performance-based questions (PBQs)</b></td></tr>
+        <tr><td>Time</td><td>90 minutes</td></tr>
+        <tr><td>Passing score</td><td><b>750</b> on a scale of 100–900 (scaled, not a straight 83%)</td></tr>
+        <tr><td>Cost</td><td>~$404–439 USD voucher (discounted bundles exist); no free retake</td></tr>
+        <tr><td>Validity</td><td>3 years — renew with <b>50 CEUs</b> (+ maintenance fee) or a higher cert</td></tr>
+        <tr><td>Delivery / languages</td><td>Pearson VUE (test center or online); EN, JA, PT, ES, TH</td></tr>
+      </table>
+      <p><a class="jump" href="#t-exam">→ Deep dive: §1 Exam Details &amp; PBQs</a></p>
+    </section>
+
+    <section id="ov-domains">
+      <h2>The 5 Domains</h2>
+      <p><b>Security Operations (28%) is the biggest</b>; together with Threats/Vulns/Mitigations (22%) it's <b>half the exam</b>. Weight your time accordingly.</p>
+      <div class="domain-band">
+        <div class="db"><div class="pct">12%</div><div class="nm">1 · General Security Concepts</div></div>
+        <div class="db"><div class="pct">22%</div><div class="nm">2 · Threats, Vulns &amp; Mitigations</div></div>
+        <div class="db"><div class="pct">18%</div><div class="nm">3 · Security Architecture</div></div>
+        <div class="db"><div class="pct">28%</div><div class="nm">4 · Security Operations</div></div>
+        <div class="db"><div class="pct">20%</div><div class="nm">5 · Program Mgmt &amp; Oversight</div></div>
+      </div>
+      <table>
+        <tr><th>Domain</th><th>What it tests</th><th>Deep dive</th></tr>
+        <tr><td><b>1 · Concepts</b> <span class="tag d1">12%</span></td><td>Control types, CIA/AAA, zero trust, physical security, cryptography basics, change management.</td><td><a class="jump" href="#t-d1">→ §2</a></td></tr>
+        <tr><td><b>2 · Threats</b> <span class="tag d2">22%</span></td><td>Threat actors, vectors, vulnerabilities, indicators of attack, mitigation/hardening.</td><td><a class="jump" href="#t-d2">→ §3</a></td></tr>
+        <tr><td><b>3 · Architecture</b> <span class="tag d3">18%</span></td><td>Architecture models, securing infra, data protection, resilience/recovery.</td><td><a class="jump" href="#t-d3">→ §4</a></td></tr>
+        <tr><td><b>4 · Operations</b> <span class="tag d4">28%</span></td><td>Hardening, vuln management, monitoring/SIEM, IAM, automation, incident response, forensics.</td><td><a class="jump" href="#t-d4">→ §5</a></td></tr>
+        <tr><td><b>5 · Program Mgmt</b> <span class="tag d5">20%</span></td><td>Governance, risk management, third-party risk, compliance, audits, awareness.</td><td><a class="jump" href="#t-d5">→ §6</a></td></tr>
+      </table>
+    </section>
+
+    <section id="ov-snapshot">
+      <h2>Concept Snapshot</h2>
+      <div class="grid">
+        <div class="card"><h4>Foundations</h4>CIA triad, non-repudiation, AAA, least privilege, defense in depth, zero trust. <a class="jump" href="#t-d1">→</a></div>
+        <div class="card"><h4>Cryptography</h4>Symmetric (AES) vs asymmetric (RSA/ECC), hashing (SHA-2), PKI, digital signatures, TLS. <a class="jump" href="#ref-crypto">→</a></div>
+        <div class="card"><h4>Attacks</h4>Phishing, DDoS, SQLi, XSS, on-path, privilege escalation, password attacks, malware. <a class="jump" href="#ref-attacks">→</a></div>
+        <div class="card"><h4>IAM</h4>MFA factors, SSO (SAML/OAuth/OIDC), access models (DAC/MAC/RBAC/ABAC), PAM. <a class="jump" href="#ref-iam">→</a></div>
+        <div class="card"><h4>Operations</h4>SIEM, DLP, EDR/XDR, vuln mgmt (CVE/CVSS), incident response, forensics. <a class="jump" href="#t-d4">→</a></div>
+        <div class="card"><h4>GRC</h4>Risk (SLE/ALE/ARO), BIA (RTO/RPO/MTBF/MTTR), frameworks (NIST, ISO, CIS), audits. <a class="jump" href="#ref-risk">→</a></div>
+      </div>
+    </section>
+
+    <section id="ov-materials">
+      <h2>Recommended Materials <span class="kbd">(community consensus)</span></h2>
+      <div class="consensus"><b>The consensus stack:</b> <b>Professor Messer's free videos</b> (objective-by-objective) as your backbone → reinforce with <b>Darril Gibson's "Get Certified Get Ahead" book</b> and/or <b>Anki</b> → drill <b>Jason Dion practice exams</b> (intentionally ~10% harder) to a consistent <b>80–85%</b> → sit the exam. Typically 2–4 weeks. <b>Never touch dumps.</b></div>
+      <p><a class="jump" href="#t-materials">→ Full breakdown with sources (§8)</a></p>
+    </section>
+
+    <section id="ov-plan">
+      <h2>Study Plan (Quick Version)</h2>
+      <ol>
+        <li><b>Use the objectives PDF as a checklist</b>; watch Professor Messer in order, taking notes per objective.</li>
+        <li><b>Active recall:</b> reinforce with Anki (acronym soup is real) and per-chapter quizzes in Gibson's book.</li>
+        <li><b>Practice + PBQs:</b> drill Dion exams; review every miss; practice PBQs (ports, log/firewall analysis, attack→mitigation matching).</li>
+        <li><b>Gut-check:</b> Messer's practice exams (closer to real difficulty), then book once consistently 80–85%+.</li>
+      </ol>
+      <p><a class="jump" href="#t-plan">→ Detailed retention-based plan (§9)</a> · <a class="jump" href="cram.html">⚡ Cram Jam</a></p>
+    </section>
+
+    <!-- THOROUGH -->
+    <h2 class="part">Part 2 — Thorough Study Guide</h2>
+
+    <section id="t-exam">
+      <h2>1 · Exam Details &amp; PBQs</h2>
+      <ul>
+        <li><b>Up to 90 questions in 90 minutes.</b> <b>Passing score is 750 / 900</b> — a <i>scaled</i> score, so it's not simply "get 83% right."</li>
+        <li><b>Performance-based questions (PBQs):</b> ~3–6 interactive simulations (drag-and-drop, configure a firewall/ACL, analyze a log or packet capture, match attacks to mitigations). They're presented <b>first</b>, are time-consuming, offer <b>partial credit</b>, and can be <b>flagged/skipped</b>.</li>
+        <li><b>Strategy:</b> glance at each PBQ, <b>flag the heavy ones</b>, clear all the multiple-choice quickly, then return to the PBQs with your remaining time. Never leave a PBQ blank — partial credit.</li>
+        <li><b>Recommended experience:</b> Network+ and ~2 years of security/admin work (not required). Valid 3 years; renew via <b>50 CEUs</b> + maintenance fee, or by earning a higher CompTIA cert.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">The #1 exam trap</span> Questions ask for the <b>BEST / MOST likely / FIRST</b> answer — several options are often technically valid. Read the whole stem and every option; watch keywords <b>FIRST, BEST, MOST, LEAST, NOT</b>. It tests <b>judgment in scenarios</b>, not rote recall.</div>
+    </section>
+
+    <!-- DOMAIN 1 -->
+    <section id="t-d1">
+      <h2>2 · General Security Concepts <span class="tag d1">12%</span></h2>
+      <h4>Security controls — two axes</h4>
+      <table>
+        <tr><th>Category (how it's implemented)</th><th>Type (what it does)</th></tr>
+        <tr><td><b>Technical</b> (tech/logical), <b>Managerial</b> (policy/risk), <b>Operational</b> (people/process), <b>Physical</b> (real-world)</td><td><b>Preventive</b>, <b>Deterrent</b>, <b>Detective</b>, <b>Corrective</b>, <b>Compensating</b>, <b>Directive</b></td></tr>
+      </table>
+      <p class="legend">Example: a firewall is a <b>technical preventive</b> control; a warning sign is <b>physical deterrent</b>; a backup is <b>technical corrective</b>.</p>
+      <h4>Fundamental concepts</h4>
+      <ul>
+        <li><b>CIA triad</b> — Confidentiality, Integrity, Availability. Plus <b>Non-repudiation</b> (can't deny an action — provided by digital signatures).</li>
+        <li><b>AAA</b> — Authentication (who you are), Authorization (what you may do), Accounting (logging what you did). Applies to people <i>and</i> systems.</li>
+        <li><b>Zero Trust</b> — "never trust, always verify." Split into a <b>Control Plane</b> (adaptive identity, policy engine, policy administrator, threat-scope reduction) and a <b>Data Plane</b> (subject/system, policy enforcement point, implicit trust zones).</li>
+        <li><b>Gap analysis</b>; <b>defense in depth</b>; <b>least privilege</b>.</li>
+        <li><b>Physical security</b> — bollards, access-control vestibule (mantrap), fencing, lighting, cameras, guards, badges, sensors (infrared/pressure/microwave/ultrasonic).</li>
+        <li><b>Deception tech</b> — honeypot, honeynet, honeyfile, honeytoken.</li>
+      </ul>
+      <h4>Change management</h4>
+      <p>Approval process, ownership, stakeholders, <b>impact analysis</b>, test results, <b>backout plan</b>, maintenance windows, SOPs; technical implications (allow/deny lists, restarts, downtime, dependencies, legacy apps); documentation &amp; <b>version control</b>. (Cryptography basics are also introduced here — see the full treatment in <a href="#ref-crypto">§7.1</a>.)</p>
+    </section>
+
+    <!-- DOMAIN 2 -->
+    <section id="t-d2">
+      <h2>3 · Threats, Vulnerabilities &amp; Mitigations <span class="tag d2">22%</span></h2>
+      <h4>Threat actors &amp; motivations</h4>
+      <ul>
+        <li><b>Actors:</b> nation-state (APT), unskilled attacker (script kiddie), hacktivist, insider threat, organized crime, shadow IT.</li>
+        <li><b>Attributes:</b> internal/external, resources/funding, sophistication.</li>
+        <li><b>Motivations:</b> data exfiltration, espionage, service disruption, blackmail, financial gain, philosophical/political, revenge, war, chaos.</li>
+      </ul>
+      <h4>Threat vectors &amp; social engineering</h4>
+      <ul>
+        <li><b>Vectors/attack surfaces:</b> message-based (email/SMS/IM), image/file/voice, removable media, vulnerable/unsupported software, unsecure networks (wireless/wired/Bluetooth), open ports, default credentials, supply chain (MSPs/vendors).</li>
+        <li><b>Human/social engineering:</b> phishing, vishing, smishing, pretexting, impersonation, business email compromise (BEC), watering hole, brand impersonation, typosquatting, mis/disinformation.</li>
+      </ul>
+      <h4>Vulnerabilities</h4>
+      <p>Application (memory injection, <b>buffer overflow</b>, race condition/<b>TOCTOU</b>, malicious update); OS; web (<b>SQLi</b>, <b>XSS</b>); hardware (firmware, end-of-life, legacy); virtualization (VM escape, resource reuse); cloud; supply chain; cryptographic; misconfiguration; mobile (side-loading, jailbreaking); <b>zero-day</b>.</p>
+      <h4>Indicators of malicious activity</h4>
+      <p><b>Malware:</b> ransomware, trojan, worm, spyware, virus, keylogger, logic bomb, rootkit, bloatware. <b>Attacks:</b> DDoS (amplified/reflected), DNS/ARP poisoning, on-path (MITM), credential replay, injection, privilege escalation, directory traversal, password spraying/brute force, downgrade, collision/birthday. <b>Indicators:</b> account lockout, impossible travel, concurrent sessions, resource consumption, out-of-cycle or missing logs. (Full attack reference in <a href="#ref-attacks">§7.2</a>.)</p>
+      <h4>Mitigation &amp; hardening</h4>
+      <p>Segmentation, access control (ACL/permissions), application allow-listing, isolation, patching, encryption, monitoring, least privilege, configuration enforcement, decommissioning. <b>Hardening:</b> endpoint protection, host-based firewall/HIPS, disable unused ports/protocols, change default passwords, remove unnecessary software.</p>
+    </section>
+
+    <!-- DOMAIN 3 -->
+    <section id="t-d3">
+      <h2>4 · Security Architecture <span class="tag d3">18%</span></h2>
+      <h4>Architecture models</h4>
+      <ul>
+        <li>Cloud (shared responsibility matrix, hybrid, third-party), <b>IaC</b>, serverless, microservices, on-prem, centralized vs decentralized, containerization, virtualization, IoT, <b>ICS/SCADA</b>, RTOS, embedded, high availability.</li>
+        <li>Design considerations: availability, resilience, cost, scalability, ease of deployment/recovery, risk transference, patch availability, power/compute.</li>
+        <li>Network infra: physical isolation/<b>air-gap</b>, logical segmentation, <b>SDN</b>.</li>
+      </ul>
+      <h4>Securing the enterprise infrastructure</h4>
+      <ul>
+        <li>Device placement, security zones, attack surface; <b>fail-open vs fail-closed</b>; active vs passive; <b>inline vs tap/monitor</b>.</li>
+        <li>Appliances: jump server, proxy (forward/reverse), <b>IDS/IPS</b>, load balancer, sensors.</li>
+        <li>Port security: <b>802.1X</b>, EAP. Firewalls: <b>WAF</b>, UTM, <b>NGFW</b>, Layer 4 vs Layer 7.</li>
+        <li>Secure access: <b>VPN</b> (IPSec/TLS), tunneling, <b>SD-WAN</b>, <b>SASE</b>.</li>
+      </ul>
+      <h4>Protecting data</h4>
+      <ul>
+        <li><b>Data states:</b> at rest, in transit, in use. Classifications: public, private, sensitive, confidential, restricted, critical. Types: regulated, trade secret, IP, financial, PII/PHI.</li>
+        <li><b>Methods:</b> encryption, hashing, masking, tokenization, obfuscation, segmentation, permission restrictions, geographic restrictions; sovereignty/geolocation.</li>
+      </ul>
+      <h4>Resilience &amp; recovery</h4>
+      <ul>
+        <li>High availability (<b>load balancing vs clustering</b>); sites (<b>hot/warm/cold</b>), geographic dispersion, platform diversity, multi-cloud.</li>
+        <li>Backups (onsite/offsite, frequency, encryption, snapshots, replication, journaling); power (UPS, generators); testing (<b>tabletop</b>, failover, simulation, parallel processing).</li>
+      </ul>
+    </section>
+
+    <!-- DOMAIN 4 -->
+    <section id="t-d4">
+      <h2>5 · Security Operations <span class="tag d4">28% — biggest</span></h2>
+      <h4>Hardening &amp; secure baselines</h4>
+      <p>Establish/deploy/maintain secure baselines; harden targets (mobile, workstations, switches/routers, servers, cloud, ICS/SCADA, embedded, RTOS, IoT). Wireless: site surveys, heat maps, <b>WPA3</b>, <b>802.1X + RADIUS/EAP</b>. Mobile: <b>MDM</b>, BYOD/COPE/CYOD. App security: input validation, secure cookies, static code analysis, <b>code signing</b>, sandboxing.</p>
+      <h4>Asset &amp; vulnerability management</h4>
+      <ul>
+        <li>Asset lifecycle: acquisition → assignment/classification → tracking/inventory → disposal (sanitization, destruction, certification, retention).</li>
+        <li><b>Vulnerability management:</b> identification (vuln scan, static/dynamic analysis, threat feeds/OSINT, pen testing, responsible disclosure/bug bounty); analysis (false positive/negative, <b>CVE</b>, <b>CVSS</b>, prioritization, exposure factor); response (patching, segmentation, compensating controls, exceptions); validation (rescan, audit).</li>
+      </ul>
+      <h4>Monitoring &amp; tooling</h4>
+      <ul>
+        <li>Activities: log aggregation, alerting, scanning, reporting, archiving, quarantine, <b>alert tuning</b>.</li>
+        <li>Tools: <b>SIEM</b> (aggregate/correlate logs), <b>SOAR</b> (automation/playbooks), antivirus, <b>DLP</b>, SNMP traps, NetFlow, vulnerability scanners, <b>SCAP</b>/benchmarks, <b>EDR/XDR</b>, DNS filtering, web filtering, email security (<b>DMARC/DKIM/SPF</b>), file integrity monitoring, NAC, UBA.</li>
+      </ul>
+      <h4>Identity &amp; Access Management</h4>
+      <p>Provisioning/de-provisioning, identity proofing, federation, <b>SSO</b> (LDAP, OAuth, SAML), attestation; access-control models (MAC, DAC, RBAC, rule-based, ABAC); <b>MFA</b> factors; password policy &amp; managers, passwordless; <b>PAM</b> (just-in-time, vaulting, ephemeral credentials). Full detail in <a href="#ref-iam">§7.3</a>.</p>
+      <h4>Automation &amp; orchestration</h4>
+      <p>Use cases: user/resource provisioning, guardrails, ticket creation, escalation, CI/testing, APIs. Benefits: efficiency, baseline enforcement, faster reaction, workforce multiplier. Considerations: complexity, cost, single point of failure, technical debt.</p>
+      <h4>Incident response &amp; forensics</h4>
+      <ul>
+        <li><b>IR process (7 steps):</b> Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned.</li>
+        <li>Testing: tabletop, simulation. <b>Root cause analysis</b>, threat hunting.</li>
+        <li><b>Digital forensics:</b> legal hold, <b>chain of custody</b>, acquisition, preservation, order of volatility, e-discovery, reporting.</li>
+        <li><b>Investigation data sources:</b> firewall/application/endpoint/OS/IDS-IPS/network logs, metadata, vuln scans, dashboards, packet captures.</li>
+      </ul>
+    </section>
+
+    <!-- DOMAIN 5 -->
+    <section id="t-d5">
+      <h2>6 · Security Program Management &amp; Oversight <span class="tag d5">20%</span></h2>
+      <h4>Governance</h4>
+      <ul>
+        <li><b>Policies:</b> AUP, information security, BCP, DRP, incident response, SDLC, change management.</li>
+        <li><b>Standards</b> (password, access control, encryption, physical) &amp; <b>procedures</b> (onboarding/offboarding, playbooks).</li>
+        <li>Governance structures (boards, committees), external considerations (regulatory/legal/industry), data roles (owner, controller, processor, custodian/steward).</li>
+      </ul>
+      <h4>Risk management</h4>
+      <ul>
+        <li>Identification; assessment (ad hoc/recurring/continuous); analysis (qualitative vs quantitative).</li>
+        <li><b>Quantitative formulas:</b> <b>SLE = AV × EF</b>; <b>ALE = SLE × ARO</b>. <b>BIA metrics:</b> <b>RTO, RPO, MTTR, MTBF</b>.</li>
+        <li><b>Risk register</b> (KRIs, risk owners, thresholds); risk tolerance &amp; appetite (expansionary/neutral/conservative); strategies: <b>Accept, Avoid, Transfer, Mitigate</b>.</li>
+      </ul>
+      <h4>Third-party risk</h4>
+      <p>Vendor assessment (pen testing, right-to-audit, independent assessments, supply-chain analysis); agreements — <b>SLA, MOA, MOU, MSA, SOW/WO, NDA, BPA</b>; ongoing monitoring &amp; questionnaires; rules of engagement.</p>
+      <h4>Compliance &amp; audits</h4>
+      <ul>
+        <li>Compliance reporting (internal/external); consequences (fines, sanctions, reputational/contractual/license loss); privacy (data subject, controller vs processor, right to be forgotten, retention).</li>
+        <li>Audits/assessments: attestation, internal (audit committee, self-assessment), external (regulatory, third-party), and <b>pen testing</b> (known/partially-known/unknown environment; passive vs active reconnaissance; offensive/defensive/physical).</li>
+      </ul>
+      <h4>Security awareness</h4>
+      <p>Phishing campaigns &amp; recognition, anomalous behavior recognition, user training (password mgmt, removable media, social engineering, operational security, remote/hybrid work), reporting &amp; monitoring.</p>
+    </section>
+
+    <!-- REFERENCE -->
+    <section id="t-ref">
+      <h2>7 · High-Yield Reference</h2>
+      <p>The topics below span multiple domains and appear constantly. Memorize them cold — much of the exam (and the PBQs) draws from here.</p>
+
+      <h3 id="ref-crypto">7.1 · Cryptography</h3>
+      <table>
+        <tr><th>Type</th><th>Purpose</th><th>Examples</th></tr>
+        <tr><td><b>Symmetric</b></td><td>One shared key; fast; bulk data / confidentiality</td><td><b>AES</b> (128/192/256), ChaCha20, 3DES; avoid DES/RC4</td></tr>
+        <tr><td><b>Asymmetric</b></td><td>Public/private key pair; key exchange &amp; digital signatures; slower</td><td><b>RSA</b>, <b>ECC/ECDSA</b> (efficient, mobile/IoT), Diffie-Hellman (key exchange)</td></tr>
+        <tr><td><b>Hashing</b></td><td>Integrity; one-way; fixed length</td><td><b>SHA-2/256/512</b>, SHA-3; avoid MD5 (collisions); <b>HMAC</b> = hash + key</td></tr>
+      </table>
+      <ul>
+        <li><b>Digital signature</b> = hash of the message encrypted with the <b>sender's private key</b> → integrity + authentication + <b>non-repudiation</b>. Encrypt for confidentiality with the <b>recipient's public key</b>.</li>
+        <li><b>Password protection:</b> <b>salt</b> (defeats rainbow tables) + key stretching (<b>bcrypt, PBKDF2, Argon2</b>).</li>
+        <li><b>PKI:</b> CA, RA, <b>CSR</b>, X.509 certs, <b>CRL</b> (revocation list) vs <b>OCSP</b> (real-time status), root of trust, wildcard/SAN certs, key escrow. TLS/HTTPS is <b>hybrid</b> — asymmetric to exchange a symmetric session key.</li>
+        <li><b>Other:</b> TPM (on-device key storage), <b>HSM</b> (dedicated key hardware), secure enclave; obfuscation via steganography, tokenization, data masking; blockchain/open public ledger.</li>
+      </ul>
+
+      <h3 id="ref-attacks">7.2 · Attacks</h3>
+      <ul>
+        <li><b>Social:</b> phishing / spear phishing / whaling / vishing / smishing / pharming, watering hole, typosquatting, BEC.</li>
+        <li><b>Network:</b> <b>DDoS</b> (amplified/reflected), <b>on-path (MITM)</b>, DNS poisoning, ARP poisoning, replay, pass-the-hash.</li>
+        <li><b>Application:</b> <b>SQL injection</b>, <b>XSS</b> (stored/reflected/DOM), <b>CSRF</b>, <b>buffer overflow</b>, race condition (<b>TOCTOU</b>), directory traversal, privilege escalation.</li>
+        <li><b>Password:</b> spraying vs brute force vs dictionary; <b>cryptographic:</b> birthday, collision, downgrade.</li>
+      </ul>
+
+      <h3 id="ref-iam">7.3 · Identity &amp; Access Management</h3>
+      <ul>
+        <li><b>MFA factors:</b> something you <b>know</b> (password), <b>have</b> (token/smart card), <b>are</b> (biometric), <b>somewhere you are</b> (geolocation), <b>something you do</b> (behavior). MFA = two or more <i>different</i> factors.</li>
+        <li><b>SSO / federation protocols:</b> <b>SAML</b> (enterprise web SSO), <b>OAuth 2.0</b> (authorization), <b>OpenID Connect</b> (authentication on OAuth), <b>Kerberos</b> (tickets/TGT, port 88), LDAP/LDAPS. <b>RADIUS</b> vs <b>TACACS+</b> (TACACS+ separates AAA, uses TCP, Cisco).</li>
+        <li><b>Access-control models:</b> <b>DAC</b> (owner decides), <b>MAC</b> (labels/clearance), <b>RBAC</b> (role), <b>ABAC</b> (attributes), rule-based, time-of-day.</li>
+        <li><b>Principles:</b> least privilege, separation of duties; <b>PAM</b> — just-in-time access, password vaulting, ephemeral credentials.</li>
+      </ul>
+
+      <h3 id="ref-ports">7.4 · Ports &amp; Protocols <span class="kbd">(common on PBQs)</span></h3>
+      <table>
+        <tr><th>Port</th><th>Service</th><th>Secure form</th></tr>
+        <tr><td>20/21</td><td>FTP</td><td>FTPS (989/990) / SFTP (22)</td></tr>
+        <tr><td><b>22</b></td><td>SSH / SCP / SFTP</td><td>(secure)</td></tr>
+        <tr><td>23</td><td>Telnet</td><td>→ SSH (22)</td></tr>
+        <tr><td>25</td><td>SMTP</td><td>SMTPS / STARTTLS</td></tr>
+        <tr><td><b>53</b></td><td>DNS</td><td>DoH/DoT</td></tr>
+        <tr><td><b>80</b></td><td>HTTP</td><td>→ HTTPS (443)</td></tr>
+        <tr><td>88</td><td>Kerberos</td><td>—</td></tr>
+        <tr><td>110 / 143</td><td>POP3 / IMAP</td><td>995 / 993</td></tr>
+        <tr><td>161/162</td><td>SNMP</td><td>SNMPv3</td></tr>
+        <tr><td><b>389</b></td><td>LDAP</td><td>LDAPS (<b>636</b>)</td></tr>
+        <tr><td><b>443</b></td><td>HTTPS (TLS)</td><td>(secure)</td></tr>
+        <tr><td>445</td><td>SMB</td><td>—</td></tr>
+        <tr><td>514</td><td>Syslog</td><td>—</td></tr>
+        <tr><td>1433 / 3306</td><td>MS SQL / MySQL</td><td>—</td></tr>
+        <tr><td>1812/1813</td><td>RADIUS</td><td>—</td></tr>
+        <tr><td><b>3389</b></td><td>RDP</td><td>—</td></tr>
+      </table>
+
+      <h3 id="ref-risk">7.5 · Risk, BC &amp; Frameworks</h3>
+      <ul>
+        <li><b>Quantitative risk:</b> <b>SLE = AV × EF</b>; <b>ALE = SLE × ARO</b>. Risk strategies: Accept / Avoid / Transfer (insurance) / Mitigate.</li>
+        <li><b>Business continuity metrics:</b> <b>RTO</b> (max time to restore), <b>RPO</b> (max data loss), <b>MTBF</b> (mean time between failures — repairable), <b>MTTR</b> (mean time to repair), MTTF (non-repairable lifespan).</li>
+        <li><b>Frameworks:</b> <b>NIST CSF</b> = Identify, Protect, Detect, Respond, Recover (2.0 adds <b>Govern</b>); NIST RMF; NIST 800-53 (federal), 800-171 (CUI); <b>CIS Controls (18)</b>/Benchmarks; <b>ISO 27001/27002</b>; SOC 2; <b>PCI DSS</b> (cardholder data); <b>MITRE ATT&amp;CK</b>, Cyber Kill Chain, Diamond Model; OWASP. Regs: GDPR, HIPAA, SOX.</li>
+      </ul>
+      <div class="callout tip"><span class="lbl">Acronym soup</span> CompTIA publishes a huge acronym appendix and expects you to know it. Build an <b>Anki deck of acronyms + one-line definitions</b> — it's the single highest-ROI recall tool for this exam.</div>
+    </section>
+
+    <!-- MATERIALS -->
+    <section id="t-materials">
+      <h2>8 · Study Materials <span class="kbd">(community consensus)</span></h2>
+      <p class="legend">Averaged across 40+ r/CompTIA and r/SecurityPlus threads (pass write-ups &amp; course debates). The consensus is remarkably consistent.</p>
+
+      <div class="consensus"><b>TL;DR:</b> <b>Professor Messer</b> (free videos) + <b>Darril Gibson's book</b> and/or <b>Anki</b> for reinforcement + <b>Jason Dion practice exams</b> drilled to ~80–85% → sit the exam. Typically 2–4 weeks. <b>Never touch exam dumps.</b></div>
+
+      <h3>1 · Video courses</h3>
+      <table>
+        <tr><th>Course</th><th>Why</th></tr>
+        <tr><td><span class="rank">#1</span><b>Professor Messer</b> (FREE, YouTube)</td><td>~120 videos mapped objective-by-objective + free monthly live study group + free pop quizzes. The default backbone. Critique: terse ("straight to the point") — some beginners want more depth.</td></tr>
+        <tr><td><b>Jason Dion</b> (Udemy, ~$15–25 on sale)</td><td>Narrative, scenario-based; the big draw is it <b>bundles six 90-Q practice exams</b>. The most-recommended paid supplement.</td></tr>
+        <tr><td><b>Mike Meyers</b> (Udemy)</td><td>The go-to if Messer is too terse — fuller explainer, then review with Messer.</td></tr>
+        <tr><td><b>Mike Chapple</b> (LinkedIn Learning)</td><td>Solid but secondary; mainly if you already have LinkedIn Learning.</td></tr>
+      </table>
+
+      <h3>2 · Practice exams <span class="tag d2">most important</span></h3>
+      <div class="consensus"><b>Jason Dion's 6×90-Q practice tests</b> are the single most-cited practice resource. They're <b>intentionally harder/nitpickier</b> than the real exam — so <b>~80% on Dion = ready, 85%+ = comfortable</b>. <b>Professor Messer's practice exams</b> (~$25, MC-only) are considered <i>closer</i> to real difficulty — great final gut-check. <b>CompTIA CertMaster</b> (official) includes PBQs.</div>
+
+      <h3>3 · PBQ &amp; hands-on practice</h3>
+      <ul>
+        <li>Best PBQ prep: <b>Dion's PBQ module</b> and <b>CompTIA CertMaster</b> (Messer's practice exams are MC-only). Free PBQ drills at securityplus.training.</li>
+        <li>Memorize for PBQs: <b>ports</b>, reading logs/packet captures, <b>firewall/ACL rule ordering</b>, matching attacks → defenses, basic Linux/networking commands.</li>
+      </ul>
+
+      <h3>4 · Free resources</h3>
+      <ul>
+        <li><b>Professor Messer's ecosystem</b> (videos + study group + pop quizzes) is the free backbone.</li>
+        <li><b>Community Anki decks</b> (free, often Messer-based) — the community favors grassroots/GitHub decks over paid ones. Great for acronyms.</li>
+        <li><b>The official SY0-701 objectives PDF</b> — use it as your master checklist; make your own notes keyed to it.</li>
+      </ul>
+
+      <h3>5 · Books / notes</h3>
+      <ul>
+        <li><span class="rank">Book #1</span><b>Darril Gibson &amp; Joe Shelley — "CompTIA Security+ Get Certified Get Ahead: SY0-701 Study Guide"</b> — plain-English, with a 50-Q pre-test, per-chapter quizzes, 300+ practice questions, and a full practice exam.</li>
+        <li><b>Professor Messer's SY0-701 Course Notes PDF</b> (~$20) — summarizes every objective.</li>
+      </ul>
+
+      <h4>Sources</h4>
+      <ul class="legend">
+        <li>Official: <a href="https://www.comptia.org/en-us/certifications/security/" target="_blank" rel="noopener">CompTIA Security+</a> · <a href="https://www.professormesser.com/sy0-701-secplus-resources/" target="_blank" rel="noopener">Professor Messer resources</a> · <a href="https://www.getcertifiedgetahead.com/" target="_blank" rel="noopener">Get Certified Get Ahead (Gibson)</a></li>
+        <li>Community: r/CompTIA pass threads (1bit5q6, 1g95zx2, 197lvk7, 191lzhz, 18982rw) · <a href="https://www.comptia.org/en-us/blog/comptia-a-and-security-brain-dumps-why-they-are-bad-for-you/" target="_blank" rel="noopener">CompTIA brain-dump policy</a></li>
+      </ul>
+    </section>
+
+    <!-- PLAN -->
+    <section id="t-plan">
+      <h2>9 · Study Plan (Retention-Based, ≈3–5 weeks)</h2>
+      <p>Security+ is <b>broad and acronym-heavy</b>, which makes it the ideal candidate for <b>spaced repetition (Anki)</b> and <b>retrieval practice</b>. Cramming a vocabulary this large fails; distributed, self-tested review succeeds — and it's how you'll actually retain the concepts on the job.</p>
+      <table>
+        <tr><th>Principle</th><th>How to apply it to Security+</th></tr>
+        <tr><td><b>Spaced repetition</b></td><td>Run an Anki acronym/concept deck <b>daily</b> from day one — the single highest-ROI habit for this exam.</td></tr>
+        <tr><td><b>Active recall</b></td><td>Use per-objective quizzes (Gibson's book, Messer's pop quizzes) instead of re-watching. Test, then review misses.</td></tr>
+        <tr><td><b>Interleaving</b></td><td>Mix domains in practice sets; the exam jumps between crypto, IAM, risk, and operations.</td></tr>
+        <tr><td><b>Elaboration</b></td><td>For each control/attack, explain <i>why</i> it fits and how it's mitigated — not just the definition.</td></tr>
+        <tr><td><b>Concrete practice</b></td><td>Do PBQ-style drills early (ports, logs, firewall rules) so the format isn't new.</td></tr>
+      </table>
+      <table>
+        <tr><th>Phase</th><th>Focus</th><th>Actions</th></tr>
+        <tr><td><b>Week 1</b></td><td>Concepts + threats</td><td>Messer Domains 1–2 in order; start the Anki deck (run it daily forever after). Notes keyed to the objectives PDF.</td></tr>
+        <tr><td><b>Week 2</b></td><td>Architecture + operations</td><td>Messer Domains 3–4 (Ops is 28% — go deep). Reinforce with Gibson chapter quizzes. Begin PBQ drills (ports, logs, firewall).</td></tr>
+        <tr><td><b>Week 3</b></td><td>Program mgmt + first practice</td><td>Messer Domain 5. Take your first full Dion exam cold; review <b>every</b> miss and Anki the gaps.</td></tr>
+        <tr><td><b>Week 4</b></td><td>Drill to readiness</td><td>Rotate through Dion's 6 exams + PBQ practice; interleaved review; push to consistent <b>80–85%</b>.</td></tr>
+        <tr><td><b>Week 5</b></td><td>Gut-check + taper</td><td>Messer's practice exams (closer to real). Final acronym/port sweep with the <a href="cram.html">Cram Jam</a>. Light review, good sleep, then sit it.</td></tr>
+      </table>
+      <p class="legend">Compress to 1–2 weeks with prior A+/Network+/IT experience; total beginners lean toward 4–6 weeks.</p>
+      <div class="callout tip"><span class="lbl">Readiness bar</span> You're ready when you're consistently <b>80–85%+</b> on fresh Dion exams (they run harder), you can recall the acronyms/ports cold, and you can explain the BEST mitigation for a given attack — not just recognize the term.</div>
+    </section>
+
+    <!-- TIPS -->
+    <section id="t-tips">
+      <h2>10 · Tips &amp; Common Traps</h2>
+      <ul>
+        <li><b>PBQs first, but do them last.</b> Flag the heavy ones, clear the multiple-choice, then return. Never leave a PBQ blank (partial credit).</li>
+        <li><b>Pick the BEST / MOST likely / FIRST</b> answer — several options are often technically correct. Watch keywords <b>FIRST, BEST, MOST, LEAST, NOT</b>.</li>
+        <li><b>Acronym soup</b> — memorize the acronym list cold (that's what Anki is for).</li>
+        <li><b>Symmetric vs asymmetric vs hashing</b> — and what a digital signature provides (integrity + auth + non-repudiation).</li>
+        <li><b>CRL vs OCSP</b>, <b>RADIUS vs TACACS+</b>, <b>DAC/MAC/RBAC/ABAC</b>, <b>IDS vs IPS</b>, <b>SIEM vs SOAR</b>, <b>EDR vs XDR</b>.</li>
+        <li><b>Risk math:</b> SLE = AV×EF, ALE = SLE×ARO; know RTO/RPO/MTBF/MTTR.</li>
+        <li><b>IR order:</b> Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned.</li>
+        <li>The real exam often feels <b>less nitpicky than Dion's practice tests</b> — don't panic if Dion scores feel low.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Avoid dumps — seriously</span> "SY0-701 real questions PDF" dump sites <b>violate CompTIA's Candidate Agreement</b> — penalties include a <b>12-month ban, score invalidation, and decertification</b> (sometimes caught years later via answer-pattern audits). They're also often outdated (601 vs 701) and teach nothing for PBQs or the job. <b>Legitimate practice exams (Dion, Messer, CertMaster) are original questions and are fine</b> — dumps are stolen live questions.</div>
+
+      <div class="footer">
+        <p><b>Sources:</b> the official CompTIA SY0-701 Exam Objectives (v5.0) — domain weightings &amp; objective titles verified verbatim — plus 40+ r/CompTIA / r/SecurityPlus community pass write-ups and CompTIA's own guidance. Verify current pricing &amp; the exam version (SY0-701 retires ~2026) on comptia.org before booking. Not affiliated with or endorsed by CompTIA.</p>
+      </div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+  </main>
+</div>
+<a id="top"></a>
+<script src="../assets/scrollspy.js"></script>
+</body>
+</html>

@@ -1,20 +1,50 @@
-# AWS Certified Solutions Architect – Associate (SAA-C03) — Study Material
+# 🎓 Certification Study Materials
 
-A single self-contained HTML study guide for the **AWS Certified Solutions Architect – Associate (SAA-C03)** exam.
+A personal, research-backed hub of exam study guides — each with a high-level overview, a thorough deep-dive, community-sourced study-material recommendations (Reddit consensus), and a dense one-page **"Cram Jam"** for the day of the exam.
 
-👉 **View it:** https://jake-kelley.github.io/aws-saa-material/
+👉 **View it:** https://jake-kelley.github.io/study-materials/
 
-## What's inside `index.html`
+## Certifications covered
+
+| Cert | Code | Guide | Cram |
+|------|------|-------|------|
+| AWS Solutions Architect – Associate | SAA-C03 | [guide](saa/index.html) | [cram](saa/cram.html) |
+| Splunk Core Certified Power User | SPLK-1002 | [guide](splunk-power-user/index.html) | [cram](splunk-power-user/cram.html) |
+| CompTIA Security+ | SY0-701 | [guide](security-plus/index.html) | [cram](security-plus/cram.html) |
+| Microsoft Azure — Designing Infrastructure Solutions | AZ-305 | [guide](az-305/index.html) | [cram](az-305/cram.html) |
+| HashiCorp Terraform Associate | 003 → 004 | [guide](terraform-associate/index.html) | [cram](terraform-associate/cram.html) |
+
+## What each guide contains
 
 - **Fixed left-panel table of contents** with scrollspy (stays on screen and tracks your position as you scroll).
-- **Part 1 — High-Level Overview:** exam-at-a-glance, the 4 domains, a core-services snapshot, recommended materials, and a quick study plan. Every overview item links straight into its deep-dive section.
-- **Part 2 — Thorough Study Guide:** full coverage of all four exam domains (Secure, Resilient, High-Performing, Cost-Optimized), the in-scope AWS services by category, "which service?" decision tables, a 6-week study plan, and exam-day tips/traps.
-- **Recommended study materials** synthesized from the r/AWSCertifications community consensus.
+- **High-level overview** — exam-at-a-glance, domains/weightings, a service/concept snapshot, and a quick study plan. Overview items link straight into the deep-dive sections.
+- **Thorough study guide** — every exam domain/objective, decision tables, and service/command references.
+- **Study materials** — the most commonly recommended courses, practice exams, and free resources, synthesized from Reddit and community write-ups (with sources cited).
+- **Retention-based study plan** — built on evidence-based learning (active recall, spaced repetition, interleaving, the Feynman technique, hands-on practice), not just "watch videos and cram."
+- **⚡ Cram Jam** — a dense, print-friendly one-pager (`cram.html`) to speed-read right before the exam.
 
-## Sources
+## Structure
 
-- [AWS official certification page](https://aws.amazon.com/certification/certified-solutions-architect-associate/)
-- [SAA-C03 official exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html)
-- Study-material recommendations synthesized from AWS certification community discussion.
+```
+study-materials/
+├── index.html              # hub landing page
+├── assets/
+│   ├── style.css           # shared guide styles (per-cert color themes)
+│   ├── cram.css            # dense cram-sheet styles (print-friendly)
+│   └── scrollspy.js        # shared TOC scrollspy
+├── saa/                    # each cert: index.html (guide) + cram.html
+├── splunk-power-user/
+├── security-plus/
+├── az-305/
+└── terraform-associate/
+```
 
-> Figures (service limits, pricing) are study aids — always verify against current AWS documentation. Not affiliated with or endorsed by AWS.
+## Sources & caveats
+
+Guides are compiled from official exam guides/objectives and community consensus (r/AWSCertifications, r/Splunk, r/CompTIA, r/AzureCertification, r/Terraform + first-hand pass write-ups). A few notes:
+
+- **Verify service limits, pricing, and the current exam version** against official vendor documentation before your exam — figures are study aids, not guarantees.
+- **Terraform 003** retired in January 2026; **004** is current and ~90% identical (the guide flags the deltas).
+- **Security+ SY0-701** domain weightings and objectives were verified verbatim against the official CompTIA objectives PDF.
+
+> Not affiliated with or endorsed by AWS, Splunk, CompTIA, Microsoft, or HashiCorp.

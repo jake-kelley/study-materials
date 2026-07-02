@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-305 — Cram Jam (1-page)</title>
+<link rel="stylesheet" href="../assets/cram.css">
+</head>
+<body class="theme-azure">
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1>⚡ AZ-305 — Cram Jam</h1>
+      <div class="sub">Designing Azure Infrastructure Solutions · dense recall · pairs with the <a href="index.html" style="color:#fff;text-decoration:underline;">full guide</a>.</div>
+    </div>
+    <div class="meta">
+      <b>~40–60 Q</b> · ~120 min · pass <b>700</b>/1000<br>
+      $165 · renews yearly free · AZ-104 prereq (cert)<br>
+      Infra 30–35% · ID/Gov 25–30% · Data 20–25% · BC 15–20%
+    </div>
+    <div class="btns">
+      <a class="btn ghost" href="index.html">Full guide</a>
+      <button class="btn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <div class="box">
+      <h2>Case Study Technique</h2>
+      <ul>
+        <li>Tabs: Overview / Business Req / Technical Req / Existing Env + 6–8 Q.</li>
+        <li><b>Read the question first</b>, then hunt constraint keywords: <b>RTO, RPO, cost, region/sovereignty, compliance, latency, HA%</b>.</li>
+        <li>May <b>not be able to return</b> once you leave the block — don't rush.</li>
+        <li>Design exam: many answers "work"; constraints pick the best.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Identity — Entra ID</h2>
+      <ul>
+        <li>Tiers Free / <b>P1</b> (Conditional Access, dynamic groups, SSPR writeback) / <b>P2</b> (+PIM, Identity Protection, Access Reviews).</li>
+        <li>Hybrid sync: PHS / PTA / Federation(ADFS).</li>
+        <li>RBAC = authorize resource access; Conditional Access = context sign-in; B2B guest, B2C customer.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Governance</h2>
+      <ul>
+        <li>Hierarchy: <b>Mgmt Group → Subscription → Resource Group → Resource</b> (inherit down).</li>
+        <li><b>Azure Policy</b> = what's allowed (Deny/Audit/Append/DINE); <b>RBAC</b> = who can do what.</li>
+        <li>Locks (CanNotDelete/ReadOnly), tags, Blueprints.</li>
+        <li><b>Key Vault</b> = secrets/keys/certs (Std vs Premium/HSM) + managed identities.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Monitoring</h2>
+      <ul>
+        <li><b>Azure Monitor</b> umbrella; <b>Log Analytics</b> (KQL); <b>App Insights</b> (APM).</li>
+        <li>Diagnostic settings → Log Analytics / Storage(archive) / Event Hubs(SIEM).</li>
+        <li>Alerts + Action Groups; <b>Sentinel</b> = SIEM/SOAR.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Storage</h2>
+      <table class="mini">
+        <tr><th>Need</th><th>Use</th></tr>
+        <tr><td>object / data lake</td><td>Blob / ADLS Gen2</td></tr>
+        <tr><td>SMB file share</td><td>Azure Files</td></tr>
+        <tr><td>disk for 1 VM</td><td>Managed Disk</td></tr>
+      </table>
+      <ul>
+        <li>Tiers: <b>Hot → Cool → Cold → Archive</b> (rehydrate latency).</li>
+        <li>Redundancy: <b>LRS &lt; ZRS &lt; GRS &lt; GZRS</b> (RA-* = read secondary).</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Relational DB</h2>
+      <table class="mini">
+        <tr><th>Option</th><th>Best for</th></tr>
+        <tr><td>Azure SQL DB</td><td>new PaaS app, most managed</td></tr>
+        <tr><td>SQL Managed Instance</td><td><b>lift-shift</b>, near-full compat, VNet</td></tr>
+        <tr><td>SQL on VM</td><td>full OS/instance control</td></tr>
+      </table>
+      <p>vCore tiers: General Purpose / <b>Business Critical</b> (local SSD+HA replica) / <b>Hyperscale</b> (100TB). Serverless=auto-pause.</p>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Cosmos DB</h2>
+      <ul>
+        <li>APIs: NoSQL(Core), MongoDB, Cassandra, Gremlin(graph), Table. Match existing app.</li>
+        <li>Consistency (strong→weak): <b>Strong → Bounded Staleness → Session(default) → Consistent Prefix → Eventual</b>.</li>
+        <li>Multi-region writes, global, &lt;10ms.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Business Continuity</h2>
+      <ul>
+        <li><b>Azure Backup</b> = restorable copies (RPO). <b>Site Recovery (ASR)</b> = replicate + region failover (RTO).</li>
+        <li>HA: <b>Availability Set</b> (fault/update domains, 1 DC, 99.95%) vs <b>Zone</b> (separate DCs, 99.99%) vs region pairs.</li>
+        <li>VM Scale Sets = autoscale identical VMs.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Compute / Hosting</h2>
+      <table class="mini">
+        <tr><th>Need</th><th>Use</th></tr>
+        <tr><td>managed web app</td><td>App Service</td></tr>
+        <tr><td>full K8s</td><td>AKS</td></tr>
+        <tr><td>serverless containers</td><td>Container Apps</td></tr>
+        <tr><td>event fns</td><td>Functions</td></tr>
+        <tr><td>HPC/batch</td><td>Batch</td></tr>
+        <tr><td>full OS/legacy</td><td>VM</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2>Networking / LB (2×2)</h2>
+      <table class="mini">
+        <tr><th></th><th>Regional</th><th>Global</th></tr>
+        <tr><td><b>L4</b></td><td>Load Balancer</td><td>Traffic Mgr (DNS)</td></tr>
+        <tr><td><b>L7</b></td><td>App Gateway (+WAF)</td><td>Front Door (+CDN/WAF)</td></tr>
+      </table>
+      <p><b>VPN Gateway</b> = internet-encrypted; <b>ExpressRoute</b> = private dedicated circuit (high BW/SLA). ER+VPN failover.</p>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Messaging</h2>
+      <table class="mini">
+        <tr><th>Need</th><th>Use</th></tr>
+        <tr><td>enterprise queue/topic, order, txn</td><td>Service Bus</td></tr>
+        <tr><td>discrete event routing</td><td>Event Grid</td></tr>
+        <tr><td>high-throughput streaming</td><td>Event Hubs</td></tr>
+        <tr><td>simple queue</td><td>Storage Queue</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2>Migration + Frameworks</h2>
+      <ul>
+        <li><b>Azure Migrate</b> hub; <b>DMS</b> for DBs; <b>Data Box</b> offline bulk.</li>
+        <li><b>CAF</b>: Strategy→Plan→Ready→Adopt→Govern→Manage. "R"s: rehost/refactor/rearchitect/rebuild.</li>
+        <li><b>WAF pillars</b>: Reliability, Security, Cost, Operational Excellence, Performance.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Top Traps</h2>
+      <div class="warn">Backup(RPO) vs ASR(RTO) · SQL DB vs MI(lift-shift) vs VM · LB/AppGw/FrontDoor/TrafficMgr (L4/L7×regional/global) · VPN vs ExpressRoute · P1 vs P2(PIM) · Set 99.95 vs Zone 99.99 · LRS&lt;ZRS&lt;GRS&lt;GZRS · Cosmos consistency order</div>
+      <div class="tip">Re-watch John Savill's Study Cram 24–48h before. Practice the exam sandbox UI. Avoid dumps.</div>
+    </div>
+
+  </div>
+  <div class="footnote">Cram Jam · AZ-305 · pairs with the full guide · verify current skills outline on learn.microsoft.com · not affiliated with Microsoft.</div>
+</div>
+</body>
+</html>
