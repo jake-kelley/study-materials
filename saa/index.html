@@ -558,7 +558,8 @@
       </table>
       <h4>Edge &amp; DNS</h4>
       <ul>
-        <li><b>Amazon CloudFront</b> — CDN caching content at edge locations; supports dynamic + static, OAC to lock S3 origins, signed URLs/cookies, Lambda@Edge / CloudFront Functions, WAF integration, DDoS mitigation.</li>
+        <li><b>Amazon CloudFront</b> — CDN caching content at edge locations; supports dynamic + static, OAC to lock S3 origins, signed URLs/cookies, Lambda@Edge / CloudFront Functions, WAF integration, DDoS mitigation. Also: <b>origin failover</b> (primary + secondary origin in an origin group) and <b>geo restriction</b> (allow/block countries).</li>
+        <li><b>Hybrid DNS:</b> <b>Route 53 Resolver endpoints</b> — <i>inbound</i> lets on-prem resolve VPC names; <i>outbound</i> + forwarding rules lets VPCs resolve on-prem domains. The answer to "DNS between datacenter and VPC."</li>
         <li><b>AWS Global Accelerator</b> — anycast static IPs routing over the AWS backbone to the nearest healthy endpoint; great for TCP/UDP, gaming, non-HTTP, fast regional failover. (CloudFront caches content; Global Accelerator accelerates/routes traffic.)</li>
         <li><b>Amazon Route 53</b> — DNS + health checks. Routing policies: <b>Simple, Weighted, Latency, Failover, Geolocation, Geoproximity, Multivalue answer, IP-based</b>. Alias records point to AWS resources for free.</li>
         <li><b>Record types:</b> <b>A</b>/<b>AAAA</b> (name → IPv4/IPv6), <b>CNAME</b> (name → another name; <b>not allowed at the zone apex</b>), <b>Alias</b> (AWS extension — points at ELB/CloudFront/S3/etc., <b>works at the apex</b>, free queries). "Point example.com at an ALB" → <b>Alias</b>, not CNAME.</li>
