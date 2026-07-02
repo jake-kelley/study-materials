@@ -1,0 +1,75 @@
+/* ============================================================
+   "Cram Jam" one-pager stylesheet — dense, print-friendly.
+   Same theme classes as style.css (theme-aws default, etc.)
+   ============================================================ */
+:root{
+  --accent:#FF9900; --accent-d:#EC7211; --nav:#232F3E;
+  --ink:#1b2733; --muted:#5b6b7b; --line:#d8e0e8; --bg:#eef1f4;
+  --box:#ffffff; --good:#1a8a53; --bad:#c0392b; --code-bg:#eef2f6;
+}
+body.theme-splunk   { --accent:#5EB226; --accent-d:#4a9018; --nav:#14181b; }
+body.theme-security { --accent:#E02B34; --accent-d:#b81f27; --nav:#182a3f; }
+body.theme-azure    { --accent:#0A84D4; --accent-d:#005a9e; --nav:#1f334f; }
+body.theme-terraform{ --accent:#8850CF; --accent-d:#6b3aa0; --nav:#241539; }
+
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:11px;line-height:1.34;}
+a{color:var(--accent-d);text-decoration:none;}
+
+.wrap{max-width:1240px;margin:0 auto;padding:14px 16px 40px 16px;}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  background:var(--nav);color:#fff;border-radius:8px;padding:12px 16px;margin-bottom:12px;border-bottom:3px solid var(--accent);}
+.topbar h1{font-size:17px;margin:0;line-height:1.2;}
+.topbar .sub{font-size:11px;color:#c3cedb;margin-top:2px;}
+.topbar .meta{font-size:10.5px;color:#d4deea;text-align:right;line-height:1.5;min-width:150px;}
+.topbar .meta b{color:var(--accent);}
+.btns{display:flex;gap:6px;}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:5px;padding:7px 11px;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;}
+.btn:hover{background:var(--accent-d);}
+
+.cols{column-count:3;column-gap:12px;}
+@media(max-width:1000px){.cols{column-count:2;}}
+@media(max-width:640px){.cols{column-count:1;}}
+
+.box{break-inside:avoid;background:var(--box);border:1px solid var(--line);border-radius:7px;
+  padding:8px 10px 9px 10px;margin:0 0 12px 0;box-shadow:0 1px 1px rgba(16,24,40,.03);}
+.box h2{font-size:11.5px;margin:0 0 5px 0;padding:2px 7px;color:#fff;background:var(--accent);
+  border-radius:4px;letter-spacing:.3px;text-transform:uppercase;font-weight:800;}
+.box h2.alt{background:var(--nav);}
+.box h3{font-size:11px;margin:7px 0 2px 0;color:var(--accent-d);font-weight:800;}
+.box ul{margin:3px 0;padding-left:15px;}
+.box li{margin:2px 0;}
+.box p{margin:3px 0;}
+.box b{color:#111;}
+.k{color:var(--accent-d);font-weight:700;}
+.mono{font-family:"SFMono-Regular",Consolas,Menlo,monospace;background:var(--code-bg);border-radius:3px;padding:0 3px;font-size:10px;}
+.good{color:var(--good);font-weight:700;}
+.bad{color:var(--bad);font-weight:700;}
+
+table.mini{width:100%;border-collapse:collapse;margin:4px 0;font-size:10px;}
+table.mini td,table.mini th{border:1px solid var(--line);padding:2px 4px;vertical-align:top;text-align:left;}
+table.mini th{background:var(--nav);color:#fff;font-weight:700;}
+table.mini tr:nth-child(even) td{background:#f6f8fa;}
+
+.pill{display:inline-block;background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:0 6px;font-size:9.5px;margin:1px 1px;}
+.tip{border-left:3px solid var(--good);background:#eefaf2;padding:4px 7px;border-radius:0 5px 5px 0;margin:4px 0;}
+.warn{border-left:3px solid var(--bad);background:#fdeeec;padding:4px 7px;border-radius:0 5px 5px 0;margin:4px 0;}
+
+.footnote{font-size:9.5px;color:var(--muted);margin-top:8px;text-align:center;}
+
+@media print{
+  body{background:#fff;font-size:8.4px;}
+  .wrap{max-width:none;padding:0;}
+  .btns{display:none;}
+  .topbar{border-radius:0;padding:7px 10px;margin-bottom:7px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cols{column-count:4;column-gap:7px;}
+  .box{margin-bottom:7px;padding:5px 6px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .box h2{font-size:8.6px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  table.mini,table.mini th,table.mini td{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  a{color:var(--ink);}
+  @page{size:landscape;margin:8mm;}
+}

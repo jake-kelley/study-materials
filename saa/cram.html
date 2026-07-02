@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAA-C03 — Cram Jam (1-page)</title>
+<link rel="stylesheet" href="../assets/cram.css">
+</head>
+<body class="theme-aws">
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <h1>⚡ AWS SAA-C03 — Cram Jam</h1>
+      <div class="sub">Last-minute dense recall sheet · read fast, stash in memory. Not a substitute for the <a href="index.html" style="color:#fff;text-decoration:underline;">full guide</a>.</div>
+    </div>
+    <div class="meta">
+      <b>65 Q</b> · 130 min · pass <b>720</b>/1000<br>
+      50 scored + 15 unscored · $150 · 3-yr valid<br>
+      Secure 30% · Resilient 26% · Perf 24% · Cost 20%
+    </div>
+    <div class="btns">
+      <a class="btn ghost" href="index.html">Full guide</a>
+      <button class="btn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <div class="box">
+      <h2>Well-Architected Pillars</h2>
+      <ul>
+        <li><b>Op Excellence</b> · <b>Security</b> · <b>Reliability</b> · <b>Performance</b> · <b>Cost</b> · <b>Sustainability</b></li>
+        <li><span class="k">Shared Responsibility:</span> AWS = security <b>OF</b> cloud; you = security <b>IN</b> cloud (data, IAM, OS patching, config).</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">IAM</h2>
+      <ul>
+        <li>Global, free. <b>Explicit Deny &gt; any Allow</b>; default = implicit deny.</li>
+        <li><b>Roles &gt; access keys.</b> EC2 → attach <b>instance role</b>, never hardcode keys.</li>
+        <li>Cross-account = <b>role + sts:AssumeRole</b>, not new users.</li>
+        <li>Policy types: identity, resource (has <span class="mono">Principal</span>), permission boundary, <b>SCP</b>.</li>
+        <li><b>STS</b> = temp creds. <b>Identity Center</b> = SSO. <b>Cognito</b> = customer app identity (User Pool = sign-in, Identity Pool = AWS creds).</li>
+        <li>MFA on root; lock root away; least privilege.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Multi-Account</h2>
+      <ul>
+        <li><b>Organizations</b> = many accts + consolidated billing + OUs.</li>
+        <li><b>SCP</b> = guardrail / max permission ceiling — <b>does NOT grant</b>.</li>
+        <li><b>Control Tower</b> = automated governed landing zone.</li>
+        <li><b>RAM</b> = share resources across accounts.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Encryption / Data</h2>
+      <ul>
+        <li><b>KMS</b> = managed keys, envelope encryption, auto annual rotation (CMK). <b>CloudHSM</b> = dedicated/single-tenant/FIPS 140-2 L3.</li>
+        <li><b>ACM</b> = free auto-renew TLS certs (CloudFront needs us-east-1).</li>
+        <li><b>Secrets Manager</b> = secrets + <b>auto rotation</b> (RDS). <b>Parameter Store</b> = cheaper, no rotation.</li>
+        <li><b>Macie</b> = find PII in S3. <b>Config</b> = config/compliance history. <b>Artifact</b> = compliance reports.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Security Services (by job)</h2>
+      <table class="mini">
+        <tr><th>Job</th><th>Service</th></tr>
+        <tr><td>Web exploits SQLi/XSS, rate-limit</td><td><b>WAF</b></td></tr>
+        <tr><td>DDoS</td><td><b>Shield</b> (Adv=$)</td></tr>
+        <tr><td>Threat detection (logs)</td><td><b>GuardDuty</b></td></tr>
+        <tr><td>Vuln/CVE scan (EC2/ECR/λ)</td><td><b>Inspector</b></td></tr>
+        <tr><td>PII in S3</td><td><b>Macie</b></td></tr>
+        <tr><td>Aggregate findings</td><td><b>Security Hub</b></td></tr>
+        <tr><td>Investigate root cause</td><td><b>Detective</b></td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">VPC / Networking</h2>
+      <ul>
+        <li><b>SG</b> = instance, <b>stateful</b>, allow-only. <b>NACL</b> = subnet, <b>stateless</b>, allow+deny, numbered order.</li>
+        <li>Public subnet = route <span class="mono">0.0.0.0/0 → IGW</span>. Private outbound → <b>NAT GW</b> (in public subnet, per-AZ for HA).</li>
+        <li><b>Gateway endpoint</b> = S3/DynamoDB, <b>free</b>, route table. <b>Interface endpoint</b> = PrivateLink, ENI, $.</li>
+        <li><b>VPC Peering</b> non-transitive. <b>Transit GW</b> = hub for many VPCs+on-prem.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Load Balancers</h2>
+      <table class="mini">
+        <tr><th>LB</th><th>Layer / use</th></tr>
+        <tr><td><b>ALB</b></td><td>L7 HTTP(S), path/host routing</td></tr>
+        <tr><td><b>NLB</b></td><td>L4 TCP/UDP, static IP, millions rps, ultra-low latency</td></tr>
+        <tr><td><b>GWLB</b></td><td>L3, 3rd-party appliances (firewalls)</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2>Edge &amp; DNS</h2>
+      <ul>
+        <li><b>CloudFront</b> = CDN, <b>cache</b> content at edge, OAC to S3, signed URLs.</li>
+        <li><b>Global Accelerator</b> = static anycast IPs, <b>route</b> TCP/UDP to nearest healthy region, fast failover.</li>
+        <li><b>Route 53</b> policies: Simple, Weighted, Latency, <b>Failover</b>, Geolocation, Geoproximity, Multivalue, IP. Alias = free to AWS resources.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>S3</h2>
+      <ul>
+        <li><b>11 nines</b> durability, ≥3 AZ (not One Zone-IA). Object ≤5 TB, multipart &gt;5 GB.</li>
+        <li>3,500 PUT / 5,500 GET per prefix/s. Transfer Acceleration = edge uploads.</li>
+        <li>Block Public Access on by default; Versioning; Object Lock = WORM.</li>
+      </ul>
+      <h3>Storage classes</h3>
+      <table class="mini">
+        <tr><th>Class</th><th>Use</th></tr>
+        <tr><td>Standard</td><td>hot</td></tr>
+        <tr><td><b>Intelligent-Tiering</b></td><td><b>unknown</b> access</td></tr>
+        <tr><td>Standard-IA</td><td>infrequent, multi-AZ</td></tr>
+        <tr><td>One Zone-IA</td><td>infrequent, recreatable, 1 AZ</td></tr>
+        <tr><td>Glacier Instant</td><td>archive, ms</td></tr>
+        <tr><td>Glacier Flexible</td><td>min–hrs</td></tr>
+        <tr><td>Deep Archive</td><td>cheapest, ~12h</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2>Block / File Storage</h2>
+      <ul>
+        <li><b>EBS</b> = 1 EC2, <b>single-AZ</b>, snapshot→S3. gp3 (tune IOPS/throughput), io2 (high IOPS, Multi-Attach), st1 (throughput HDD), sc1 (cold).</li>
+        <li><b>Instance store</b> = ephemeral, lost on stop.</li>
+        <li><b>EFS</b> = NFS, Linux, multi-AZ, elastic. <b>FSx</b>: Windows(SMB/AD), Lustre(HPC+S3), NetApp, OpenZFS.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Compute + Purchasing</h2>
+      <ul>
+        <li>Families: M/T general, C compute, R/X memory, I/D storage, P/G GPU.</li>
+        <li>Placement: <b>Cluster</b>(low latency/1AZ), <b>Spread</b>(≤7/AZ distinct HW), <b>Partition</b>(HDFS/Cassandra).</li>
+        <li>λ: 15-min max, 128MB–10GB mem (=CPU). Fargate = serverless containers.</li>
+      </ul>
+      <table class="mini">
+        <tr><th>Option</th><th>Save / use</th></tr>
+        <tr><td>On-Demand</td><td>spiky/short</td></tr>
+        <tr><td><b>Savings Plans</b></td><td>~72%, $/hr commit, flexible</td></tr>
+        <tr><td>Reserved</td><td>~72%, steady, fixed attrs</td></tr>
+        <tr><td><b>Spot</b></td><td>~90%, interruptible, 2-min warn</td></tr>
+        <tr><td>Dedicated</td><td>compliance/BYOL</td></tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h2>Databases</h2>
+      <ul>
+        <li><b>RDS</b> Multi-AZ = HA (sync standby, failover) — <span class="bad">NOT</span> read scaling. <b>Read replica</b> = async read scaling (cross-region OK).</li>
+        <li><b>Aurora</b> = 6 copies/3 AZ, 15 replicas, auto-heal, Serverless v2.</li>
+        <li><b>DynamoDB</b> = serverless KV, single-digit ms, on-demand/provisioned, Global Tables, Streams. <b>DAX</b> = microsecond cache.</li>
+        <li><b>ElastiCache</b> Redis/Memcached = cache/sessions. <b>Redshift</b> = OLAP warehouse. <b>RDS Proxy</b> = pool conns (λ).</li>
+      </ul>
+      <div class="warn">"Improve reads" → replica/cache. "Survive AZ" → Multi-AZ.</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Decouple / Messaging</h2>
+      <table class="mini">
+        <tr><th>Need</th><th>Use</th></tr>
+        <tr><td>Buffer/decouple, retry</td><td><b>SQS</b></td></tr>
+        <tr><td>Order + exactly-once</td><td>SQS <b>FIFO</b></td></tr>
+        <tr><td>Fan-out to many</td><td><b>SNS</b> (+SQS)</td></tr>
+        <tr><td>Route events / SaaS / cron</td><td><b>EventBridge</b></td></tr>
+        <tr><td>Multi-step workflow</td><td><b>Step Functions</b></td></tr>
+        <tr><td>JMS/AMQP/MQTT migrate</td><td>Amazon MQ</td></tr>
+      </table>
+      <p>SQS: retain 4d(def)/14d max, visibility 30s/12h, long poll ≤20s, msg ≤256KB, DLQ for poison.</p>
+    </div>
+
+    <div class="box">
+      <h2>Scaling / Serverless</h2>
+      <ul>
+        <li><b>ASG</b> across AZs; policies: target-tracking, step, scheduled, predictive. + ELB health checks.</li>
+        <li>Make instances <b>stateless</b> → session in DynamoDB/ElastiCache.</li>
+        <li>Containers: <b>ECS</b>(AWS-native), <b>EKS</b>(K8s), on EC2 or <b>Fargate</b>. <b>ECR</b>=registry.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>HA &amp; Disaster Recovery</h2>
+      <p><b>RPO</b>=data loss, <b>RTO</b>=downtime. Lower = pricier.</p>
+      <table class="mini">
+        <tr><th>Strategy</th><th>RTO / cost</th></tr>
+        <tr><td>Backup &amp; Restore</td><td>hrs / $</td></tr>
+        <tr><td>Pilot Light</td><td>10s min / $$</td></tr>
+        <tr><td>Warm Standby</td><td>min / $$$</td></tr>
+        <tr><td>Active-Active</td><td>~0 / $$$$</td></tr>
+      </table>
+      <p><b>AWS Backup</b> central; S3 CRR + DynamoDB Global Tables = active-active data.</p>
+    </div>
+
+    <div class="box">
+      <h2>Data / Analytics</h2>
+      <ul>
+        <li><b>Kinesis Data Streams</b> = real-time, shards, custom consumers, replay. <b>Firehose</b> = no-code delivery to S3/Redshift/OpenSearch.</li>
+        <li><b>Glue</b> = serverless ETL + catalog (CSV→Parquet). <b>Athena</b> = SQL on S3 (pay/scan). <b>EMR</b> = Spark/Hadoop. <b>QuickSight</b> = BI.</li>
+        <li>Move data: <b>DataSync</b>(online), <b>Snow</b>(offline PB), <b>Storage Gateway</b>(hybrid).</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Cost Tools + Network Cost</h2>
+      <ul>
+        <li><b>Cost Explorer</b> analyze, <b>Budgets</b> alert, <b>CUR</b> granular→S3, <b>Trusted Advisor</b> checks, cost allocation tags.</li>
+        <li>Same-AZ private IP = <b>free</b>; cross-AZ/region/internet = $. Gateway endpoints avoid NAT + egress. CloudFront cuts origin egress.</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Keyword → Answer</h2>
+      <ul>
+        <li>"decouple/buffer" → <b>SQS</b></li>
+        <li>"notify many/fan-out" → <b>SNS</b></li>
+        <li>"least ops / managed / no servers" → <b>serverless</b> (λ, Fargate, Aurora Serverless, S3)</li>
+        <li>"highly available" → <b>Multi-AZ / ASG multi-AZ</b></li>
+        <li>"durable / archive cheap" → <b>S3 / Glacier</b></li>
+        <li>"move PBs / no bandwidth" → <b>Snow</b></li>
+        <li>"cross-account guardrail" → <b>SCP</b></li>
+        <li>"temporary creds" → <b>role / STS</b></li>
+        <li>"unknown access pattern" → <b>S3 Intelligent-Tiering</b></li>
+        <li>"microsecond DynamoDB" → <b>DAX</b></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Top Traps</h2>
+      <div class="warn">
+        Multi-AZ ≠ read scaling · SCP ≠ grant · EBS single-AZ · Spot ≠ stateful DB · CloudFront(cache) vs Global Accelerator(route) · Gateway(free) vs Interface(paid) endpoint · KMS vs CloudHSM(dedicated/FIPS-L3) · Kinesis Streams(custom) vs Firehose(no-code)
+      </div>
+      <div class="tip">Read the <b>last sentence first</b>: optimize for cost / least-ops / HA / latency / secure — that word picks between two "right" answers.</div>
+    </div>
+
+  </div>
+
+  <div class="footnote">Cram Jam · AWS SAA-C03 · pairs with the full study guide · verify limits/pricing against current AWS docs · not affiliated with AWS.</div>
+</div>
+</body>
+</html>
