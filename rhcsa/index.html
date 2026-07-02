@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Hat RHCSA (EX200) — Study Guide</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="theme-redhat">
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo">RED HAT · EX200</span>
+      <h1>RHCSA — Certified System Administrator</h1>
+      <div class="sub">Overview + Thorough Study Guide</div>
+      <a class="home" href="../index.html">← All certifications</a> &nbsp;·&nbsp; <a class="home" href="cram.html">⚡ Cram Jam</a>
+    </div>
+    <div class="toc" id="toc">
+      <div class="group-label">Overview</div>
+      <a href="#ov-intro">What &amp; Why</a>
+      <a href="#ov-version">RHEL 9 vs RHEL 10</a>
+      <a href="#ov-glance">Exam at a Glance</a>
+      <a href="#ov-objectives">The Objectives</a>
+      <a href="#ov-materials">Recommended Materials</a>
+      <a href="#ov-plan">Study Plan (Quick)</a>
+
+      <div class="group-label">Thorough Guide</div>
+      <a href="#t-exam">1 · Exam Details &amp; Format</a>
+      <a href="#t-tools">2 · Essential Tools</a>
+      <a href="#t-scripts">3 · Shell Scripts</a>
+      <a href="#t-operate">4 · Operate Running Systems</a>
+      <a href="#t-storage">5 · Local Storage (LVM)</a>
+      <a href="#t-fs">6 · File Systems, NFS &amp; autofs</a>
+      <a href="#t-deploy">7 · Deploy &amp; Maintain</a>
+      <a href="#t-network">8 · Networking</a>
+      <a href="#t-users">9 · Users &amp; Groups</a>
+      <a href="#t-security">10 · Security (SELinux, firewalld)</a>
+      <a href="#t-containers">11 · Containers (EX200V9)</a>
+      <a href="#t-materials">12 · Study Materials</a>
+      <a href="#t-plan">13 · Study Plan (Retention)</a>
+      <a href="#t-tips">14 · Exam-Day Tips &amp; Traps</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="hero">
+      <h1>Red Hat Certified System Administrator (RHCSA)</h1>
+      <p><b>Exam EX200.</b> Unlike every other cert on this hub, the RHCSA is <b>100% hands-on</b>: three hours at a real RHEL system performing real tasks — no multiple choice, graded by scripts that inspect your machine's final state. It's the gold-standard proof you can actually administer Linux, and the foundation for RHCE and the whole Red Hat track.</p>
+      <span class="pill"><b>100%</b> hands-on lab</span>
+      <span class="pill"><b>3</b> hours</span>
+      <span class="pill">pass <b>210</b>/300</span>
+      <span class="pill"><b>$500</b> USD</span>
+      <span class="pill">free retake incl.</span>
+      <span class="pill">Valid <b>3 years</b></span>
+      <div><a class="crambtn" href="cram.html">⚡ Open the 1-page Cram Jam sheet</a></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <h2 class="part">Part 1 — High-Level Overview</h2>
+
+    <section id="ov-intro">
+      <h2>What &amp; Why</h2>
+      <p>The <b>RHCSA</b> validates that you can perform the core tasks of a Linux system administrator on Red Hat Enterprise Linux — manage users, storage, file systems, networking, security (SELinux/firewalld), services, and software — <b>with your hands, under time pressure, with only man pages for help</b>. Because it can't be passed by memorizing answers, employers treat it as one of the most credible entry-to-mid-level infrastructure certs anywhere.</p>
+      <div class="callout note"><span class="lbl">The one rule that defines the exam</span> Red Hat's own words: <b>"configurations must persist after reboot without intervention."</b> A working-but-not-persistent config scores zero. Every topic in this guide ends with "…and make it survive a reboot."</div>
+    </section>
+
+    <section id="ov-version">
+      <h2>⚠️ RHEL 9 vs RHEL 10 — check which exam you're booking</h2>
+      <div class="callout"><span class="lbl">Version fork (2026)</span> The official EX200 page now states the exam is <b>based on RHEL 10</b>. The RHEL 9 version (EX200V9) may still be selectable while it phases out — <b>you choose the version when scheduling, so check before you study</b>. Most community pass reports to date are for RHEL 9. Roughly 85–90% of the content is identical; the differences:</div>
+      <table>
+        <tr><th></th><th>EX200V9 (RHEL 9)</th><th>EX200V10 (RHEL 10)</th></tr>
+        <tr><td><b>Containers</b></td><td>✔ Podman objectives (run, systemd services, persistent storage)</td><td><b>Removed entirely</b></td></tr>
+        <tr><td><b>Software</b></td><td>dnf + repos (incl. modularity)</td><td>New "Manage software" category adds <b>Flatpak</b>; dnf modularity dropped</td></tr>
+        <tr><td><b>Scheduling</b></td><td>at + cron</td><td>at + cron + <b>systemd timer units</b></td></tr>
+        <tr><td><b>Also in v10</b></td><td>—</td><td><b>Modify the system bootloader</b>; GPT-only partitioning (MBR dropped)</td></tr>
+      </table>
+      <p>This guide covers <b>both</b>: everything shared, plus §11 for V9 containers and V10 callouts (Flatpak, timers, bootloader) inline in §7.</p>
+    </section>
+
+    <section id="ov-glance">
+      <h2>Exam at a Glance</h2>
+      <table>
+        <tr><th>Attribute</th><th>Value</th></tr>
+        <tr><td>Exam code</td><td>EX200 (RHCSA)</td></tr>
+        <tr><td>Format</td><td><b>Hands-on, performance-based lab</b> on live systems — no multiple choice; graded automatically against system state</td></tr>
+        <tr><td>Duration</td><td>3 hours (confirm at booking)</td></tr>
+        <tr><td>Passing score</td><td><b>210 / 300</b> (70%)</td></tr>
+        <tr><td>Cost</td><td>$500 USD (varies by country); <b>one free retake</b> included with individual exams (use within 1 year; classroom exams excluded)</td></tr>
+        <tr><td>Delivery</td><td>Remote (boot your own x86_64 PC from a Red Hat live USB, live proctor, compatibility test 2–3 days prior) · testing-center kiosk · classroom after training</td></tr>
+        <tr><td>Resources allowed</td><td>No internet, no notes. <b>man pages, <code>--help</code>, info, and <code>/usr/share/doc</code> ARE available</b> — learn to mine them.</td></tr>
+        <tr><td>Prerequisites</td><td>None required (RH124 + RH134, RH199, or equivalent experience recommended)</td></tr>
+        <tr><td>Results / validity</td><td>Emailed pass/fail + per-category % (usually within hours, officially ≤3 business days) · valid 3 years</td></tr>
+      </table>
+      <p><a class="jump" href="#t-exam">→ Deep dive: §1 Exam Details &amp; Format</a></p>
+    </section>
+
+    <section id="ov-objectives">
+      <h2>The Objectives</h2>
+      <p>Red Hat publishes no weightings — every category can appear. The official categories map to this guide's sections:</p>
+      <table>
+        <tr><th>Official category</th><th>Deep dive</th></tr>
+        <tr><td>Understand and use essential tools</td><td><a class="jump" href="#t-tools">→ §2</a></td></tr>
+        <tr><td>Create simple shell scripts</td><td><a class="jump" href="#t-scripts">→ §3</a></td></tr>
+        <tr><td>Operate running systems (boot, processes, journals, services)</td><td><a class="jump" href="#t-operate">→ §4</a></td></tr>
+        <tr><td>Configure local storage (partitions, LVM, swap)</td><td><a class="jump" href="#t-storage">→ §5</a></td></tr>
+        <tr><td>Create and configure file systems (xfs/ext4/vfat, NFS, autofs)</td><td><a class="jump" href="#t-fs">→ §6</a></td></tr>
+        <tr><td>Deploy, configure, and maintain systems (scheduling, services, time, software) <span class="tag d1">+Flatpak/timers/bootloader in V10</span></td><td><a class="jump" href="#t-deploy">→ §7</a></td></tr>
+        <tr><td>Manage basic networking (nmcli, hostname, firewalld)</td><td><a class="jump" href="#t-network">→ §8</a></td></tr>
+        <tr><td>Manage users and groups</td><td><a class="jump" href="#t-users">→ §9</a></td></tr>
+        <tr><td>Manage security (firewalld, umask, SSH keys, SELinux)</td><td><a class="jump" href="#t-security">→ §10</a></td></tr>
+        <tr><td>Manage containers (podman) <span class="tag d2">V9 only</span></td><td><a class="jump" href="#t-containers">→ §11</a></td></tr>
+      </table>
+    </section>
+
+    <section id="ov-materials">
+      <h2>Recommended Materials <span class="kbd">(community consensus)</span></h2>
+      <div class="consensus"><b>The consensus stack:</b> <b>Sander van Vugt</b> (book + video + practice exams — "the gold standard," accessed cheaply via <b>O'Reilly ~$49/mo or free through many libraries</b>) → optionally <b>Asghar Ghori's</b> book for depth → a <b>home lab of two VMs on free real RHEL</b> (Developer Subscription, 16 licenses) → drill <b>van Vugt's + Lisenet's (free) practice exams</b> until you finish them cold, under time, with everything surviving a reboot.</div>
+      <p><a class="jump" href="#t-materials">→ Full breakdown with sources (§12)</a></p>
+    </section>
+
+    <section id="ov-plan">
+      <h2>Study Plan (Quick Version)</h2>
+      <ol>
+        <li><b>Build the lab first</b> (day 1): two RHEL VMs. Every hour of study after that is hands-on.</li>
+        <li><b>Work the objectives</b> as tasks, not reading: do each one, then <b>reboot and verify</b> — persistence is the exam.</li>
+        <li><b>Drill retrieval:</b> re-do tasks from a blank terminal, no notes, using only man pages (exactly the exam conditions).</li>
+        <li><b>Mock exams under time:</b> van Vugt's + Lisenet's, full 3-hour blocks, offline. Book when you finish them comfortably with time to spare.</li>
+      </ol>
+      <p><a class="jump" href="#t-plan">→ Detailed retention-based plan (§13)</a> · <a class="jump" href="cram.html">⚡ Cram Jam</a></p>
+    </section>
+
+    <!-- THOROUGH -->
+    <h2 class="part">Part 2 — Thorough Study Guide</h2>
+
+    <section id="t-exam">
+      <h2>1 · Exam Details &amp; Format</h2>
+      <ul>
+        <li><b>You get real systems and a task list.</b> Tasks look like: "Create a 500 MiB logical volume named lvdata in volume group vgdata, format it XFS, and mount it persistently at /data." Scoring scripts then check the final state — <i>how</i> you did it doesn't matter; <i>that it works and persists</i> does.</li>
+        <li><b>Partial credit exists per task/category</b>, and your results email shows a percentage per objective category — but no explanations. Several test-takers report surprise 0% categories from strict script grading, usually persistence misses.</li>
+        <li><b>No penalty for breaking things you fix</b> — but an unbootable system at grading time can zero everything. Balance boldness with care around fstab and the bootloader.</li>
+        <li><b>Remote exam specifics:</b> boot from a Red Hat live USB on your own machine, external webcam for a 360° room scan, single monitor, empty desk (no paper on remote; allowed in person), compatibility test 2–3 days prior. Test-center kiosks avoid all of that — several Redditors call remote "an order of magnitude more stressful."</li>
+        <li><b>Free retake:</b> individual exam purchases include one retake on a NO PASS/NO SHOW, within 1 year.</li>
+      </ul>
+      <div class="callout tip"><span class="lbl">The docs are your lifeline</span> Practice answering questions with <b>only</b> <code>man</code>, <code>--help</code>, and <code>/usr/share/doc</code>. High-value man pages with EXAMPLES sections: <code>man semanage-fcontext</code>, <code>man 5 fstab</code>, <code>man 5 crontab</code>, <code>man lvcreate</code>, <code>man 8 mount</code>. Knowing <i>where</i> an example lives is as good as memorizing it.</div>
+    </section>
+
+    <section id="t-tools">
+      <h2>2 · Essential Tools</h2>
+      <h4>Redirection &amp; text processing</h4>
+      <ul>
+        <li>Redirection: <code>&gt;</code> overwrite, <code>&gt;&gt;</code> append, <code>2&gt;</code> stderr, <code>&amp;&gt;</code> both, <code>|</code> pipe, <code>2&gt;&amp;1</code> merge stderr into stdout.</li>
+        <li><code>grep -i</code> (case-insensitive) <code>-v</code> (invert) <code>-r</code> (recursive) <code>-E</code> (extended regex) <code>-l</code> (filenames only). Regex anchors <code>^</code> <code>$</code>, classes <code>[abc]</code>, repetition <code>*</code> <code>+</code>.</li>
+        <li>Classic exam task shape: "Find all lines containing X in file Y and save them to /root/answer" → <code>grep 'X' Y &gt; /root/answer</code> — exact output path matters to the grader.</li>
+      </ul>
+      <h4>Files, links, archives, find</h4>
+      <ul>
+        <li><code>tar -czf a.tar.gz /etc</code> (<code>z</code>=gzip, <code>j</code>=bzip2, <code>J</code>=xz) · extract <code>tar -xzf a.tar.gz -C /dest</code> · list <code>tar -tf</code>. Compress standalone files with <code>gzip</code>/<code>bzip2</code>, reverse with <code>gunzip</code>/<code>bunzip2</code>.</li>
+        <li><b>Hard link</b> (<code>ln</code>) = same inode, same filesystem only, survives deleting the original. <b>Soft link</b> (<code>ln -s</code>) = pointer by path, crosses filesystems, breaks if target moves.</li>
+        <li><code>find /home -user bob -exec cp -p {} /root/found/ \;</code> · <code>find / -perm -4000</code> (SUID) · <code>-size +100M</code> · <code>-name "*.conf"</code>. The <code>-exec … {} \;</code> pattern is a recurring exam task.</li>
+        <li>Permissions: <code>chmod u+x / 754 …</code>, <code>chown user:group</code>, <code>chgrp</code>. Special bits: SUID 4, SGID 2, sticky 1 (e.g. <code>chmod 2770</code> for a group-collab dir).</li>
+        <li>SSH: <code>ssh user@host</code>, <code>scp file user@host:/path</code>, <code>rsync -av</code>, <code>sftp</code>.</li>
+      </ul>
+    </section>
+
+    <section id="t-scripts">
+      <h2>3 · Shell Scripts</h2>
+      <ul>
+        <li>Start with <code>#!/bin/bash</code>; <code>chmod +x</code>. Inputs: <code>$1 $2 …</code>, all args <code>$@</code>, count <code>$#</code>, exit status <code>$?</code>.</li>
+        <li><b>Conditionals:</b> <code>if [ "$1" = "start" ]; then … elif … else … fi</code>. Tests: <code>-f</code> file exists, <code>-d</code> dir, <code>-z</code> empty string; numeric <code>-eq -ne -gt -lt</code>. Quote your variables.</li>
+        <li><b>Loops:</b> <code>for f in /etc/*.conf; do echo "$f"; done</code> · <code>for i in $(seq 1 10)</code> · <code>while read line; do …; done &lt; file</code>.</li>
+        <li><b>Command output into a script:</b> <code>var=$(command)</code>.</li>
+        <li>Typical exam shape: "Write /root/script.sh that takes one argument; if it's <code>foo</code> print X, otherwise print Y" — simple branching + args, nothing exotic. Test your script both ways before moving on.</li>
+      </ul>
+    </section>
+
+    <section id="t-operate">
+      <h2>4 · Operate Running Systems</h2>
+      <h4>Boot, targets &amp; the root-password reset</h4>
+      <ul>
+        <li>Targets: <code>systemctl get-default</code> / <code>set-default multi-user.target</code> (or <code>graphical.target</code>); switch live with <code>systemctl isolate</code>. One-off boot to a target: append <code>systemd.unit=multi-user.target</code> to the kernel line.</li>
+        <li><b>Root password reset (know this cold — it's usually your first exam task):</b> at GRUB press <code>e</code> → append <code>rd.break</code> to the <code>linux</code> line → <code>Ctrl+X</code>, then:
+          <br><code>mount -o remount,rw /sysroot</code> → <code>chroot /sysroot</code> → <code>passwd root</code> → <code>touch /.autorelabel</code> → <code>exit</code> → <code>exit</code>.</li>
+        <li>Fallback method: append <code>init=/bin/bash</code> instead → <code>mount -o remount,rw /</code> → <code>passwd</code> → <code>touch /.autorelabel</code> → <code>exec /sbin/init</code>. Know both — a GRUB quirk bit at least one live exam-taker.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">The #1 reset trap</span> Skip <code>touch /.autorelabel</code> and SELinux contexts on <code>/etc/shadow</code> are wrong after reboot — logins fail and the task scores zero. Remount rw first, autorelabel last, every time.</div>
+      <h4>Processes &amp; tuning</h4>
+      <ul>
+        <li><code>top</code> / <code>ps aux --sort=-%cpu</code> to find hogs; <code>kill PID</code>, <code>kill -9</code> as last resort, <code>pkill name</code>.</li>
+        <li>Priorities: <code>nice -n 10 cmd</code>, <code>renice -n 5 -p PID</code> (lower = more CPU; only root sets negative).</li>
+        <li><b>Tuning profiles:</b> <code>tuned-adm active</code> · <code>tuned-adm list</code> · <code>tuned-adm profile virtual-guest</code> · <code>tuned-adm recommend</code>. (Ensure <code>tuned</code> is installed/enabled.)</li>
+      </ul>
+      <h4>Logs &amp; journals</h4>
+      <ul>
+        <li><code>journalctl -u sshd</code> · <code>-b</code> (this boot) · <code>-p err</code> · <code>--since "2026-07-01 09:00"</code> · <code>-f</code> (follow). Classic logs still in <code>/var/log/</code> (messages, secure).</li>
+        <li><b>Preserve journals across reboots (a stated objective):</b> <code>mkdir -p /var/log/journal &amp;&amp; systemctl restart systemd-journald</code> — or set <code>Storage=persistent</code> in <code>/etc/systemd/journald.conf</code>.</li>
+      </ul>
+      <h4>Services</h4>
+      <ul>
+        <li><code>systemctl status|start|stop|restart httpd</code>; <b><code>systemctl enable --now httpd</code></b> — enable and start in one shot. <code>enable</code> alone does NOT start it; <code>start</code> alone does NOT survive reboot. <code>systemctl mask</code> hard-disables.</li>
+      </ul>
+    </section>
+
+    <section id="t-storage">
+      <h2>5 · Local Storage — Partitions, LVM, Swap</h2>
+      <h4>Partitioning</h4>
+      <ul>
+        <li><code>parted /dev/sdb mklabel gpt</code> (destroys the table; <b>parted writes immediately</b> — no undo) → <code>parted /dev/sdb mkpart data xfs 1MiB 501MiB</code> → <code>parted /dev/sdb set 1 lvm on</code>.</li>
+        <li>Or <code>fdisk</code>/<code>gdisk</code> interactive (n=new, t=type, w=write). After changes to an in-use disk: <code>partprobe</code>; before formatting a fresh partition: <code>udevadm settle</code>.</li>
+        <li>V10 note: objectives are <b>GPT-only</b>; V9 also listed MBR.</li>
+      </ul>
+      <h4>LVM — the exam's bread and butter</h4>
+      <ul>
+        <li>Stack: <b>PV → VG → LV</b>. <code>pvcreate /dev/sdb1</code> → <code>vgcreate vgdata /dev/sdb1</code> (set PE size with <code>-s 16M</code> if asked) → <code>lvcreate -n lvdata -L 500M vgdata</code>.</li>
+        <li>Size flags: <code>-L</code> absolute (500M, 2G); <code>-l</code> extents — and <b>percentages only work with <code>-l</code></b> (<code>-l 100%FREE</code>).</li>
+        <li>Grow: <code>vgextend vgdata /dev/sdc1</code> then <b><code>lvextend -r -L +500M /dev/vgdata/lvdata</code></b> — the <code>-r</code> resizes the filesystem too (the habit that saves you). Manual FS grow: <code>xfs_growfs /mountpoint</code> (XFS, mounted, takes the <b>mount point</b>) vs <code>resize2fs /dev/…</code> (ext4, takes the device). <b>XFS cannot shrink.</b></li>
+        <li>Inspect: <code>pvs</code> / <code>vgs</code> / <code>lvs</code> (+ <code>-a -o +devices</code> for detail), <code>lsblk</code>.</li>
+      </ul>
+      <h4>Swap</h4>
+      <ul>
+        <li><code>mkswap /dev/vgdata/lvswap</code> → <code>swapon /dev/vgdata/lvswap</code> → fstab line: <code>/dev/vgdata/lvswap none swap defaults 0 0</code> → validate with <code>swapon -a &amp;&amp; swapon --show</code>.</li>
+      </ul>
+    </section>
+
+    <section id="t-fs">
+      <h2>6 · File Systems, NFS &amp; autofs</h2>
+      <h4>Make &amp; mount persistently</h4>
+      <ul>
+        <li><code>mkfs.xfs</code> / <code>mkfs.ext4</code> / <code>mkfs.vfat</code> on the device or LV.</li>
+        <li>Get the UUID with <code>blkid</code>; fstab entry: <code>UUID=abc-123  /data  xfs  defaults  0 0</code> (no quotes around the UUID).</li>
+        <li><b>Always validate before rebooting:</b> <code>mount -a</code> (errors surface immediately) and <code>findmnt --verify</code>. A bad fstab line drops the system into emergency mode — the classic exam-bricker.</li>
+      </ul>
+      <h4>NFS &amp; autofs</h4>
+      <ul>
+        <li>Manual NFS: <code>mount -t nfs serverb:/share /mnt</code>; persist via fstab with type <code>nfs</code>.</li>
+        <li><b>autofs (on-demand mounting — a stated objective):</b> <code>dnf install -y autofs nfs-utils &amp;&amp; systemctl enable --now autofs</code>.</li>
+        <li>Master map <code>/etc/auto.master.d/shares.autofs</code>: indirect → <code>/shares /etc/auto.shares</code>; direct → <code>/- /etc/auto.direct</code>.</li>
+        <li>Indirect map line: <code>work -rw,sync serverb:/shares/work</code> (mounts as /shares/work). Direct map line uses the full path.</li>
+        <li>The wildcard home-dir classic: <code>* -rw serverb:/home/guests/&amp;</code> — <code>*</code> matches the key, <code>&amp;</code> substitutes it. <b>Don't pre-create indirect mount dirs; restart autofs after edits.</b></li>
+      </ul>
+      <h4>Permissions problems &amp; collaboration dirs</h4>
+      <ul>
+        <li>Group-collab dir recipe: <code>mkdir /shared &amp;&amp; chgrp devs /shared &amp;&amp; chmod 2770 /shared</code> — the SGID bit (2) makes new files inherit the group.</li>
+        <li>ACLs when ugo/rwx isn't enough: <code>setfacl -m u:bob:rw- file</code>, default ACLs on dirs <code>setfacl -m d:u:bob:rw /dir</code>, inspect with <code>getfacl</code>.</li>
+        <li>Diagnosing "permission denied": check ownership, mode, ACL mask, <b>and SELinux context</b> (§10) — in that order.</li>
+      </ul>
+    </section>
+
+    <section id="t-deploy">
+      <h2>7 · Deploy, Configure &amp; Maintain</h2>
+      <h4>Task scheduling</h4>
+      <ul>
+        <li><b>cron:</b> <code>crontab -e</code>; field order <b>min hour day-of-month month day-of-week</b>. <code>0 2 * * 1-5</code> = 02:00 weekdays; <code>*/5 * * * *</code> = every 5 min. System-wide files in <code>/etc/cron.d/</code> add a <b>username field</b>.</li>
+        <li><b>at</b> for one-shots: <code>at 23:00</code> → type commands → <code>Ctrl+D</code>; list <code>atq</code>, remove <code>atrm</code>.</li>
+        <li><span class="tag d1">V10</span> <b>systemd timers:</b> a <code>.timer</code> unit with <code>OnCalendar=</code> paired with a <code>.service</code>; activate with <code>systemctl enable --now name.timer</code>; list with <code>systemctl list-timers</code>.</li>
+      </ul>
+      <h4>Time services</h4>
+      <ul>
+        <li><b>chrony:</b> <code>dnf install -y chrony &amp;&amp; systemctl enable --now chronyd</code>; point at a server in <code>/etc/chrony.conf</code>: <code>server classroom.example.com iburst</code> (include <b>iburst</b>), restart chronyd, verify with <code>chronyc sources -v</code> (<code>^*</code> = synced).</li>
+        <li><code>timedatectl set-timezone America/Chicago</code> · <code>timedatectl set-ntp true</code>.</li>
+      </ul>
+      <h4>Software — dnf, repos (and V10: Flatpak)</h4>
+      <ul>
+        <li><code>dnf install/remove/search/info</code>, groups via <code>dnf group install</code>, history via <code>dnf history</code>. The lifesaver: <b><code>dnf provides */semanage</code></b> — find which package ships a missing command.</li>
+        <li><b>Local repo from exam-provided URLs (memorize the .repo format cold — you get the baseurl, not the syntax):</b>
+          <br><code>/etc/yum.repos.d/local.repo</code> → <code>[baseos]</code> / <code>name=BaseOS</code> / <code>baseurl=http://…/BaseOS</code> (or <code>file:///mnt/BaseOS</code>) / <code>enabled=1</code> / <code>gpgcheck=0</code>. <b>RHEL media has TWO repos — define both BaseOS and AppStream.</b></li>
+        <li>Kernel updates: <code>dnf update kernel</code> installs alongside the old one; GRUB keeps both (safe rollback).</li>
+        <li><span class="tag d1">V10</span> <b>Flatpak:</b> <code>flatpak remote-add --if-not-exists flathub &lt;url&gt;</code> · <code>flatpak install/uninstall/list</code> · <code>flatpak remotes</code>.</li>
+        <li><span class="tag d1">V10</span> <b>Bootloader:</b> edit <code>/etc/default/grub</code> then regenerate with <code>grub2-mkconfig -o /boot/grub2/grub.cfg</code>; kernel args per-entry via <code>grubby --update-kernel=ALL --args="…"</code>.</li>
+      </ul>
+    </section>
+
+    <section id="t-network">
+      <h2>8 · Networking</h2>
+      <h4>nmcli — do it in one line</h4>
+      <ul>
+        <li>Static connection:
+          <br><code>nmcli con add con-name lab type ethernet ifname enp1s0 ipv4.method manual ipv4.addresses 192.168.1.10/24 ipv4.gateway 192.168.1.1 ipv4.dns 192.168.1.1</code></li>
+        <li>Modify: <code>nmcli con mod lab +ipv4.dns 8.8.8.8</code> (the <code>+</code> appends). <b>Then <code>nmcli con up lab</code> — modifications don't apply until you re-up the connection.</b></li>
+        <li><code>ipv4.method manual</code> is mandatory for static addressing (otherwise DHCP overrides you). IPv6 mirrors it: <code>ipv6.method manual ipv6.addresses …</code>.</li>
+        <li>Inspect: <code>nmcli con show</code>, <code>nmcli dev status</code>, <code>ip a</code>, <code>ip route</code>.</li>
+      </ul>
+      <h4>Hostname &amp; resolution</h4>
+      <ul>
+        <li><code>hostnamectl set-hostname server1.example.com</code>; add static entries to <code>/etc/hosts</code>; DNS servers live in the connection profile (nmcli), not hand-edited resolv.conf.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">A network mistake is an exam-ender</span> If your changes break connectivity or don't persist, the grader can't reach the system — one 2025 taker scored <b>0% on networking</b> after using nmtui without verifying persistence. Use nmcli, re-up the connection, then <b>reboot and confirm</b> the address, gateway, DNS, and hostname all stuck.</div>
+    </section>
+
+    <section id="t-users">
+      <h2>9 · Users &amp; Groups</h2>
+      <ul>
+        <li><code>useradd -u 2000 -G wheel,devs -s /bin/bash -c "Bob" bob</code> · service account: <code>useradd -s /sbin/nologin svc</code> · <code>userdel -r</code> removes the home dir too.</li>
+        <li><b><code>usermod -aG devs bob</code> — the <code>-a</code> matters:</b> <code>-G</code> alone <i>replaces</i> the supplementary group list. Groups: <code>groupadd -g 5000 devs</code>, <code>groupmod</code>, <code>groupdel</code>; check with <code>id bob</code>.</li>
+        <li><b>Password aging (chage):</b> <code>chage -M 90 -m 7 -W 5 bob</code> (max/min/warn) · force change at next login <code>chage -d 0 bob</code> · account expiry <code>chage -E 2026-12-31 bob</code> · view <code>chage -l bob</code>. Defaults for <i>new</i> users: <code>/etc/login.defs</code>.</li>
+        <li><b>Privileged access:</b> drop a file in <code>/etc/sudoers.d/</code> (e.g. <code>bob ALL=(ALL) ALL</code>), validate with <code>visudo -cf</code> — or simply <code>usermod -aG wheel bob</code> (wheel is pre-enabled in sudoers).</li>
+      </ul>
+    </section>
+
+    <section id="t-security">
+      <h2>10 · Security — firewalld, umask, SSH keys, SELinux</h2>
+      <h4>firewalld</h4>
+      <ul>
+        <li><code>firewall-cmd --permanent --add-service=http</code> · <code>--permanent --add-port=8080/tcp</code> · then <b><code>firewall-cmd --reload</code></b>.</li>
+        <li>Inspect: <code>--list-all</code>, <code>--get-services</code>. Made runtime-only changes you want kept? <code>--runtime-to-permanent</code>.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">The firewalld double-trap</span> <code>--permanent</code> alone changes <b>nothing now</b> (needs <code>--reload</code>); a rule <b>without</b> <code>--permanent</code> works now but <b>dies at reboot</b>. Do both, every time.</div>
+      <h4>umask &amp; SSH keys</h4>
+      <ul>
+        <li>umask subtracts from 666 (files) / 777 (dirs): umask <code>027</code> → files 640, dirs 750. Set persistently in <code>/etc/profile.d/</code> or the user's <code>~/.bashrc</code>.</li>
+        <li>Key auth: <code>ssh-keygen</code> → <code>ssh-copy-id user@host</code> → verify passwordless login. Keys live in <code>~/.ssh/authorized_keys</code> (dir 700, file 600).</li>
+      </ul>
+      <h4>SELinux — where most exam points hide</h4>
+      <ul>
+        <li>Modes: <code>getenforce</code>; <code>setenforce 0|1</code> (runtime); persistent in <code>/etc/selinux/config</code> (enforcing/permissive/disabled).</li>
+        <li>Contexts: view with <code>ls -Z</code> / <code>ps -Z</code>. <b>The persistent-context recipe:</b>
+          <br><code>semanage fcontext -a -t httpd_sys_content_t '/web(/.*)?'</code> → <code>restorecon -Rv /web</code>. <b>Always single-quote the regex.</b> Find the right type by copying a working example: <code>semanage fcontext -l | grep /var/www</code>.</li>
+        <li><b>Never use <code>chcon</code></b> for exam tasks — it's not stored in policy and is lost on relabel; graders' relabels wipe it.</li>
+        <li>Non-standard ports: <code>semanage port -a -t http_port_t -p tcp 82</code> (list: <code>semanage port -l | grep http</code>).</li>
+        <li>Booleans: <code>getsebool -a | grep httpd</code>; set with <b><code>setsebool -P</code></b> — without <code>-P</code> it's gone at reboot.</li>
+        <li>Diagnose denials: <code>ausearch -m AVC -ts recent</code>, <code>sealert -a /var/log/audit/audit.log</code>.</li>
+        <li><code>semanage</code> missing? It ships in <code>policycoreutils-python-utils</code> — find it yourself with <code>dnf provides */semanage</code>.</li>
+      </ul>
+    </section>
+
+    <section id="t-containers">
+      <h2>11 · Containers with Podman <span class="tag d2">EX200V9 only — removed in V10</span></h2>
+      <ul>
+        <li>Images: <code>podman pull registry.access.redhat.com/ubi9/ubi</code> · <code>podman images</code> · <code>podman inspect</code> · inspect <i>without</i> pulling: <code>skopeo inspect docker://registry…</code> · private registries: <code>podman login</code>.</li>
+        <li>Build from a Containerfile: <code>podman build -t myimg .</code></li>
+        <li>Run: <code>podman run -d --name web -p 8080:8080 -v /home/user/www:/var/www:Z IMAGE</code> — the <b><code>:Z</code></b> relabels the volume for SELinux (forget it → permission denied). Manage: <code>podman ps -a</code>, <code>stop</code>, <code>start</code>, <code>rm</code>, <code>logs</code>.</li>
+        <li><b>Rootless can't bind ports below 1024</b> — map high ports (8080), not 80.</li>
+        <li><b>Container as a systemd service (the big V9 task):</b>
+          <ol>
+            <li><code>loginctl enable-linger $USER</code> — without linger the service dies at logout.</li>
+            <li><code>mkdir -p ~/.config/systemd/user &amp;&amp; cd ~/.config/systemd/user</code></li>
+            <li><code>podman generate systemd --new --files --name web</code></li>
+            <li><code>systemctl --user daemon-reload &amp;&amp; systemctl --user enable --now container-web.service</code></li>
+          </ol>
+          <code>systemctl --user</code> needs a real SSH login session as that user (not <code>su -</code>).</li>
+      </ul>
+    </section>
+
+    <!-- MATERIALS -->
+    <section id="t-materials">
+      <h2>12 · Study Materials <span class="kbd">(community consensus)</span></h2>
+      <p class="legend">Synthesized from 30+ threads across r/redhat, r/linuxadmin, r/sysadmin and the Red Hat Learning Community (2023–2026 pass write-ups). The consensus is unusually strong.</p>
+
+      <div class="consensus"><b>TL;DR:</b> <b>Sander van Vugt</b> (book + videos + practice exams) is "the gold standard" — cited in ~20 of 30 threads, often as the only resource needed. Access it via <b>O'Reilly (~$49/mo, free trial, or free via many public libraries)</b> instead of paying full course price. Add <b>Ghori's book</b> for depth, a <b>2-VM home lab on free real RHEL</b>, and drill <b>van Vugt + Lisenet (free)</b> practice exams until they're easy under time.</div>
+
+      <h3>1 · Books &amp; courses</h3>
+      <table>
+        <tr><th>Resource</th><th>Community view</th></tr>
+        <tr><td><span class="rank">#1</span><b>Sander van Vugt</b> — <i>RHCSA Cert Guide</i> (RHEL 9 &amp; RHEL 10 editions) + O'Reilly video course + live crash-course sessions</td><td>"The Bible of the EX200 exam." The practice labs/exams are the killer feature — "if you can do all 4 labs in the back of the book you will pass." Updates fastest for new RHEL versions. Cons: known errata ("verify everything"), dry delivery.</td></tr>
+        <tr><td><span class="rank">#2</span><b>Asghar Ghori</b> — <i>RHCSA Training and Exam Preparation Guide</i> (RHEL 9 3rd ed. / RHEL 10 4th ed.)</td><td>Near-equal favorite, usually <i>alongside</i> van Vugt: "exercises tougher than the test." ~$40 ebook with four practice exams. Cons: typos, weaker container coverage. The most common winning stack = <b>Ghori for depth + van Vugt for videos/practice</b>.</td></tr>
+        <tr><td><b>Red Hat official</b> — RH124/RH134 (or RH199 Rapid Track), Red Hat Learning Subscription</td><td>Excellent labs, but list price ~$5–7.5k — <b>only if your employer pays</b>. RHLS becomes genuinely worth it past RHCSA/RHCE where third-party material thins out.</td></tr>
+        <tr><td><span class="rank">Free</span><b>YouTube</b></td><td>Increasingly used as primary material: <b>Beanologi's</b> RHCSA 9 series (a 286/300 passer spent $15 total), Red Hat's "Into the Terminal."</td></tr>
+        <tr><td><b>Udemy / others</b></td><td>No consistent winner. Imran Afzal = fine beginner on-ramp but flagged as dated for exam prep; KodeKloud lectures OK but its mock-exam <b>grading is buggy</b>.</td></tr>
+      </table>
+
+      <h3>2 · Practice exams &amp; labs <span class="tag d1">most important</span></h3>
+      <ul>
+        <li><span class="rank">#1</span><b>Van Vugt's practice exams</b> (book appendix + O'Reilly) — the de facto readiness gate: "keep doing them until you can complete them in your sleep."</li>
+        <li><span class="rank">Free</span><b>Lisenet.com practice exam</b> — the best free mock, styled differently from van Vugt's (a good complement). Readiness bar: complete it cold, under time, offline.</li>
+        <li><b>Ghori's four included exams</b>; <b>Beanologi's</b> exam-style videos.</li>
+        <li>GitHub lab environments: <code>aggressiveHiker/rhcsa9</code> (current recommendation); the older <code>rdbreak/rhcsa8env</code> Vagrant lab is now dated. CertDepot per-objective pages remain a useful reference (much RHEL 7/8-era content though).</li>
+      </ul>
+
+      <h3>3 · Home lab (non-negotiable for this exam)</h3>
+      <ul>
+        <li><b>Free real RHEL:</b> the <b>Red Hat Developer Subscription for Individuals</b> (developers.redhat.com) gives a free account with licenses for <b>up to 16 systems</b>. Rocky/Alma work in a pinch, but since real RHEL is free — use RHEL.</li>
+        <li><b>Topology:</b> two small VMs (server + node, mirroring the exam), ~2 GB RAM / 20 GB disk each, <b>plus spare virtual disks</b> for storage tasks. Any hypervisor (KVM/virt-manager, VirtualBox, Proxmox).</li>
+        <li>Practice <b>offline, in exam conditions</b> — no internet, man pages only.</li>
+      </ul>
+
+      <h3>4 · Typical timelines</h3>
+      <ul>
+        <li>Daily Linux user / working sysadmin: <b>~1–2 months</b> (some pass on "3 weeks at 10 hrs/week").</li>
+        <li>Little or no Linux background: <b>~3–6 months</b>. Universal caveat: <b>hands-on hours matter more than calendar weeks.</b></li>
+      </ul>
+
+      <div class="callout trap"><span class="lbl">Dumps are pointless here — and risky</span> There's no answer key to memorize on a live, script-graded machine. Circulating "dump" task lists are stale RHEL 8 content that actively misleads, and pirated official courseware carries NDA-violation / cert-revocation risk. Spend the time in the lab instead.</div>
+
+      <h4>Sources</h4>
+      <ul class="legend">
+        <li>Official: <a href="https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam" target="_blank" rel="noopener">EX200 exam page &amp; objectives</a> · <a href="https://www.redhat.com/en/about/red-hat-training-policies" target="_blank" rel="noopener">training policies (retakes)</a> · <a href="https://developers.redhat.com/" target="_blank" rel="noopener">free RHEL Developer Subscription</a></li>
+        <li>Community: r/redhat pass threads (1jxbzgu 270/300 · 1i0dqf2 286/300 · 1kd1hwk &amp; 1l73kz0 300/300 · 1j6bn0h 255/300 · 1hgvl7s "Real talk about Sander van Vugt") · r/linuxadmin (18vf6oe, 195trlf, 1ifaxgl) · <a href="https://www.lisenet.com/tag/rhcsa/" target="_blank" rel="noopener">Lisenet practice exams</a> · <a href="https://www.sandervanvugt.com/" target="_blank" rel="noopener">sandervanvugt.com</a></li>
+      </ul>
+    </section>
+
+    <!-- PLAN -->
+    <section id="t-plan">
+      <h2>13 · Study Plan (Retention-Based, ≈6–10 weeks)</h2>
+      <p>The RHCSA is the purest possible case for <b>learning by doing</b>: the exam <i>is</i> the practice. Reading about LVM earns zero points; typing the commands until they're muscle memory earns all of them. Every principle below is applied through the lab.</p>
+      <table>
+        <tr><th>Principle</th><th>How to apply it to RHCSA</th></tr>
+        <tr><td><b>Generation effect</b></td><td>Never copy-paste from the book — type every command. Break things on purpose and repair them.</td></tr>
+        <tr><td><b>Active recall</b></td><td>Re-do each task from a blank terminal with no notes — man pages only (exam conditions). If you had to peek, it goes back on the re-drill list.</td></tr>
+        <tr><td><b>Spaced repetition</b></td><td>Rotate old objective areas into each session (10-min warm-up: yesterday's tasks). Root-password reset, fstab, SELinux contexts, nmcli — re-drill weekly regardless.</td></tr>
+        <tr><td><b>Interleaving</b></td><td>Mock exams mix storage + users + SELinux + networking in one sitting — practice mixed task sets, not single-topic marathons.</td></tr>
+        <tr><td><b>Testing effect</b></td><td>Full timed mocks early and often, not just at the end. Each mock's misses define next week's drills.</td></tr>
+      </table>
+      <table>
+        <tr><th>Phase</th><th>Focus</th><th>Actions</th></tr>
+        <tr><td><b>Week 1</b></td><td>Lab + essential tools</td><td>Build the 2-VM RHEL lab (free Developer Subscription) with spare disks. Drill §2–§3: redirection, grep, find, tar, links, permissions, a few small scripts.</td></tr>
+        <tr><td><b>Weeks 2–3</b></td><td>Systems &amp; storage</td><td>§4–§6: boot targets, <b>root-password reset until it's reflex</b>, journald, services; partitions → LVM → fstab → NFS/autofs. Reboot after every task; <code>mount -a</code> before every reboot.</td></tr>
+        <tr><td><b>Weeks 4–5</b></td><td>Config &amp; security</td><td>§7–§10: cron/at(+timers on V10), chrony, repos (.repo syntax cold), nmcli one-liners, users/chage/sudoers, firewalld, the SELinux recipe (semanage fcontext + restorecon). V9: containers §11. V10: Flatpak + bootloader.</td></tr>
+        <tr><td><b>Week 6+</b></td><td>Mock exams</td><td>Van Vugt's labs + Lisenet, full 3-hour offline blocks. Grade yourself by <b>rebooting and re-checking every task</b>. Re-drill misses at spaced intervals; repeat mocks until comfortable with ~30 min to spare, then book.</td></tr>
+      </table>
+      <p class="legend">Experienced admins compress to ~3–4 weeks; true beginners should extend weeks 1–5 and consider RH124/RH134 material first.</p>
+      <div class="callout tip"><span class="lbl">Readiness bar</span> You're ready when you can complete a full mock cold — offline, no notes, inside 3 hours — and every task still works <b>after a reboot</b>. That reboot check is the whole exam in miniature.</div>
+    </section>
+
+    <!-- TIPS -->
+    <section id="t-tips">
+      <h2>14 · Exam-Day Tips &amp; Common Traps</h2>
+      <h4>Strategy</h4>
+      <ul>
+        <li><b>Skim all tasks first</b> (10–15 min), knock out easy wins, skip-and-return on hard ones — but use your full 3 hours; skipped tasks may be heavily weighted.</li>
+        <li><b>Reserve the last 15–30 minutes for a reboot + verification pass</b> over every task. "Reboot often: as soon as you did something that can be affected by a reboot, consider rebooting."</li>
+        <li>Set up SSH keys between the exam systems early — saves minutes on every subsequent task.</li>
+        <li>Esc can be broken in the exam's browser console — <code>Ctrl+[</code> is Esc in vim.</li>
+        <li>Asking the proctor about task <i>content</i> can cost points; ask only about environment problems.</li>
+      </ul>
+      <h4>The trap list (each one has zeroed real candidates' categories)</h4>
+      <ul>
+        <li><b>fstab typo</b> → emergency mode at grading. <b><code>mount -a</code> after every fstab edit</b>, then <code>findmnt --verify</code>.</li>
+        <li><b><code>systemctl start</code> without <code>enable</code></b> (or vice versa) → use <code>enable --now</code>.</li>
+        <li><b>firewall-cmd without <code>--permanent</code></b> (dies at reboot) or <b><code>--permanent</code> without <code>--reload</code></b> (never applies).</li>
+        <li><b><code>chcon</code> instead of <code>semanage fcontext</code> + <code>restorecon</code></b> — lost on relabel. And <code>setsebool</code> without <code>-P</code>.</li>
+        <li><b>Forgetting <code>touch /.autorelabel</code></b> in the root-password reset.</li>
+        <li><b><code>usermod -G</code> without <code>-a</code></b> — wipes the user's existing groups.</li>
+        <li><b>nmcli changes not re-upped / not persistent</b> — a dead network can zero the whole category (the grader can't reach the box).</li>
+        <li>autofs: pre-creating indirect mount dirs / botching the <code>*</code> and <code>&amp;</code> wildcard syntax.</li>
+        <li>V9 containers: missing <code>:Z</code> on volumes, missing <code>loginctl enable-linger</code>, testing <code>systemctl --user</code> from <code>su -</code> instead of a real login.</li>
+        <li>Defining only one of the <b>two</b> repos (BaseOS <i>and</i> AppStream).</li>
+      </ul>
+      <div class="callout note"><span class="lbl">The mantra</span> <b>Does it work? Will it still work after a reboot? Prove it.</b> If you internalize one habit from this guide, make it that one.</div>
+
+      <div class="footer">
+        <p><b>Sources:</b> official Red Hat EX200 exam page &amp; objectives (verified July 2026 — RHEL 10 based, with the RHEL 9 deltas noted), Red Hat training/retake policies and remote-exam FAQ, RHEL 9 documentation for command syntax, and 30+ community pass write-ups from r/redhat and r/linuxadmin. Passing score/price/duration aren't printed on the public exam page — confirm at booking. Not affiliated with or endorsed by Red Hat.</p>
+      </div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+  </main>
+</div>
+<a id="top"></a>
+<script src="../assets/scrollspy.js"></script>
+</body>
+</html>

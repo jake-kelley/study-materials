@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHCSA EX200 — Cram Jam (1-page)</title>
+<link rel="stylesheet" href="../assets/cram.css">
+</head>
+<body class="theme-redhat">
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <h1>⚡ RHCSA (EX200) — Cram Jam</h1>
+      <div class="sub">Command recall sheet · pairs with the <a href="index.html" style="color:#fff;text-decoration:underline;">full guide</a> · every config must survive a reboot.</div>
+    </div>
+    <div class="meta">
+      <b>100% hands-on</b> · 3 hr · pass <b>210</b>/300<br>
+      $500 · free retake · valid 3 yr<br>
+      man pages + /usr/share/doc available · no internet
+    </div>
+    <div class="btns">
+      <a class="btn ghost" href="index.html">Full guide</a>
+      <button class="btn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <div class="box">
+      <h2>Root Password Reset ★</h2>
+      <p>GRUB → <span class="mono">e</span> → append to linux line → <span class="mono">Ctrl+X</span></p>
+      <ul>
+        <li><b>rd.break:</b> <span class="mono">mount -o remount,rw /sysroot</span> → <span class="mono">chroot /sysroot</span> → <span class="mono">passwd root</span> → <b><span class="mono">touch /.autorelabel</span></b> → exit ×2</li>
+        <li>Fallback <span class="mono">init=/bin/bash</span>: remount rw / → passwd → autorelabel → <span class="mono">exec /sbin/init</span></li>
+      </ul>
+      <div class="warn">Forget /.autorelabel → logins break after reboot.</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">LVM</h2>
+      <ul>
+        <li><span class="mono">pvcreate /dev/sdb1</span> → <span class="mono">vgcreate vgdata /dev/sdb1</span> (<span class="mono">-s 16M</span> PE size) → <span class="mono">lvcreate -n lvdata -L 500M vgdata</span></li>
+        <li><b>-L</b> = size; <b>-l</b> = extents; <span class="bad">% only with -l</span> (<span class="mono">-l 100%FREE</span>)</li>
+        <li>Grow: <span class="mono">vgextend</span> → <b><span class="mono">lvextend -r -L +500M /dev/vgdata/lvdata</span></b> (-r = resize FS too)</li>
+        <li>Manual: <span class="mono">xfs_growfs /mnt</span> (mountpoint) vs <span class="mono">resize2fs /dev/…</span> (device). <span class="bad">XFS can't shrink.</span></li>
+        <li><span class="mono">pvs vgs lvs lsblk</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Partitions &amp; Swap</h2>
+      <ul>
+        <li><span class="mono">parted /dev/sdb mklabel gpt</span> (writes <b>immediately</b>) → <span class="mono">mkpart data xfs 1MiB 501MiB</span> → <span class="mono">set 1 lvm on</span></li>
+        <li><span class="mono">udevadm settle</span> before mkfs; <span class="mono">partprobe</span> after editing in-use disk</li>
+        <li>Swap: <span class="mono">mkswap</span> → <span class="mono">swapon</span> → fstab <span class="mono">… none swap defaults 0 0</span> → <span class="mono">swapon -a &amp;&amp; swapon --show</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">fstab &amp; Mounts ★</h2>
+      <ul>
+        <li><span class="mono">blkid</span> → fstab: <span class="mono">UUID=…  /data  xfs  defaults  0 0</span></li>
+        <li><b>ALWAYS</b> <span class="mono">mount -a</span> + <span class="mono">findmnt --verify</span> before reboot</li>
+      </ul>
+      <div class="warn">fstab typo = emergency mode = failed exam. Verify every edit.</div>
+    </div>
+
+    <div class="box">
+      <h2>NFS + autofs</h2>
+      <ul>
+        <li><span class="mono">dnf install -y autofs nfs-utils; systemctl enable --now autofs</span></li>
+        <li>Master <span class="mono">/etc/auto.master.d/x.autofs</span>: indirect <span class="mono">/shares /etc/auto.shares</span> · direct <span class="mono">/- /etc/auto.direct</span></li>
+        <li>Map: <span class="mono">work -rw,sync serverb:/shares/work</span></li>
+        <li>Wildcard homes: <span class="mono">* -rw serverb:/home/guests/&amp;</span></li>
+        <li>Don't pre-create indirect dirs; restart autofs after edits</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">SELinux ★</h2>
+      <ul>
+        <li><span class="mono">getenforce · setenforce 0|1</span> · persistent: <span class="mono">/etc/selinux/config</span></li>
+        <li><b>Context recipe:</b> <span class="mono">semanage fcontext -a -t httpd_sys_content_t '/web(/.*)?'</span> → <span class="mono">restorecon -Rv /web</span> (single-quote the regex)</li>
+        <li>Copy a working type: <span class="mono">semanage fcontext -l | grep /var/www</span></li>
+        <li>Port: <span class="mono">semanage port -a -t http_port_t -p tcp 82</span></li>
+        <li>Boolean: <span class="mono">setsebool -P httpd_can_network_connect on</span></li>
+        <li>Denials: <span class="mono">ausearch -m AVC -ts recent</span></li>
+        <li>semanage missing → <span class="mono">dnf provides */semanage</span></li>
+      </ul>
+      <div class="warn">chcon = lost on relabel. setsebool without -P = lost at reboot.</div>
+    </div>
+
+    <div class="box">
+      <h2>firewalld ★</h2>
+      <ul>
+        <li><span class="mono">firewall-cmd --permanent --add-service=http</span></li>
+        <li><span class="mono">firewall-cmd --permanent --add-port=8080/tcp</span></li>
+        <li><b><span class="mono">firewall-cmd --reload</span></b> · check <span class="mono">--list-all</span></li>
+        <li>Keep runtime changes: <span class="mono">--runtime-to-permanent</span></li>
+      </ul>
+      <div class="warn">--permanent alone = not active now. No --permanent = gone at reboot. Do both.</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">nmcli ★</h2>
+      <ul>
+        <li><span class="mono">nmcli con add con-name lab type ethernet ifname enp1s0 ipv4.method manual ipv4.addresses 192.168.1.10/24 ipv4.gateway 192.168.1.1 ipv4.dns 192.168.1.1</span></li>
+        <li>Append DNS: <span class="mono">nmcli con mod lab +ipv4.dns 8.8.8.8</span></li>
+        <li><b>Then <span class="mono">nmcli con up lab</span></b> — mods don't apply until re-up</li>
+        <li><span class="mono">hostnamectl set-hostname s1.example.com</span> + /etc/hosts</li>
+      </ul>
+      <div class="warn">Dead/non-persistent network = grader can't reach you = 0%.</div>
+    </div>
+
+    <div class="box">
+      <h2>Users &amp; Groups</h2>
+      <ul>
+        <li><span class="mono">useradd -u 2000 -G wheel,devs -s /bin/bash bob</span> · nologin: <span class="mono">-s /sbin/nologin</span></li>
+        <li><b><span class="mono">usermod -aG devs bob</span></b> — <span class="bad">-G without -a wipes groups</span></li>
+        <li><span class="mono">chage -M 90 -m 7 -W 5 bob</span> · force change: <span class="mono">chage -d 0</span> · expire: <span class="mono">chage -E date</span></li>
+        <li>sudo: file in <span class="mono">/etc/sudoers.d/</span> (<span class="mono">bob ALL=(ALL) ALL</span>), check <span class="mono">visudo -cf</span>; or <span class="mono">usermod -aG wheel</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">systemd · journal · tuned</h2>
+      <ul>
+        <li><b><span class="mono">systemctl enable --now httpd</span></b> (enable ≠ start!)</li>
+        <li>Target: <span class="mono">systemctl set-default multi-user.target</span> · live: <span class="mono">isolate</span></li>
+        <li><span class="mono">journalctl -u sshd -b · -p err · --since "…" · -f</span></li>
+        <li><b>Persist journal:</b> <span class="mono">mkdir -p /var/log/journal &amp;&amp; systemctl restart systemd-journald</span></li>
+        <li><span class="mono">tuned-adm active / profile virtual-guest / recommend</span></li>
+        <li>Processes: <span class="mono">ps aux --sort=-%cpu · kill · nice -n 10 · renice</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Scheduling &amp; Time</h2>
+      <ul>
+        <li>cron fields: <b>min hr dom mon dow</b> · <span class="mono">0 2 * * 1-5</span> = 2am weekdays · <span class="mono">*/5</span> = every 5 min · /etc/cron.d/ adds <b>user field</b></li>
+        <li><span class="mono">at 23:00</span> → cmds → Ctrl+D · <span class="mono">atq / atrm</span></li>
+        <li>V10: .timer w/ <span class="mono">OnCalendar=</span> + <span class="mono">systemctl enable --now x.timer</span></li>
+        <li>chrony: <span class="mono">server host iburst</span> in /etc/chrony.conf → restart → <span class="mono">chronyc sources -v</span> (^*=synced) · <span class="mono">timedatectl set-timezone</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">dnf &amp; repos ★</h2>
+      <ul>
+        <li><span class="mono">dnf install/search/info/history</span> · find pkg for cmd: <b><span class="mono">dnf provides */semanage</span></b></li>
+        <li>.repo (memorize — you get only the URL):<br><span class="mono">[baseos]</span><br><span class="mono">name=BaseOS</span><br><span class="mono">baseurl=http://…/BaseOS</span><br><span class="mono">enabled=1</span><br><span class="mono">gpgcheck=0</span></li>
+        <li><span class="bad">TWO repos: BaseOS + AppStream</span></li>
+        <li>V10 Flatpak: <span class="mono">flatpak remote-add --if-not-exists flathub URL · install · list</span></li>
+        <li>V10 bootloader: <span class="mono">/etc/default/grub</span> → <span class="mono">grub2-mkconfig -o /boot/grub2/grub.cfg</span> · <span class="mono">grubby --update-kernel=ALL --args=…</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Containers (V9 only)</h2>
+      <ul>
+        <li><span class="mono">podman pull/images/ps -a/inspect/logs</span> · <span class="mono">skopeo inspect docker://…</span> · <span class="mono">podman login</span> · build: <span class="mono">podman build -t x .</span></li>
+        <li><span class="mono">podman run -d --name web -p 8080:8080 -v /host:/ctr<b>:Z</b> IMG</span></li>
+        <li>Rootless: no ports &lt;1024</li>
+        <li><b>systemd service:</b> <span class="mono">loginctl enable-linger $USER</span> → <span class="mono">~/.config/systemd/user</span> → <span class="mono">podman generate systemd --new --files --name web</span> → <span class="mono">systemctl --user daemon-reload &amp;&amp; enable --now container-web</span></li>
+      </ul>
+      <div class="warn">No :Z = SELinux denial. No linger = dies at logout. --user needs real ssh login, not su -.</div>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Tools · perms · scripts</h2>
+      <ul>
+        <li><span class="mono">tar -czf a.tgz /etc</span> (z gzip · j bzip2 · J xz) · extract <span class="mono">-xzf -C /dest</span> · list <span class="mono">-tf</span></li>
+        <li><span class="mono">find /home -user bob -exec cp -p {} /dest \;</span> · <span class="mono">-perm -4000</span> · <span class="mono">-size +100M</span></li>
+        <li><span class="mono">grep -ivrE 'patt' /etc</span> · redirect <span class="mono">&gt; &gt;&gt; 2&gt; &amp;&gt; 2&gt;&amp;1</span></li>
+        <li>ln (hard, same FS) vs ln -s · SGID collab: <span class="mono">chgrp devs /d; chmod 2770 /d</span></li>
+        <li>ACL: <span class="mono">setfacl -m u:bob:rw file</span> · default <span class="mono">-m d:u:bob:rw /dir</span> · <span class="mono">getfacl</span></li>
+        <li>umask from 666/777: 027 → 640/750</li>
+        <li>ssh-keygen → <span class="mono">ssh-copy-id user@host</span> (~/.ssh 700, authorized_keys 600)</li>
+        <li>Script: <span class="mono">#!/bin/bash · $1 $# $? · if [ -f x ]; then · for i in …; do · v=$(cmd)</span></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2 class="alt">Exam-Day Checklist</h2>
+      <div class="tip">Skim all tasks first · easy wins → skip &amp; return · ssh keys between systems early · Ctrl+[ = Esc in vim · last 20 min: <b>reboot + verify every task</b>.</div>
+      <div class="warn">Traps that zero categories: fstab typo (mount -a!) · start w/o enable · firewall w/o --permanent or w/o --reload · chcon · setsebool w/o -P · no /.autorelabel · usermod -G w/o -a · nmcli not re-upped · only 1 of 2 repos.</div>
+      <p><b>Mantra: does it work — and will it after a reboot?</b></p>
+    </div>
+
+  </div>
+  <div class="footnote">Cram Jam · RHCSA EX200 (RHEL 9/10 — check your booked version; containers=V9, Flatpak/timers/bootloader=V10) · man pages available in-exam · not affiliated with Red Hat.</div>
+</div>
+</body>
+</html>

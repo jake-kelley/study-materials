@@ -28,6 +28,7 @@ body.theme-splunk   { --accent:#5EB226; --accent-d:#4a9018; --nav:#14181b; --nav
 body.theme-security { --accent:#E02B34; --accent-d:#b81f27; --nav:#182a3f; --nav-2:#2b4a6b; }
 body.theme-azure    { --accent:#0A84D4; --accent-d:#005a9e; --nav:#1f334f; --nav-2:#345183; }
 body.theme-terraform{ --accent:#8850CF; --accent-d:#6b3aa0; --nav:#241539; --nav-2:#442c66; }
+body.theme-redhat   { --accent:#EE0000; --accent-d:#b30000; --nav:#1c1414; --nav-2:#4a2020; }
 
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}

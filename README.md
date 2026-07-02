@@ -13,6 +13,7 @@ A personal, research-backed hub of exam study guides — each with a high-level 
 | CompTIA Security+ | SY0-701 | [guide](security-plus/index.html) | [cram](security-plus/cram.html) |
 | Microsoft Azure — Designing Infrastructure Solutions | AZ-305 | [guide](az-305/index.html) | [cram](az-305/cram.html) |
 | HashiCorp Terraform Associate | 004 | [guide](terraform-associate/index.html) | [cram](terraform-associate/cram.html) |
+| Red Hat Certified System Administrator | RHCSA · EX200 | [guide](rhcsa/index.html) | [cram](rhcsa/cram.html) |
 
 ## What each guide contains
 
@@ -36,7 +37,8 @@ study-materials/
 ├── splunk-power-user/
 ├── security-plus/
 ├── az-305/
-└── terraform-associate/
+├── terraform-associate/
+└── rhcsa/
 ```
 
 ## Sources & caveats
@@ -46,5 +48,6 @@ Guides are compiled from official exam guides/objectives and community consensus
 - **Verify service limits, pricing, and the current exam version** against official vendor documentation before your exam — figures are study aids, not guarantees.
 - **Terraform Associate 004** is built against Terraform 1.12.
 - **Security+ SY0-701** domain weightings and objectives were verified verbatim against the official CompTIA objectives PDF.
+- **RHCSA EX200** moved to RHEL 10 in 2026 (containers dropped; Flatpak/systemd timers added) — the guide covers both RHEL 9 and 10; check which version you're booking.
 
 > Not affiliated with or endorsed by AWS, Splunk, CompTIA, Microsoft, or HashiCorp.

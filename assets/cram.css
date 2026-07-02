@@ -11,6 +11,7 @@ body.theme-splunk   { --accent:#5EB226; --accent-d:#4a9018; --nav:#14181b; }
 body.theme-security { --accent:#E02B34; --accent-d:#b81f27; --nav:#182a3f; }
 body.theme-azure    { --accent:#0A84D4; --accent-d:#005a9e; --nav:#1f334f; }
 body.theme-terraform{ --accent:#8850CF; --accent-d:#6b3aa0; --nav:#241539; }
+body.theme-redhat   { --accent:#EE0000; --accent-d:#b30000; --nav:#1c1414; }
 
 *{box-sizing:border-box;}
 body{margin:0;background:var(--bg);color:var(--ink);
