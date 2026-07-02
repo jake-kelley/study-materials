@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Certified Solutions Architect – Associate (SAA-C03) — Study Guide</title>
+<style>
+  :root{
+    --aws-navy:#232F3E;
+    --aws-navy-2:#2d3b4d;
+    --aws-orange:#FF9900;
+    --aws-orange-d:#EC7211;
+    --ink:#1b2733;
+    --muted:#5b6b7b;
+    --line:#e2e8f0;
+    --bg:#f6f8fa;
+    --card:#ffffff;
+    --sidebar-w:310px;
+    --accent-blue:#1166bb;
+    --good:#1a8a53;
+    --warn:#b4690e;
+    --bad:#c0392b;
+    --code-bg:#f0f3f6;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.6;
+    font-size:16px;
+  }
+  a{color:var(--accent-blue);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  /* ---------- Layout ---------- */
+  .layout{display:flex;align-items:flex-start;}
+  .sidebar{
+    width:var(--sidebar-w);
+    min-width:var(--sidebar-w);
+    height:100vh;
+    position:sticky;
+    top:0;
+    overflow-y:auto;
+    background:var(--aws-navy);
+    color:#cfd8e3;
+    padding:0 0 40px 0;
+    border-right:1px solid #11202f;
+  }
+  .sidebar::-webkit-scrollbar{width:9px;}
+  .sidebar::-webkit-scrollbar-thumb{background:#46586c;border-radius:8px;}
+  .sidebar::-webkit-scrollbar-track{background:transparent;}
+
+  .brand{
+    padding:20px 22px 16px 22px;
+    border-bottom:1px solid #33465b;
+    position:sticky;top:0;background:var(--aws-navy);z-index:3;
+  }
+  .brand .logo{
+    display:inline-block;background:var(--aws-orange);color:var(--aws-navy);
+    font-weight:800;font-size:12px;letter-spacing:.5px;padding:3px 8px;border-radius:4px;margin-bottom:8px;
+  }
+  .brand h1{font-size:15px;margin:6px 0 2px 0;color:#fff;line-height:1.3;}
+  .brand .sub{font-size:12px;color:#8fa2b6;}
+
+  .toc{padding:10px 0;}
+  .toc .group-label{
+    font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:var(--aws-orange);
+    padding:14px 22px 6px 22px;font-weight:700;
+  }
+  .toc a{
+    display:block;color:#c3cedb;padding:6px 22px 6px 22px;font-size:13.5px;
+    border-left:3px solid transparent;text-decoration:none;transition:all .12s ease;
+  }
+  .toc a:hover{background:#2c3a4b;color:#fff;text-decoration:none;}
+  .toc a.lvl2{padding-left:36px;font-size:12.7px;color:#a8b6c6;}
+  .toc a.lvl3{padding-left:50px;font-size:12.3px;color:#93a2b4;}
+  .toc a.active{
+    background:#2c3a4b;color:#fff;border-left:3px solid var(--aws-orange);font-weight:600;
+  }
+
+  /* ---------- Content ---------- */
+  .content{
+    flex:1;
+    min-width:0;
+    padding:0 48px 120px 48px;
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .hero{
+    background:linear-gradient(135deg,var(--aws-navy) 0%,#31465f 100%);
+    color:#fff;margin:0 -48px 34px -48px;padding:46px 48px 40px 48px;
+    border-bottom:4px solid var(--aws-orange);
+  }
+  .hero h1{margin:0 0 8px 0;font-size:30px;line-height:1.2;}
+  .hero p{margin:6px 0 0 0;color:#d4deea;max-width:760px;}
+  .hero .pill{
+    display:inline-block;margin-top:18px;margin-right:8px;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22);padding:5px 12px;border-radius:20px;font-size:13px;
+  }
+  .hero .pill b{color:var(--aws-orange);}
+
+  section{scroll-margin-top:18px;}
+  h2.part{
+    font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--aws-orange-d);
+    border-top:2px solid var(--aws-orange);padding-top:10px;margin-top:54px;font-weight:800;
+  }
+  h2{font-size:25px;margin:40px 0 12px 0;padding-bottom:8px;border-bottom:2px solid var(--line);scroll-margin-top:18px;}
+  h3{font-size:20px;margin:32px 0 10px 0;color:var(--aws-navy);scroll-margin-top:18px;}
+  h4{font-size:16.5px;margin:22px 0 6px 0;color:var(--aws-navy-2);}
+  p{margin:10px 0;}
+
+  ul,ol{margin:10px 0;padding-left:24px;}
+  li{margin:5px 0;}
+
+  code{background:var(--code-bg);border:1px solid #dde4ec;border-radius:4px;padding:1px 5px;font-size:13.5px;
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color:#334;}
+
+  table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14.2px;background:var(--card);
+    border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th{background:var(--aws-navy);color:#fff;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px;}
+  td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top;}
+  tr:nth-child(even) td{background:#fafbfc;}
+  table code{font-size:12.8px;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.04);}
+
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));margin:18px 0;}
+  .grid .card{margin:0;}
+  .grid .card h4{margin-top:0;}
+
+  .callout{border-left:4px solid var(--aws-orange);background:#fff8ec;padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;}
+  .callout.tip{border-left-color:var(--good);background:#eefaf2;}
+  .callout.trap{border-left-color:var(--bad);background:#fdeeec;}
+  .callout.note{border-left-color:var(--accent-blue);background:#eef4fb;}
+  .callout .lbl{font-weight:700;font-size:12px;letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:2px;}
+  .callout.tip .lbl{color:var(--good);}
+  .callout.trap .lbl{color:var(--bad);}
+  .callout.note .lbl{color:var(--accent-blue);}
+  .callout .lbl.orange{color:var(--aws-orange-d);}
+
+  .domain-band{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;}
+  .domain-band .db{flex:1;min-width:180px;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--aws-orange);
+    border-radius:10px;padding:14px 16px;}
+  .domain-band .db .pct{font-size:26px;font-weight:800;color:var(--aws-navy);}
+  .domain-band .db .nm{font-size:13.5px;color:var(--muted);}
+
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;}
+  .tag.d1{background:#fde8cf;color:#8a4b00;}
+  .tag.d2{background:#d6ecfa;color:#0b4d75;}
+  .tag.d3{background:#e2f4e5;color:#1a6b38;}
+  .tag.d4{background:#efe4f7;color:#5f2c86;}
+
+  .backtop{font-size:12px;color:var(--muted);margin-top:8px;display:inline-block;}
+  .jump{font-size:12.5px;background:#fff4e2;border:1px solid #ffdca8;color:#8a4b00;padding:2px 9px;border-radius:20px;
+    display:inline-block;margin:2px 0;}
+  .jump:hover{background:#ffe9c9;text-decoration:none;}
+
+  .kbd{font-size:12px;color:var(--muted);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:1100px){.two-col{grid-template-columns:1fr;}}
+
+  .legend{font-size:12.5px;color:var(--muted);margin:6px 0 0 0;}
+  .star{color:var(--aws-orange);}
+  hr.soft{border:none;border-top:1px dashed var(--line);margin:30px 0;}
+
+  .toc-toggle{display:none;}
+  @media(max-width:900px){
+    .layout{flex-direction:column;}
+    .sidebar{position:relative;width:100%;min-width:0;height:auto;max-height:none;border-right:none;}
+    .content{padding:0 20px 80px 20px;}
+    .hero{margin:0 -20px 24px -20px;padding:32px 20px;}
+    .two-col{grid-template-columns:1fr;}
+  }
+  .footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;}
+  .rank{display:inline-block;background:var(--aws-orange);color:#fff;font-weight:800;border-radius:6px;
+    padding:1px 8px;font-size:12px;margin-right:6px;}
+  .consensus{background:#eefaf2;border:1px solid #bfe6cd;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:14px;}
+  .consensus b{color:var(--good);}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ============ SIDEBAR / TOC ============ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo">AWS · SAA-C03</span>
+      <h1>Solutions Architect – Associate</h1>
+      <div class="sub">Overview + Thorough Study Guide</div>
+    </div>
+    <div class="toc" id="toc">
+      <div class="group-label">High-Level Overview</div>
+      <a href="#ov-intro">What & Why</a>
+      <a href="#ov-glance">Exam at a Glance</a>
+      <a href="#ov-domains">The 4 Domains</a>
+      <a href="#ov-services">Core Services Snapshot</a>
+      <a href="#ov-materials">Recommended Materials</a>
+      <a href="#ov-plan">Study Plan (Quick)</a>
+
+      <div class="group-label">Thorough Study Guide</div>
+      <a href="#t-exam">1 · Exam Details &amp; Logistics</a>
+      <a href="#t-waf">2 · Well-Architected Framework</a>
+      <a href="#t-global">3 · Global Infrastructure</a>
+
+      <a href="#t-d1">4 · Domain 1 — Secure Architectures</a>
+      <a href="#d1-iam" class="lvl2">4.1 IAM &amp; Identity</a>
+      <a href="#d1-multi" class="lvl2">4.2 Multi-Account &amp; Orgs</a>
+      <a href="#d1-data" class="lvl2">4.3 Data Protection &amp; Encryption</a>
+      <a href="#d1-net" class="lvl2">4.4 Network &amp; App Security</a>
+
+      <a href="#t-d2">5 · Domain 2 — Resilient Architectures</a>
+      <a href="#d2-decouple" class="lvl2">5.1 Decoupling &amp; Messaging</a>
+      <a href="#d2-scale" class="lvl2">5.2 Scaling, Serverless, Containers</a>
+      <a href="#d2-ha" class="lvl2">5.3 High Availability &amp; Fault Tolerance</a>
+      <a href="#d2-dr" class="lvl2">5.4 Disaster Recovery</a>
+
+      <a href="#t-d3">6 · Domain 3 — High-Performing</a>
+      <a href="#d3-storage" class="lvl2">6.1 Storage</a>
+      <a href="#d3-compute" class="lvl2">6.2 Compute</a>
+      <a href="#d3-db" class="lvl2">6.3 Databases</a>
+      <a href="#d3-net" class="lvl2">6.4 Networking</a>
+      <a href="#d3-data" class="lvl2">6.5 Data Ingestion &amp; Analytics</a>
+
+      <a href="#t-d4">7 · Domain 4 — Cost-Optimized</a>
+      <a href="#d4-storage" class="lvl2">7.1 Storage Cost</a>
+      <a href="#d4-compute" class="lvl2">7.2 Compute Cost</a>
+      <a href="#d4-db" class="lvl2">7.3 Database Cost</a>
+      <a href="#d4-net" class="lvl2">7.4 Network Cost</a>
+      <a href="#d4-tools" class="lvl2">7.5 Cost Management Tools</a>
+
+      <a href="#t-ref">8 · Service Reference</a>
+      <a href="#t-decision">9 · Decision Guides &amp; Tables</a>
+      <a href="#t-materials">10 · Study Materials (Reddit)</a>
+      <a href="#t-plan">11 · Full Study Plan</a>
+      <a href="#t-tips">12 · Exam-Day Tips &amp; Traps</a>
+    </div>
+  </nav>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="content">
+
+    <div class="hero">
+      <h1>AWS Certified Solutions Architect – Associate</h1>
+      <p><b>Exam code SAA-C03.</b> This single page holds two things: a fast <b>high-level overview</b> to orient you, and a <b>thorough study guide</b> covering every exam domain, the in-scope services, decision tables, and community-recommended study materials. Overview items link straight into their deep-dive sections.</p>
+      <span class="pill"><b>65</b> questions</span>
+      <span class="pill"><b>130</b> minutes</span>
+      <span class="pill"><b>720</b>/1000 to pass</span>
+      <span class="pill"><b>$150</b> USD</span>
+      <span class="pill">Valid <b>3 years</b></span>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- ====================  OVERVIEW  ===================== -->
+    <!-- ==================================================== -->
+    <h2 class="part">Part 1 — High-Level Overview</h2>
+
+    <section id="ov-intro">
+      <h2>What &amp; Why</h2>
+      <p>The <b>AWS Certified Solutions Architect – Associate</b> validates your ability to design solutions on AWS that are <b>secure, resilient, high-performing, and cost-optimized</b> — the four pillars it borrows from the <a href="#t-waf">AWS Well-Architected Framework</a>. It is AWS's most popular certification and the standard "prove you can design on AWS" credential for cloud engineers, architects, and developers.</p>
+      <p>You are <b>not</b> expected to write code or deep-configure every service. You <b>are</b> expected to read a business scenario and pick the <i>right</i> combination of services and the <i>right</i> configuration. The exam is a giant "which option best meets these requirements?" quiz.</p>
+      <div class="callout note"><span class="lbl">Who it's for</span> AWS recommends ~1 year of hands-on experience designing on AWS. If you have no IT background, start with <b>Cloud Practitioner (CLF-C02)</b> first. Full detail in <a href="#t-exam">§1 Exam Details</a>.</div>
+    </section>
+
+    <section id="ov-glance">
+      <h2>Exam at a Glance</h2>
+      <table>
+        <tr><th>Attribute</th><th>Value</th></tr>
+        <tr><td>Exam code</td><td>SAA-C03</td></tr>
+        <tr><td>Questions</td><td>65 total — <b>50 scored</b> + 15 unscored (pretest, not identified)</td></tr>
+        <tr><td>Question types</td><td>Multiple choice (1 of 4) &amp; multiple response (2+ of 5+)</td></tr>
+        <tr><td>Time</td><td>130 minutes</td></tr>
+        <tr><td>Passing score</td><td>720 out of 100–1000 (scaled, compensatory)</td></tr>
+        <tr><td>Cost</td><td>150 USD (practice question set is free on AWS Skill Builder)</td></tr>
+        <tr><td>Delivery</td><td>Pearson VUE test center or online proctored</td></tr>
+        <tr><td>Validity</td><td>3 years</td></tr>
+      </table>
+      <p><a class="jump" href="#t-exam">→ Deep dive: §1 Exam Details &amp; Logistics</a></p>
+    </section>
+
+    <section id="ov-domains">
+      <h2>The 4 Domains</h2>
+      <p>The exam is organized into four weighted domains. Security is the single biggest chunk — study it accordingly.</p>
+      <div class="domain-band">
+        <div class="db"><div class="pct">30%</div><div class="nm">Domain 1 — Design Secure Architectures</div></div>
+        <div class="db"><div class="pct">26%</div><div class="nm">Domain 2 — Design Resilient Architectures</div></div>
+        <div class="db"><div class="pct">24%</div><div class="nm">Domain 3 — Design High-Performing Architectures</div></div>
+        <div class="db"><div class="pct">20%</div><div class="nm">Domain 4 — Design Cost-Optimized Architectures</div></div>
+      </div>
+      <table>
+        <tr><th>Domain</th><th>What it tests</th><th>Deep dive</th></tr>
+        <tr><td><b>1 · Secure</b> <span class="tag d1">30%</span></td><td>IAM &amp; identity federation, multi-account governance, encryption/KMS, VPC security, protecting apps from threats.</td><td><a class="jump" href="#t-d1">→ §4</a></td></tr>
+        <tr><td><b>2 · Resilient</b> <span class="tag d2">26%</span></td><td>Loose coupling &amp; messaging, scaling, serverless &amp; containers, high availability, disaster recovery.</td><td><a class="jump" href="#t-d2">→ §5</a></td></tr>
+        <tr><td><b>3 · High-Performing</b> <span class="tag d3">24%</span></td><td>Choosing performant storage, compute, databases, networking, and data ingestion/analytics.</td><td><a class="jump" href="#t-d3">→ §6</a></td></tr>
+        <tr><td><b>4 · Cost-Optimized</b> <span class="tag d4">20%</span></td><td>Right-sizing and cheapest-fit storage, compute, database, and network + cost tooling.</td><td><a class="jump" href="#t-d4">→ §7</a></td></tr>
+      </table>
+    </section>
+
+    <section id="ov-services">
+      <h2>Core Services Snapshot</h2>
+      <p>If you master this shortlist you cover the majority of questions. Each links to its detailed treatment.</p>
+      <div class="grid">
+        <div class="card"><h4>Compute</h4>EC2 (+ Auto Scaling), Lambda, ECS/EKS/Fargate, Elastic Beanstalk, Batch. <a class="jump" href="#d3-compute">→ details</a></div>
+        <div class="card"><h4>Storage</h4>S3 (+ storage classes), EBS, EFS, FSx, Storage Gateway, Snow Family. <a class="jump" href="#d3-storage">→ details</a></div>
+        <div class="card"><h4>Database</h4>RDS, Aurora, DynamoDB, ElastiCache, Redshift, DocumentDB, Neptune. <a class="jump" href="#d3-db">→ details</a></div>
+        <div class="card"><h4>Networking</h4>VPC, subnets, SG/NACL, Route 53, CloudFront, ELB, Direct Connect, VPN, PrivateLink, Transit Gateway. <a class="jump" href="#d3-net">→ details</a></div>
+        <div class="card"><h4>Security &amp; Identity</h4>IAM, Organizations/SCPs, KMS, ACM, Secrets Manager, WAF, Shield, GuardDuty, Cognito. <a class="jump" href="#t-d1">→ details</a></div>
+        <div class="card"><h4>Integration</h4>SQS, SNS, EventBridge, Step Functions, API Gateway, Kinesis. <a class="jump" href="#d2-decouple">→ details</a></div>
+      </div>
+      <p><a class="jump" href="#t-ref">→ Full in-scope service reference by category (§8)</a></p>
+    </section>
+
+    <section id="ov-materials">
+      <h2>Recommended Materials <span class="kbd">(community consensus)</span></h2>
+      <p>Synthesized from many r/AWSCertifications threads. The overwhelmingly common formula is <b>one video course + one practice-exam bank, hammered until you consistently score 80%+</b>.</p>
+      <div class="consensus"><b>The consensus stack:</b> pick <b>Stephané Maarek</b> (Udemy) <i>or</i> <b>Adrian Cantrill</b> for the main course → then drill <b>Tutorials Dojo / Jon Bonso</b> practice exams → use <b>Tutorials Dojo cheat sheets</b> for review. That trio is recommended more than everything else combined.</div>
+      <p><a class="jump" href="#t-materials">→ Full breakdown with sources, alternatives &amp; frequencies (§10)</a></p>
+    </section>
+
+    <section id="ov-plan">
+      <h2>Study Plan (Quick Version)</h2>
+      <ol>
+        <li><b>Weeks 1–3:</b> Watch a full video course end-to-end, doing the hands-on labs.</li>
+        <li><b>Week 4:</b> Review Tutorials Dojo cheat sheets + rewatch weak areas (VPC, IAM, S3, databases).</li>
+        <li><b>Weeks 5–6:</b> Take practice exams in <i>review mode</i>; study every wrong answer's <i>explanation</i>. Repeat until you hit <b>consistent 80%+</b>.</li>
+        <li><b>Final days:</b> Do the free AWS official practice questions, skim the WAF pillars, rest before exam day.</li>
+      </ol>
+      <p><a class="jump" href="#t-plan">→ Detailed 6-week plan (§11)</a> &nbsp;·&nbsp; <a class="jump" href="#t-tips">→ Exam-day tips &amp; common traps (§12)</a></p>
+    </section>
+
+
+    <!-- ==================================================== -->
+    <!-- ================  THOROUGH GUIDE  =================== -->
+    <!-- ==================================================== -->
+    <h2 class="part">Part 2 — Thorough Study Guide</h2>
+
+    <!-- ---------- 1 EXAM DETAILS ---------- -->
+    <section id="t-exam">
+      <h2>1 · Exam Details &amp; Logistics</h2>
+      <p>The SAA-C03 exam "validates a candidate's ability to design solutions based on the AWS Well-Architected Framework." Concretely, AWS says it validates your ability to:</p>
+      <ul>
+        <li>Design solutions that incorporate AWS services to meet current business requirements and future projected needs.</li>
+        <li>Design architectures that are secure, resilient, high-performing, and cost-optimized.</li>
+        <li>Review existing solutions and determine improvements.</li>
+      </ul>
+      <h3>Scoring mechanics</h3>
+      <ul>
+        <li><b>65 questions, only 50 are scored.</b> The other 15 are unscored "pretest" items AWS is trialing — they are not marked, so treat every question as if it counts.</li>
+        <li><b>Scaled score 100–1000, pass at 720.</b> It is <b>compensatory</b>: you do not need to pass each domain individually, only the overall exam. A strong domain can offset a weak one.</li>
+        <li><b>No penalty for guessing</b> — never leave a question blank. Unanswered = incorrect.</li>
+        <li>Question formats: <b>multiple choice</b> (1 correct + 3 distractors) and <b>multiple response</b> (select 2+ from 5+). Distractors are deliberately plausible.</li>
+      </ul>
+      <h3>Target candidate</h3>
+      <p>At least <b>1 year of hands-on experience</b> designing cloud solutions with AWS. Candidates with 1–3 years of general IT experience have prepared successfully. With no IT experience, earn <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/">Cloud Practitioner</a> first.</p>
+      <h3>Logistics</h3>
+      <table>
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Price</td><td>150 USD (plus local taxes / FX). A 50% discount voucher is often available after passing any other AWS exam.</td></tr>
+        <tr><td>Languages</td><td>English, French, Italian, Japanese, Korean, Portuguese (BR), Spanish (LatAm &amp; Spain), Simplified &amp; Traditional Chinese.</td></tr>
+        <tr><td>Delivery</td><td>Pearson VUE testing center, or online proctored from home (quiet private room, webcam, ID check).</td></tr>
+        <tr><td>Recertification</td><td>Valid 3 years. Recertify by re-passing the current exam, or automatically by earning the <b>Solutions Architect – Professional</b>.</td></tr>
+      </table>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ---------- 2 WAF ---------- -->
+    <section id="t-waf">
+      <h2>2 · AWS Well-Architected Framework</h2>
+      <p>The entire exam is a practical test of the WAF. Know the pillars — many "best practice" questions are really asking "which pillar principle applies?"</p>
+      <table>
+        <tr><th>Pillar</th><th>Core idea</th><th>Key mechanisms</th></tr>
+        <tr><td><b>Operational Excellence</b></td><td>Run &amp; monitor systems, continuously improve.</td><td>IaC (CloudFormation), CloudWatch, small reversible changes, runbooks.</td></tr>
+        <tr><td><b>Security</b></td><td>Protect data, systems, assets.</td><td>Least privilege IAM, encryption, detective controls (GuardDuty/Config), shared responsibility.</td></tr>
+        <tr><td><b>Reliability</b></td><td>Recover from failure, scale to meet demand.</td><td>Multi-AZ, Auto Scaling, health checks, backups, DR strategies.</td></tr>
+        <tr><td><b>Performance Efficiency</b></td><td>Use resources efficiently as demand changes.</td><td>Right service selection, serverless, caching, global reach.</td></tr>
+        <tr><td><b>Cost Optimization</b></td><td>Avoid unnecessary cost.</td><td>Right-sizing, purchasing models, managed services, lifecycle policies.</td></tr>
+        <tr><td><b>Sustainability</b></td><td>Minimize environmental impact.</td><td>Managed services, right-sizing, efficient regions/instances.</td></tr>
+      </table>
+      <div class="callout"><span class="lbl orange">Shared Responsibility Model</span> AWS is responsible for security <b>OF</b> the cloud (hardware, global infrastructure, managed-service software). You are responsible for security <b>IN</b> the cloud (your data, IAM, OS patching on EC2, network/firewall config, encryption choices). The line shifts toward AWS as you move from EC2 → managed (RDS) → serverless (Lambda/S3).</div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ---------- 3 GLOBAL INFRA ---------- -->
+    <section id="t-global">
+      <h2>3 · AWS Global Infrastructure</h2>
+      <ul>
+        <li><b>Region</b> — a physical geographic area (e.g. <code>us-east-1</code>). Isolated; you pick regions for latency, compliance/data residency, cost, and service availability. Most services are region-scoped.</li>
+        <li><b>Availability Zone (AZ)</b> — one or more discrete data centers in a Region, with independent power/cooling/networking, connected by low-latency links. Deploy across <b>≥2 AZs</b> for high availability.</li>
+        <li><b>Edge Locations / PoPs</b> — hundreds of sites used by CloudFront, Route 53, Global Accelerator, and AWS WAF for low-latency delivery and DDoS absorption.</li>
+        <li><b>Local Zones</b> — infrastructure closer to large population centers for single-digit-ms latency. <b>Wavelength</b> embeds compute in 5G networks. <b>Outposts</b> puts AWS hardware in your data center.</li>
+      </ul>
+      <div class="callout note"><span class="lbl">Scope cheat</span> Global: IAM, Route 53, CloudFront, WAF, Organizations. Region: VPC, S3 (bucket namespace is global but data lives in one region), DynamoDB, RDS. AZ: EC2 instances, EBS volumes, subnets.</div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= DOMAIN 1 ================= -->
+    <section id="t-d1">
+      <h2>4 · Domain 1 — Design Secure Architectures <span class="tag d1">30%</span></h2>
+      <p>The largest domain. It spans three official task statements: <b>(1.1)</b> secure access to AWS resources, <b>(1.2)</b> secure workloads &amp; applications, and <b>(1.3)</b> appropriate data security controls.</p>
+
+      <!-- 4.1 IAM -->
+      <h3 id="d1-iam">4.1 · IAM &amp; Identity</h3>
+      <p><b>IAM (Identity and Access Management)</b> controls <i>who</i> can do <i>what</i> to <i>which</i> resources. It is global, free, and central to the exam.</p>
+      <h4>Building blocks</h4>
+      <ul>
+        <li><b>Users</b> — long-term identities for a person/app. <b>Groups</b> — collections of users; attach policies to groups, not individual users.</li>
+        <li><b>Roles</b> — temporary credentials assumed by trusted principals (EC2, Lambda, other accounts, federated users). <b>Prefer roles over long-lived access keys.</b> An EC2 <b>instance profile</b> passes a role to an instance so apps never store keys.</li>
+        <li><b>Policies</b> — JSON documents (<code>Effect</code>, <code>Action</code>, <code>Resource</code>, optional <code>Condition</code>). Types: <b>identity-based</b> (on users/groups/roles), <b>resource-based</b> (on S3 buckets, SQS, KMS, etc., with a <code>Principal</code>), <b>permissions boundaries</b>, and <b>SCPs</b> (org guardrails).</li>
+      </ul>
+      <h4>Evaluation logic (know this cold)</h4>
+      <ul>
+        <li><b>Explicit Deny</b> always wins over any Allow.</li>
+        <li>Default is <b>implicit deny</b>; you need an explicit Allow somewhere.</li>
+        <li>Effective permissions = intersection of SCPs, permissions boundaries, and identity/resource policies. An SCP that doesn't allow an action blocks it even if IAM allows it.</li>
+      </ul>
+      <h4>Federation &amp; temporary access</h4>
+      <ul>
+        <li><b>AWS STS</b> issues temporary security credentials (<code>AssumeRole</code>, <code>AssumeRoleWithSAML</code>, <code>AssumeRoleWithWebIdentity</code>). Used for role switching and cross-account access.</li>
+        <li><b>IAM Identity Center</b> (successor to AWS SSO) — central workforce sign-on across many accounts &amp; apps; integrates with external IdPs (Okta, Azure AD) and Active Directory.</li>
+        <li><b>AWS Directory Service</b> — managed Microsoft AD; federate an on-prem directory with IAM roles rather than recreating users.</li>
+        <li><b>Amazon Cognito</b> — identity for <b>customer-facing apps</b>: <b>User Pools</b> (sign-up/sign-in, JWT tokens) and <b>Identity Pools</b> (exchange tokens for temporary AWS credentials).</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Common trap</span> "App on EC2 needs to access S3" → attach an <b>IAM role to the instance</b>, never hard-code access keys. "Users in Account A need to use resources in Account B" → <b>cross-account IAM role</b> + <code>sts:AssumeRole</code>, not new users.</div>
+      <div class="callout tip"><span class="lbl">Best practices</span> Enable <b>MFA</b> (especially on root); lock away root credentials and use it almost never; grant <b>least privilege</b>; use roles &amp; groups; rotate credentials; use <b>IAM Access Analyzer</b> to find resources shared externally.</div>
+
+      <!-- 4.2 Multi-account -->
+      <h3 id="d1-multi">4.2 · Multi-Account &amp; Organizations</h3>
+      <table>
+        <tr><th>Service</th><th>Purpose</th></tr>
+        <tr><td><b>AWS Organizations</b></td><td>Central management of many accounts; consolidated billing; organize accounts into <b>OUs</b>.</td></tr>
+        <tr><td><b>Service Control Policies (SCPs)</b></td><td>Org-wide <b>guardrails</b> — the maximum permissions available in member accounts. They do <b>not grant</b> access; they set a ceiling. Applied to OUs/accounts.</td></tr>
+        <tr><td><b>AWS Control Tower</b></td><td>Automated setup of a secure, multi-account <b>landing zone</b> with best-practice guardrails, a Log Archive account, and Audit account.</td></tr>
+        <tr><td><b>AWS RAM</b> (Resource Access Manager)</td><td>Share resources (subnets, Transit Gateway, License Manager configs) across accounts without duplicating them.</td></tr>
+        <tr><td><b>AWS IAM Identity Center</b></td><td>Single sign-on to all accounts &amp; assigned permission sets.</td></tr>
+      </table>
+      <div class="callout note"><span class="lbl">When to use what</span> Need to <b>restrict</b> what an entire OU can ever do (e.g. block a region, deny disabling CloudTrail)? → <b>SCP</b>. Need to <b>stand up</b> a governed multi-account environment fast? → <b>Control Tower</b>. Need one bill &amp; volume discounts? → <b>Organizations consolidated billing</b>.</div>
+
+      <!-- 4.3 Data protection -->
+      <h3 id="d1-data">4.3 · Data Protection &amp; Encryption</h3>
+      <h4>Encryption at rest</h4>
+      <ul>
+        <li><b>AWS KMS</b> — managed keys for encrypting data across services (S3, EBS, RDS, etc.). <b>AWS-managed</b>, <b>customer-managed (CMK)</b>, and <b>AWS-owned</b> keys. CMKs let you control rotation and key policies. <b>Automatic annual rotation</b> is available for CMKs. KMS uses <b>envelope encryption</b> (a data key encrypts data; KMS encrypts the data key).</li>
+        <li><b>CloudHSM</b> — dedicated, single-tenant, FIPS 140-2 Level 3 hardware security module when you need full control of keys / regulatory mandates.</li>
+        <li>Enable encryption per service: S3 (SSE-S3, SSE-KMS, SSE-C, DSSE-KMS), EBS volume encryption, RDS/Aurora encryption (must be set at creation), DynamoDB encryption at rest (default).</li>
+      </ul>
+      <h4>Encryption in transit</h4>
+      <ul>
+        <li><b>ACM (AWS Certificate Manager)</b> — free public TLS/SSL certificates for ELB, CloudFront, API Gateway; <b>auto-renews</b>. Certs are regional (CloudFront requires <code>us-east-1</code>).</li>
+        <li>Use HTTPS/TLS everywhere; terminate TLS at ALB/CloudFront.</li>
+      </ul>
+      <h4>Secrets &amp; config</h4>
+      <ul>
+        <li><b>AWS Secrets Manager</b> — store DB credentials/API keys with <b>automatic rotation</b> (built-in for RDS). Costs per secret.</li>
+        <li><b>SSM Parameter Store</b> — store config &amp; secrets (SecureString via KMS); cheaper, no built-in rotation. Good default when you don't need rotation.</li>
+      </ul>
+      <h4>Data governance &amp; discovery</h4>
+      <ul>
+        <li><b>Amazon Macie</b> — ML-based discovery of sensitive data (PII) in S3.</li>
+        <li><b>AWS Config</b> — records resource configuration &amp; compliance over time.</li>
+        <li><b>AWS Artifact</b> — self-serve compliance reports (SOC, PCI, ISO).</li>
+      </ul>
+      <div class="callout tip"><span class="lbl">Exam signals</span> "Rotate DB credentials automatically" → <b>Secrets Manager</b>. "Discover PII/credit-card data in S3" → <b>Macie</b>. "Managed HSM / dedicated tenancy / FIPS 140-2 L3" → <b>CloudHSM</b>. "Free auto-renewing TLS cert" → <b>ACM</b>.</div>
+
+      <!-- 4.4 Network security -->
+      <h3 id="d1-net">4.4 · Network &amp; Application Security</h3>
+      <h4>VPC security controls</h4>
+      <table>
+        <tr><th></th><th>Security Group</th><th>Network ACL</th></tr>
+        <tr><td>Level</td><td>Instance / ENI</td><td>Subnet</td></tr>
+        <tr><td>State</td><td><b>Stateful</b> (return traffic auto-allowed)</td><td><b>Stateless</b> (must allow return traffic explicitly)</td></tr>
+        <tr><td>Rules</td><td><b>Allow only</b></td><td><b>Allow and Deny</b></td></tr>
+        <tr><td>Evaluation</td><td>All rules evaluated</td><td>Rules processed in number order, first match wins</td></tr>
+      </table>
+      <ul>
+        <li><b>Public vs private subnets</b> — a subnet is "public" if its route table sends <code>0.0.0.0/0</code> to an <b>Internet Gateway</b>. Private subnets reach the internet <i>outbound</i> via a <b>NAT Gateway</b> (in a public subnet).</li>
+        <li><b>VPC endpoints</b> keep traffic to AWS services on the AWS network: <b>Gateway endpoints</b> (S3, DynamoDB — free, route-table based) and <b>Interface endpoints / PrivateLink</b> (ENI in your subnet, most other services).</li>
+        <li><b>AWS Network Firewall</b> — managed stateful network firewall for a VPC. <b>Firewall Manager</b> — central management of WAF/Shield/SG rules across accounts.</li>
+      </ul>
+      <h4>Application &amp; threat protection</h4>
+      <table>
+        <tr><th>Service</th><th>Protects against / does</th></tr>
+        <tr><td><b>AWS WAF</b></td><td>Layer-7 filtering of HTTP(S) — SQL injection, XSS, rate limiting, geo-blocking. Attaches to ALB, CloudFront, API Gateway, AppSync.</td></tr>
+        <tr><td><b>AWS Shield</b></td><td>DDoS protection. <b>Standard</b> is free &amp; automatic; <b>Advanced</b> ($) adds L3/4/7 protection, 24/7 DRT, and cost-protection.</td></tr>
+        <tr><td><b>Amazon GuardDuty</b></td><td>Intelligent <b>threat detection</b> from CloudTrail, VPC Flow, DNS logs (no agents).</td></tr>
+        <tr><td><b>Amazon Inspector</b></td><td>Automated <b>vulnerability</b> assessment for EC2, ECR images, Lambda.</td></tr>
+        <tr><td><b>Amazon Detective</b></td><td>Investigate/visualize the root cause of security findings.</td></tr>
+        <tr><td><b>AWS Security Hub</b></td><td>Aggregates &amp; prioritizes findings across security services against standards (CIS, etc.).</td></tr>
+      </table>
+      <div class="callout trap"><span class="lbl">Don't mix these up</span> <b>WAF</b> = app-layer web exploits &amp; rules. <b>Shield</b> = DDoS. <b>GuardDuty</b> = detect threats/anomalies. <b>Inspector</b> = find vulnerabilities/CVEs. <b>Macie</b> = find sensitive data in S3. <b>Security groups/NACLs</b> = network access control.</div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= DOMAIN 2 ================= -->
+    <section id="t-d2">
+      <h2>5 · Domain 2 — Design Resilient Architectures <span class="tag d2">26%</span></h2>
+      <p>Two task statements: <b>(2.1)</b> scalable &amp; loosely coupled architectures, and <b>(2.2)</b> highly available and/or fault-tolerant architectures.</p>
+
+      <!-- 5.1 decoupling -->
+      <h3 id="d2-decouple">5.1 · Decoupling &amp; Messaging</h3>
+      <p><b>Loose coupling</b> means components fail or scale independently. Insert a queue, topic, or event bus between tiers so a slow/failed consumer doesn't take down the producer.</p>
+      <table>
+        <tr><th>Service</th><th>Pattern</th><th>Key facts</th></tr>
+        <tr><td><b>Amazon SQS</b></td><td>Queue — decouple producers/consumers (pull)</td><td><b>Standard</b>: near-unlimited throughput, at-least-once, best-effort ordering. <b>FIFO</b>: exactly-once, strict order. Msg retention 4 days default (max 14). Visibility timeout (default 30s, max 12h). Long polling (≤20s) cuts empty receives. <b>DLQ</b> for poison messages.</td></tr>
+        <tr><td><b>Amazon SNS</b></td><td>Pub/Sub — fan-out (push)</td><td>Topics push to many subscribers (SQS, Lambda, HTTP, email, SMS). <b>SNS + SQS fan-out</b> = one event to many queues.</td></tr>
+        <tr><td><b>Amazon EventBridge</b></td><td>Event bus — routing &amp; SaaS events</td><td>Rules route events to targets; schema registry; connects AWS + SaaS + custom apps. Schedule cron-style tasks.</td></tr>
+        <tr><td><b>AWS Step Functions</b></td><td>Workflow orchestration</td><td>State machine coordinating multiple services with retries, branching, human-approval. Standard vs Express workflows.</td></tr>
+        <tr><td><b>Amazon MQ</b></td><td>Managed message broker</td><td>For <b>existing apps using standard protocols</b> (JMS, AMQP, MQTT) migrating to AWS. Otherwise prefer SQS/SNS.</td></tr>
+        <tr><td><b>Amazon API Gateway</b></td><td>Managed API front door</td><td>REST/HTTP/WebSocket APIs, throttling, auth, caching; fronts Lambda/HTTP backends.</td></tr>
+      </table>
+      <div class="callout note"><span class="lbl">Signal words</span> "Decouple", "buffer", "absorb spikes", "process later" → <b>SQS</b>. "Notify multiple systems", "fan-out" → <b>SNS</b> (often + SQS). "React to events / route by content / from SaaS" → <b>EventBridge</b>. "Coordinate multi-step workflow with retries" → <b>Step Functions</b>. "Exactly-once &amp; ordered" → <b>SQS FIFO</b>.</div>
+
+      <!-- 5.2 scaling -->
+      <h3 id="d2-scale">5.2 · Scaling, Serverless &amp; Containers</h3>
+      <h4>Scaling concepts</h4>
+      <ul>
+        <li><b>Vertical scaling</b> — bigger instance (scale up); limited, requires downtime.</li>
+        <li><b>Horizontal scaling</b> — more instances (scale out); preferred for resilience &amp; elasticity.</li>
+        <li><b>EC2 Auto Scaling Group (ASG)</b> — maintains desired capacity across AZs, replaces unhealthy instances, and scales on policies: <b>target tracking</b> (keep CPU at 50%), <b>step</b>, <b>simple</b>, and <b>scheduled</b>. Combine with ELB health checks. <b>Predictive scaling</b> uses ML.</li>
+        <li>Design instances to be <b>stateless</b> — externalize session state to <b>DynamoDB/ElastiCache</b> so any instance can serve any request.</li>
+      </ul>
+      <h4>Serverless</h4>
+      <ul>
+        <li><b>AWS Lambda</b> — run code without servers; pay per request &amp; ms. Max <b>15-min</b> timeout, memory 128 MB–10,240 MB (CPU scales with memory). Event-driven from S3, API Gateway, SQS, EventBridge, etc. Watch cold starts &amp; concurrency limits.</li>
+        <li><b>AWS Fargate</b> — serverless compute for containers (ECS/EKS); no EC2 to manage.</li>
+        <li>Serverless data stores that pair well: <b>DynamoDB</b>, <b>S3</b>, <b>Aurora Serverless</b>.</li>
+      </ul>
+      <h4>Containers</h4>
+      <table>
+        <tr><th>Service</th><th>Use</th></tr>
+        <tr><td><b>Amazon ECS</b></td><td>AWS-native container orchestration. Launch on EC2 (you manage hosts) or <b>Fargate</b> (serverless).</td></tr>
+        <tr><td><b>Amazon EKS</b></td><td>Managed Kubernetes — choose when you need/​know K8s or portability.</td></tr>
+        <tr><td><b>Amazon ECR</b></td><td>Private container image registry.</td></tr>
+        <tr><td><b>App Runner / Beanstalk</b></td><td>Higher-level PaaS to deploy web apps/containers with less config.</td></tr>
+      </table>
+
+      <!-- 5.3 HA -->
+      <h3 id="d2-ha">5.3 · High Availability &amp; Fault Tolerance</h3>
+      <ul>
+        <li><b>Eliminate single points of failure:</b> multiple AZs, ASG across AZs behind an ELB, Multi-AZ databases.</li>
+        <li><b>Elastic Load Balancing</b> distributes traffic and runs health checks; deregisters unhealthy targets. See <a href="#d3-net">§6.4</a> for ALB/NLB/GWLB differences.</li>
+        <li><b>Amazon Route 53</b> health checks + <b>failover routing</b> reroute traffic when a region/endpoint is unhealthy.</li>
+        <li><b>RDS Multi-AZ</b> — synchronous standby in another AZ; automatic failover (HA, not read scaling). <b>Read replicas</b> — async, for read scaling (can be cross-region).</li>
+        <li><b>Aurora</b> — 6 copies of data across 3 AZs, self-healing storage, up to 15 low-lag read replicas, automatic failover.</li>
+        <li><b>S3</b> — 99.999999999% (11 nines) durability, stored across ≥3 AZs (except One Zone-IA). <b>EFS</b> is multi-AZ; <b>EBS</b> is single-AZ (snapshot to S3 for durability).</li>
+        <li><b>Immutable infrastructure</b> — replace rather than patch instances (via ASG + new launch template/AMI) for consistency &amp; easy rollback.</li>
+      </ul>
+      <div class="callout note"><span class="lbl">HA vs Fault-tolerant</span> <b>Highly available</b> = minimal downtime, quick recovery (e.g. Multi-AZ with brief failover). <b>Fault-tolerant</b> = keeps running with <i>zero</i> interruption despite component failure (e.g. Aurora, or N+1 redundancy). Fault tolerance usually costs more.</div>
+
+      <!-- 5.4 DR -->
+      <h3 id="d2-dr">5.4 · Disaster Recovery</h3>
+      <p>Two metrics drive the choice: <b>RPO</b> (Recovery Point Objective = acceptable data loss) and <b>RTO</b> (Recovery Time Objective = acceptable downtime). Lower RPO/RTO → higher cost.</p>
+      <table>
+        <tr><th>Strategy</th><th>RTO/RPO</th><th>Cost</th><th>How it works</th></tr>
+        <tr><td><b>Backup &amp; Restore</b></td><td>Hours</td><td>$</td><td>Back up data (snapshots, S3, AWS Backup); restore into a region on disaster. Cheapest, slowest.</td></tr>
+        <tr><td><b>Pilot Light</b></td><td>10s of min</td><td>$$</td><td>Core (e.g. replicated DB) always on but minimal; spin up the rest on failover.</td></tr>
+        <tr><td><b>Warm Standby</b></td><td>Minutes</td><td>$$$</td><td>Scaled-down but fully functional copy always running; scale it up on failover.</td></tr>
+        <tr><td><b>Multi-Site Active/Active</b></td><td>Near-zero</td><td>$$$$</td><td>Full production in 2+ regions serving traffic; failover is instant. Lowest RTO/RPO.</td></tr>
+      </table>
+      <ul>
+        <li><b>AWS Backup</b> — centralized, policy-based backups across services (EBS, RDS, DynamoDB, EFS, etc.) with cross-region/cross-account copy.</li>
+        <li><b>S3 Cross-Region Replication (CRR)</b> and <b>DynamoDB Global Tables</b> support active-active data.</li>
+        <li><b>Elastic Disaster Recovery (DRS)</b> replicates servers for fast recovery.</li>
+      </ul>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= DOMAIN 3 ================= -->
+    <section id="t-d3">
+      <h2>6 · Domain 3 — Design High-Performing Architectures <span class="tag d3">24%</span></h2>
+      <p>Five task statements covering performant &amp; scalable <b>storage, compute, databases, networking,</b> and <b>data ingestion/transformation</b>.</p>
+
+      <!-- 6.1 storage -->
+      <h3 id="d3-storage">6.1 · Storage</h3>
+      <h4>Storage types</h4>
+      <table>
+        <tr><th>Type</th><th>Service</th><th>Use when</th></tr>
+        <tr><td><b>Object</b></td><td>Amazon S3</td><td>Web assets, backups, data lakes, static hosting, unstructured data at any scale.</td></tr>
+        <tr><td><b>Block</b></td><td>Amazon EBS</td><td>Low-latency disk for a single EC2 instance (boot volumes, databases).</td></tr>
+        <tr><td><b>File</b></td><td>Amazon EFS / FSx</td><td>Shared file system mounted by many instances (NFS/SMB).</td></tr>
+      </table>
+      <h4>Amazon S3 essentials</h4>
+      <ul>
+        <li><b>11 nines durability</b>, virtually unlimited. Object size 0 B–5 TB (multipart upload for &gt;100 MB; required &gt;5 GB).</li>
+        <li>Security: <b>Block Public Access</b> (on by default), bucket policies, ACLs (legacy), <b>presigned URLs</b> for temporary access, encryption (SSE-S3/SSE-KMS/SSE-C).</li>
+        <li><b>Versioning</b> protects against overwrite/delete; <b>MFA Delete</b> adds protection. <b>S3 Object Lock</b> = WORM for compliance.</li>
+        <li>Performance: <b>3,500 PUT / 5,500 GET requests per second per prefix</b>; parallelize across prefixes. <b>S3 Transfer Acceleration</b> uses edge locations for fast long-distance uploads. <b>Multipart</b> for large objects.</li>
+        <li><b>S3 storage classes</b> — see <a href="#d4-storage">§7.1</a> for the full cost/retrieval table.</li>
+      </ul>
+      <h4>Amazon EBS volume types</h4>
+      <table>
+        <tr><th>Volume</th><th>Type</th><th>Best for</th></tr>
+        <tr><td><b>gp3 / gp2</b></td><td>SSD (general purpose)</td><td>Most workloads; boot volumes. gp3 lets you provision IOPS/throughput independently of size.</td></tr>
+        <tr><td><b>io2 / io1 / io2 Block Express</b></td><td>SSD (provisioned IOPS)</td><td>I/O-intensive, latency-sensitive DBs; highest IOPS &amp; durability; supports <b>Multi-Attach</b>.</td></tr>
+        <tr><td><b>st1</b></td><td>HDD (throughput optimized)</td><td>Big sequential workloads: big data, log processing, data warehouses.</td></tr>
+        <tr><td><b>sc1</b></td><td>HDD (cold)</td><td>Infrequently accessed, lowest cost block storage.</td></tr>
+      </table>
+      <p>EBS volumes are <b>AZ-locked</b>; snapshots go to S3 and can be copied across regions. Encrypt at creation. <b>Instance store</b> = ephemeral local disk (lost on stop/terminate) for very high IOPS scratch data.</p>
+      <h4>Shared file systems</h4>
+      <ul>
+        <li><b>Amazon EFS</b> — elastic NFS for Linux, multi-AZ, scales automatically, pay per use. Lifecycle to IA class for cost.</li>
+        <li><b>Amazon FSx</b> — <b>Windows File Server</b> (SMB/AD), <b>Lustre</b> (HPC/ML, S3-integrated), <b>NetApp ONTAP</b>, <b>OpenZFS</b>.</li>
+      </ul>
+
+      <!-- 6.2 compute -->
+      <h3 id="d3-compute">6.2 · Compute</h3>
+      <ul>
+        <li><b>EC2 instance families</b> — <b>General purpose</b> (M, T-burstable), <b>Compute optimized</b> (C), <b>Memory optimized</b> (R, X), <b>Storage optimized</b> (I, D), <b>Accelerated/GPU</b> (P, G, Inf). Match the family to the bottleneck.</li>
+        <li><b>Placement groups</b> — <b>Cluster</b> (low latency, single AZ, HPC), <b>Spread</b> (max 7/AZ on distinct hardware, critical instances), <b>Partition</b> (large distributed systems like HDFS/Cassandra).</li>
+        <li><b>Auto Scaling + ELB</b> for elastic horizontal scaling (see <a href="#d2-scale">§5.2</a>).</li>
+        <li><b>AWS Lambda</b> for event-driven/serverless; right-size <b>memory</b> (also sets CPU). <b>Fargate</b> for serverless containers.</li>
+        <li><b>AWS Batch</b> for batch jobs; <b>Amazon EMR</b> for big-data frameworks (Spark/Hadoop); <b>Elastic Beanstalk</b> to deploy apps with managed provisioning.</li>
+      </ul>
+      <div class="callout tip"><span class="lbl">Right service</span> Unpredictable/spiky &amp; short tasks → <b>Lambda</b>. Steady long-running → <b>EC2</b> (with Savings Plans). Containerized microservices, no server mgmt → <b>ECS/EKS on Fargate</b>. Batch/HPC → <b>Batch / EMR</b>.</div>
+
+      <!-- 6.3 databases -->
+      <h3 id="d3-db">6.3 · Databases</h3>
+      <table>
+        <tr><th>Service</th><th>Model</th><th>Use for</th></tr>
+        <tr><td><b>Amazon RDS</b></td><td>Managed relational (MySQL, PostgreSQL, MariaDB, Oracle, SQL Server)</td><td>Traditional relational apps needing SQL, joins, transactions. Multi-AZ for HA, read replicas for scale.</td></tr>
+        <tr><td><b>Amazon Aurora</b></td><td>MySQL/PostgreSQL-compatible, cloud-native</td><td>High performance &amp; availability at scale; 6-way replicated storage; Serverless v2 for variable load.</td></tr>
+        <tr><td><b>Amazon DynamoDB</b></td><td>Serverless key-value / document NoSQL</td><td>Massive scale, single-digit-ms latency, unpredictable traffic. On-demand or provisioned capacity; Global Tables; DAX cache; Streams.</td></tr>
+        <tr><td><b>Amazon ElastiCache</b></td><td>In-memory (Redis / Memcached)</td><td>Caching, sessions, leaderboards; reduce DB read load. Redis adds persistence/replication.</td></tr>
+        <tr><td><b>Amazon Redshift</b></td><td>Columnar data warehouse (OLAP)</td><td>Analytics over large datasets, complex queries/BI.</td></tr>
+        <tr><td><b>DocumentDB / Neptune / Keyspaces / Timestream / QLDB</b></td><td>Document / Graph / Cassandra / Time-series / Ledger</td><td>Purpose-built: MongoDB-compatible, graph relationships, wide-column, time-series, immutable ledger.</td></tr>
+      </table>
+      <h4>Performance levers</h4>
+      <ul>
+        <li><b>Read replicas</b> offload reads (RDS/Aurora). <b>Multi-AZ</b> is for availability, not scaling.</li>
+        <li><b>Caching</b>: <b>ElastiCache</b> in front of DBs, <b>DynamoDB DAX</b> for microsecond reads, <b>CloudFront</b> for content.</li>
+        <li><b>RDS Proxy</b> pools connections — great for Lambda/serverless hitting relational DBs.</li>
+        <li>Choose SQL vs NoSQL by access pattern: relational/joins/ACID → RDS/Aurora; high-scale key lookups &amp; flexible schema → DynamoDB.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Trap</span> "Improve read performance / reduce read load" → <b>read replica</b> or <b>ElastiCache</b>, NOT Multi-AZ. "Survive an AZ outage" → <b>Multi-AZ</b>. "Microsecond reads for DynamoDB" → <b>DAX</b>, not ElastiCache.</div>
+
+      <!-- 6.4 networking -->
+      <h3 id="d3-net">6.4 · Networking</h3>
+      <h4>Load balancers</h4>
+      <table>
+        <tr><th>LB</th><th>Layer</th><th>Use for</th></tr>
+        <tr><td><b>Application (ALB)</b></td><td>7 (HTTP/S)</td><td>Web apps; host/path routing, WebSockets, redirects, auth; targets = EC2/IP/Lambda/containers.</td></tr>
+        <tr><td><b>Network (NLB)</b></td><td>4 (TCP/UDP/TLS)</td><td>Extreme performance, millions of req/s, ultra-low latency, static/Elastic IP, TCP/UDP.</td></tr>
+        <tr><td><b>Gateway (GWLB)</b></td><td>3</td><td>Deploy/scale third-party virtual appliances (firewalls, IDS/IPS).</td></tr>
+      </table>
+      <h4>Edge &amp; DNS</h4>
+      <ul>
+        <li><b>Amazon CloudFront</b> — CDN caching content at edge locations; supports dynamic + static, OAC to lock S3 origins, signed URLs/cookies, Lambda@Edge / CloudFront Functions, WAF integration, DDoS mitigation.</li>
+        <li><b>AWS Global Accelerator</b> — anycast static IPs routing over the AWS backbone to the nearest healthy endpoint; great for TCP/UDP, gaming, non-HTTP, fast regional failover. (CloudFront caches content; Global Accelerator accelerates/routes traffic.)</li>
+        <li><b>Amazon Route 53</b> — DNS + health checks. Routing policies: <b>Simple, Weighted, Latency, Failover, Geolocation, Geoproximity, Multivalue answer, IP-based</b>. Alias records point to AWS resources for free.</li>
+      </ul>
+      <h4>Hybrid &amp; private connectivity</h4>
+      <table>
+        <tr><th>Option</th><th>Use</th></tr>
+        <tr><td><b>Site-to-Site VPN</b></td><td>Encrypted tunnel over the internet to your VPC. Quick, cheaper, variable performance.</td></tr>
+        <tr><td><b>AWS Direct Connect</b></td><td>Dedicated private line to AWS — consistent low latency &amp; bandwidth. Weeks to provision; pair with VPN for encryption/backup.</td></tr>
+        <tr><td><b>AWS PrivateLink / Interface Endpoints</b></td><td>Private access to AWS/partner services without internet exposure.</td></tr>
+        <tr><td><b>VPC Peering</b></td><td>Connect two VPCs privately (non-transitive).</td></tr>
+        <tr><td><b>AWS Transit Gateway</b></td><td>Hub-and-spoke connecting many VPCs &amp; on-prem — scales past peering mesh.</td></tr>
+      </table>
+
+      <!-- 6.5 data -->
+      <h3 id="d3-data">6.5 · Data Ingestion, Streaming &amp; Analytics</h3>
+      <table>
+        <tr><th>Service</th><th>Role</th></tr>
+        <tr><td><b>Amazon Kinesis Data Streams</b></td><td>Real-time streaming ingest (shards); custom consumers; retention 24 h–365 d.</td></tr>
+        <tr><td><b>Amazon Data Firehose</b></td><td>Near-real-time <b>delivery</b> to S3/Redshift/OpenSearch/Splunk; auto-scales, can transform. No consumer code.</td></tr>
+        <tr><td><b>Amazon MSK</b></td><td>Managed Apache Kafka for streaming.</td></tr>
+        <tr><td><b>AWS Glue</b></td><td>Serverless ETL &amp; Data Catalog; transform formats (CSV→Parquet).</td></tr>
+        <tr><td><b>Amazon Athena</b></td><td>Serverless SQL queries directly over S3 (pay per data scanned). Pairs with Glue Catalog.</td></tr>
+        <tr><td><b>AWS Lake Formation</b></td><td>Build &amp; secure data lakes on S3.</td></tr>
+        <tr><td><b>Amazon EMR</b></td><td>Managed Hadoop/Spark for large-scale processing.</td></tr>
+        <tr><td><b>Amazon OpenSearch</b></td><td>Search &amp; log analytics.</td></tr>
+        <tr><td><b>Amazon QuickSight</b></td><td>BI dashboards &amp; visualization.</td></tr>
+        <tr><td><b>AWS DataSync</b></td><td>Fast, automated data transfer on-prem ↔ AWS (over network).</td></tr>
+      </table>
+      <div class="callout note"><span class="lbl">Streaming signals</span> "Deliver streaming data to S3 with no code" → <b>Firehose</b>. "Real-time processing with custom consumers / replay" → <b>Kinesis Data Streams</b>. "Query S3 with SQL, no servers" → <b>Athena</b>. "Serverless ETL" → <b>Glue</b>.</div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= DOMAIN 4 ================= -->
+    <section id="t-d4">
+      <h2>7 · Domain 4 — Design Cost-Optimized Architectures <span class="tag d4">20%</span></h2>
+      <p>Four task statements — cost-optimize <b>storage, compute, database,</b> and <b>network</b> — plus the cost-management tooling that spans all of them.</p>
+
+      <!-- 7.1 storage cost -->
+      <h3 id="d4-storage">7.1 · Storage Cost Optimization</h3>
+      <h4>S3 storage classes</h4>
+      <table>
+        <tr><th>Class</th><th>Use / access</th><th>Retrieval</th></tr>
+        <tr><td><b>S3 Standard</b></td><td>Frequent access, hot data</td><td>ms</td></tr>
+        <tr><td><b>S3 Intelligent-Tiering</b></td><td><b>Unknown/changing</b> access — auto-moves objects between tiers; small monitoring fee, no retrieval fees</td><td>ms</td></tr>
+        <tr><td><b>S3 Standard-IA</b></td><td>Infrequent but rapid access; multi-AZ</td><td>ms (+ retrieval fee)</td></tr>
+        <tr><td><b>S3 One Zone-IA</b></td><td>Infrequent, <b>re-creatable</b> data; single AZ (cheaper, less durable)</td><td>ms (+ retrieval fee)</td></tr>
+        <tr><td><b>Glacier Instant Retrieval</b></td><td>Archive needing millisecond access</td><td>ms</td></tr>
+        <tr><td><b>Glacier Flexible Retrieval</b></td><td>Archive, rare access</td><td>min–hours (expedited/standard/bulk)</td></tr>
+        <tr><td><b>Glacier Deep Archive</b></td><td>Lowest cost, long-term (7–10 yr)</td><td>~12–48 h</td></tr>
+      </table>
+      <ul>
+        <li><b>Lifecycle policies</b> auto-transition objects to cheaper tiers and expire them on a schedule.</li>
+        <li>Pick <b>Intelligent-Tiering</b> when access patterns are unknown/variable — it avoids retrieval-fee surprises.</li>
+        <li><b>EBS/EFS</b>: use gp3 over gp2 (cheaper + tunable); EFS lifecycle to IA; delete unattached volumes &amp; old snapshots.</li>
+        <li>Move data with the cheapest fit: <b>DataSync</b> (online), <b>Snow Family</b> (offline, large/limited-bandwidth), <b>Storage Gateway</b> (hybrid).</li>
+      </ul>
+
+      <!-- 7.2 compute cost -->
+      <h3 id="d4-compute">7.2 · Compute Cost Optimization — Purchasing Options</h3>
+      <table>
+        <tr><th>Option</th><th>Discount</th><th>Best for</th></tr>
+        <tr><td><b>On-Demand</b></td><td>—</td><td>Short-term, spiky, unpredictable, or dev/test. No commitment.</td></tr>
+        <tr><td><b>Savings Plans</b></td><td>up to ~72%</td><td>Commit to $/hour for 1 or 3 yrs. <b>Compute SP</b> (flexible across EC2/Fargate/Lambda &amp; region) or <b>EC2 Instance SP</b> (deeper, family-locked).</td></tr>
+        <tr><td><b>Reserved Instances</b></td><td>up to ~72%</td><td>Steady-state 1/3-yr commitment to specific instance attributes. Standard (max discount) vs Convertible (flexible).</td></tr>
+        <tr><td><b>Spot Instances</b></td><td>up to ~90%</td><td>Fault-tolerant, interruptible, stateless (batch, CI, big data). 2-minute interruption notice.</td></tr>
+        <tr><td><b>Dedicated Hosts / Instances</b></td><td>premium</td><td>Compliance, licensing (BYOL), isolation.</td></tr>
+      </table>
+      <ul>
+        <li><b>Right-size</b> with <b>Compute Optimizer</b> &amp; CloudWatch; don't over-provision.</li>
+        <li>Prefer <b>serverless/managed</b> (Lambda, Fargate) to pay only for use and drop idle capacity.</li>
+        <li><b>Auto Scaling</b> to match demand; schedule non-prod to shut down off-hours; use <b>EC2 hibernation</b> where relevant.</li>
+      </ul>
+      <div class="callout tip"><span class="lbl">Purchasing signal</span> Steady 24/7 baseline → <b>Savings Plans / RIs</b>. Bursty, interruption-tolerant → <b>Spot</b>. Unknown/short-lived → <b>On-Demand</b>. Mix: baseline on RIs/SP + burst on Spot/On-Demand.</div>
+
+      <!-- 7.3 db cost -->
+      <h3 id="d4-db">7.3 · Database Cost Optimization</h3>
+      <ul>
+        <li>Use <b>Reserved Instances</b> for steady RDS/Redshift; <b>Aurora Serverless v2</b> or <b>DynamoDB on-demand</b> for variable/spiky load.</li>
+        <li>Right-size instances, use appropriate storage (gp3), and set <b>backup/snapshot retention</b> policies to avoid runaway storage cost.</li>
+        <li>Offload reads to <b>read replicas</b>/<b>caching</b> instead of a bigger primary.</li>
+        <li>Pick the <b>right engine/type</b>: DynamoDB (serverless, pay-per-request) can be far cheaper than a large always-on RDS for key-value workloads; columnar (Redshift) for analytics; time-series (Timestream) for metrics.</li>
+      </ul>
+
+      <!-- 7.4 net cost -->
+      <h3 id="d4-net">7.4 · Network Cost Optimization</h3>
+      <ul>
+        <li><b>Data transfer</b> is a top hidden cost. <b>Same-AZ private-IP traffic is free</b>; cross-AZ &amp; cross-region &amp; internet egress cost money. Keep chatty components in the same AZ where availability allows.</li>
+        <li><b>VPC endpoints</b> (esp. free <b>Gateway endpoints</b> for S3/DynamoDB) avoid NAT Gateway data-processing charges and internet egress.</li>
+        <li><b>NAT Gateway</b> costs per hour + per GB — a single shared NAT is cheaper but less HA than one-per-AZ; balance cost vs resilience.</li>
+        <li><b>CloudFront</b> reduces origin egress cost and improves performance for repeat content.</li>
+        <li><b>Direct Connect</b> can lower data-transfer rates vs internet for large sustained volumes.</li>
+      </ul>
+
+      <!-- 7.5 cost tools -->
+      <h3 id="d4-tools">7.5 · Cost Management Tools</h3>
+      <table>
+        <tr><th>Tool</th><th>Purpose</th></tr>
+        <tr><td><b>AWS Cost Explorer</b></td><td>Visualize &amp; analyze spend and usage trends; RI/SP recommendations.</td></tr>
+        <tr><td><b>AWS Budgets</b></td><td>Set custom cost/usage budgets and alert when thresholds are exceeded/forecast to be.</td></tr>
+        <tr><td><b>AWS Cost and Usage Report (CUR)</b></td><td>Most granular billing data → S3 for deep analysis (Athena/QuickSight).</td></tr>
+        <tr><td><b>Cost Allocation Tags</b></td><td>Tag resources to break down cost by team/project/env.</td></tr>
+        <tr><td><b>AWS Trusted Advisor</b></td><td>Checks across cost, performance, security, fault tolerance, limits (idle resources, underused RIs).</td></tr>
+        <tr><td><b>Consolidated Billing (Organizations)</b></td><td>One bill for many accounts + volume/RI/SP sharing discounts.</td></tr>
+      </table>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= 8 SERVICE REFERENCE ================= -->
+    <section id="t-ref">
+      <h2>8 · In-Scope Service Reference (by category)</h2>
+      <p>The official SAA-C03 in-scope list. Focus first on the <span class="star">★</span> heavy-hitters that dominate questions.</p>
+      <div class="two-col">
+        <div class="card"><h4>Compute</h4>EC2 <span class="star">★</span>, EC2 Auto Scaling <span class="star">★</span>, Elastic Beanstalk, AWS Batch, Outposts, Wavelength, VMware Cloud on AWS, Serverless Application Repository.</div>
+        <div class="card"><h4>Serverless &amp; Containers</h4>Lambda <span class="star">★</span>, Fargate <span class="star">★</span>, ECS <span class="star">★</span>, EKS, ECR, AppSync, ECS/EKS Anywhere &amp; Distro.</div>
+        <div class="card"><h4>Storage</h4>S3 <span class="star">★</span>, EBS <span class="star">★</span>, EFS <span class="star">★</span>, FSx <span class="star">★</span>, S3 Glacier, Storage Gateway, AWS Backup.</div>
+        <div class="card"><h4>Database</h4>RDS <span class="star">★</span>, Aurora <span class="star">★</span>, DynamoDB <span class="star">★</span>, ElastiCache <span class="star">★</span>, Redshift, DocumentDB, Neptune, Keyspaces.</div>
+        <div class="card"><h4>Networking &amp; Content Delivery</h4>VPC <span class="star">★</span>, Route 53 <span class="star">★</span>, CloudFront <span class="star">★</span>, ELB <span class="star">★</span>, Direct Connect, Site-to-Site VPN, Client VPN, PrivateLink, Transit Gateway, Global Accelerator.</div>
+        <div class="card"><h4>Security, Identity &amp; Compliance</h4>IAM <span class="star">★</span>, IAM Identity Center, Organizations <span class="star">★</span>, KMS <span class="star">★</span>, ACM, Secrets Manager <span class="star">★</span>, Cognito, WAF <span class="star">★</span>, Shield, GuardDuty, Inspector, Macie, Detective, Security Hub, Firewall Manager, Network Firewall, CloudHSM, Directory Service, RAM, Artifact, Audit Manager.</div>
+        <div class="card"><h4>Application Integration</h4>SQS <span class="star">★</span>, SNS <span class="star">★</span>, EventBridge <span class="star">★</span>, Step Functions, Amazon MQ, AppFlow, AppSync.</div>
+        <div class="card"><h4>Analytics</h4>Athena <span class="star">★</span>, Kinesis <span class="star">★</span>, Data Firehose, Glue <span class="star">★</span>, EMR, Redshift, Lake Formation, OpenSearch, MSK, QuickSight, Data Exchange.</div>
+        <div class="card"><h4>Management &amp; Governance</h4>CloudWatch <span class="star">★</span>, CloudFormation <span class="star">★</span>, CloudTrail <span class="star">★</span>, Config, Organizations, Control Tower, Systems Manager, Trusted Advisor, Compute Optimizer, Service Catalog, License Manager, Health Dashboard, Well-Architected Tool, Managed Grafana/Prometheus.</div>
+        <div class="card"><h4>Migration &amp; Transfer</h4>DataSync <span class="star">★</span>, Snow Family <span class="star">★</span>, DMS, Application Migration Service, Transfer Family.</div>
+        <div class="card"><h4>Cost Management</h4>Cost Explorer, Budgets, Cost &amp; Usage Report, Savings Plans.</div>
+        <div class="card"><h4>Front-End / ML / Media</h4>API Gateway <span class="star">★</span>, Amplify, Device Farm; Comprehend, Rekognition, Textract, Transcribe, Translate, Polly, Lex, Kendra, SageMaker; Elastic Transcoder, Kinesis Video Streams.</div>
+      </div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= 9 DECISION GUIDES ================= -->
+    <section id="t-decision">
+      <h2>9 · Decision Guides &amp; "Which Service?" Tables</h2>
+      <p>The exam constantly asks you to choose between similar services. Memorize these discriminators.</p>
+
+      <h4>Messaging / decoupling</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>Buffer work, decouple, retry, one consumer group</td><td>SQS (Standard) </td></tr>
+        <tr><td>Strict order &amp; exactly-once</td><td>SQS FIFO</td></tr>
+        <tr><td>Fan-out one message to many subscribers</td><td>SNS (often SNS→SQS)</td></tr>
+        <tr><td>Route events by content, SaaS/AWS events, scheduling</td><td>EventBridge</td></tr>
+        <tr><td>Orchestrate multi-step workflow with state</td><td>Step Functions</td></tr>
+        <tr><td>Migrate app using JMS/AMQP/MQTT broker</td><td>Amazon MQ</td></tr>
+      </table>
+
+      <h4>Storage &amp; file</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>Object store / data lake / static site</td><td>S3</td></tr>
+        <tr><td>Block disk for one EC2 instance</td><td>EBS</td></tr>
+        <tr><td>Shared POSIX file system, Linux, multi-AZ</td><td>EFS</td></tr>
+        <tr><td>Windows/SMB shared files with AD</td><td>FSx for Windows</td></tr>
+        <tr><td>HPC / ML high-throughput scratch, S3-linked</td><td>FSx for Lustre</td></tr>
+        <tr><td>Archive, cheapest, hours-OK retrieval</td><td>S3 Glacier Deep Archive</td></tr>
+        <tr><td>Unknown access pattern</td><td>S3 Intelligent-Tiering</td></tr>
+        <tr><td>Move PBs offline / poor bandwidth</td><td>Snow Family</td></tr>
+        <tr><td>Hybrid on-prem cache to S3</td><td>Storage Gateway</td></tr>
+      </table>
+
+      <h4>Databases</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>Relational, managed, standard engines</td><td>RDS</td></tr>
+        <tr><td>Relational at scale, high availability</td><td>Aurora</td></tr>
+        <tr><td>Key-value / document, massive scale, serverless</td><td>DynamoDB</td></tr>
+        <tr><td>Sub-ms caching / sessions</td><td>ElastiCache (Redis)</td></tr>
+        <tr><td>Microsecond reads for DynamoDB</td><td>DAX</td></tr>
+        <tr><td>Analytics / data warehouse (OLAP)</td><td>Redshift</td></tr>
+        <tr><td>Graph relationships</td><td>Neptune</td></tr>
+        <tr><td>MongoDB-compatible</td><td>DocumentDB</td></tr>
+      </table>
+
+      <h4>Networking &amp; edge</h4>
+      <table>
+        <tr><th>Need</th><th>Choose</th></tr>
+        <tr><td>HTTP/HTTPS routing (path/host), web apps</td><td>ALB</td></tr>
+        <tr><td>Extreme perf, TCP/UDP, static IP</td><td>NLB</td></tr>
+        <tr><td>Cache &amp; deliver content globally</td><td>CloudFront</td></tr>
+        <tr><td>Static anycast IP, route TCP/UDP to nearest region, fast failover</td><td>Global Accelerator</td></tr>
+        <tr><td>Dedicated private low-latency link on-prem</td><td>Direct Connect</td></tr>
+        <tr><td>Quick encrypted tunnel over internet</td><td>Site-to-Site VPN</td></tr>
+        <tr><td>Private access to a service, no internet</td><td>PrivateLink / Interface endpoint</td></tr>
+        <tr><td>Connect many VPCs + on-prem centrally</td><td>Transit Gateway</td></tr>
+      </table>
+
+      <h4>Security service by job</h4>
+      <table>
+        <tr><th>Job</th><th>Service</th></tr>
+        <tr><td>Block web exploits (SQLi/XSS), rate-limit</td><td>WAF</td></tr>
+        <tr><td>DDoS protection</td><td>Shield (Advanced for big/L7)</td></tr>
+        <tr><td>Detect threats/anomalies from logs</td><td>GuardDuty</td></tr>
+        <tr><td>Scan for software vulnerabilities/CVEs</td><td>Inspector</td></tr>
+        <tr><td>Find sensitive data (PII) in S3</td><td>Macie</td></tr>
+        <tr><td>Rotate DB/API secrets automatically</td><td>Secrets Manager</td></tr>
+        <tr><td>Manage encryption keys</td><td>KMS (CloudHSM if dedicated/FIPS-L3)</td></tr>
+        <tr><td>Customer sign-up/sign-in identity</td><td>Cognito</td></tr>
+      </table>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= 10 STUDY MATERIALS ================= -->
+    <section id="t-materials">
+      <h2>10 · Recommended Study Materials <span class="kbd">(Reddit consensus)</span></h2>
+      <p id="materials-note"><i>The community research is being finalized. Below is the strong, well-established consensus; this section is refreshed with the latest sourced Reddit findings once the research pass completes.</i></p>
+
+      <div class="consensus"><b>TL;DR consensus stack:</b> 1 video course (<b>Maarek</b> or <b>Cantrill</b>) → drill <b>Tutorials Dojo (Jon Bonso)</b> practice exams to a consistent <b>80%+</b> → review with <b>Tutorials Dojo cheat sheets</b> → finish with the <b>free official AWS practice questions</b>.</div>
+
+      <h3>Video courses</h3>
+      <table>
+        <tr><th>Course</th><th>Why people pick it</th><th>Trade-off</th></tr>
+        <tr><td><span class="rank">#1</span><b>Stephané Maarek</b> — Ultimate AWS SAA-C03 (Udemy)</td><td>Most-recommended overall. Concise, exam-focused, frequently updated, cheap on Udemy sale (~$15). Great pace to "pass efficiently".</td><td>Less deep hands-on than Cantrill.</td></tr>
+        <tr><td><span class="rank">#1</span><b>Adrian Cantrill</b> — AWS SAA-C03</td><td>Deepest hands-on labs &amp; conceptual understanding; loved by those who want to truly <i>get it</i>, not just pass.</td><td>Longer; more time investment.</td></tr>
+        <tr><td>freeCodeCamp / AWS Skill Builder</td><td>Free options; Skill Builder has the official Exam Prep plan &amp; free practice question set.</td><td>Skill Builder alone is thin; supplement with practice exams.</td></tr>
+      </table>
+      <p class="legend">Consensus: Maarek if you want the fastest efficient path; Cantrill if you want depth/hands-on. Many do <b>Cantrill for learning + Maarek as a fast refresher</b>, or either course + heavy practice exams.</p>
+
+      <h3>Practice exams <span class="tag d1">most important</span></h3>
+      <div class="consensus"><b>Near-universal:</b> <b>Tutorials Dojo (Jon Bonso) practice exams</b> are the single most-recommended resource on r/AWSCertifications. Their explanations teach the "why," and the difficulty mirrors (or exceeds) the real exam. Also popular: Maarek's practice tests as a second bank.</div>
+
+      <h3>Review aids &amp; free resources</h3>
+      <ul>
+        <li><b>Tutorials Dojo cheat sheets</b> — condensed comparison notes; excellent final-week review.</li>
+        <li><b>AWS Skill Builder</b> — official free digital training + free "Official Practice Question Set" for SAA-C03.</li>
+        <li><b>AWS Whitepapers/FAQs</b> — Well-Architected Framework, plus S3/EC2/VPC/RDS FAQs for edge cases.</li>
+        <li><b>Hands-on</b> — a free-tier account; build a VPC, launch EC2 behind an ALB with an ASG, host a site on S3+CloudFront, spin up RDS Multi-AZ.</li>
+      </ul>
+
+      <h3>How Redditors actually pass</h3>
+      <ul>
+        <li>Watch one full course once (don't over-collect courses).</li>
+        <li>Then <b>practice exams are ~70% of the value</b> — take them in review mode and study every explanation, right or wrong.</li>
+        <li>Iterate until you consistently score <b>80%+</b> across fresh sets, then book the exam.</li>
+        <li>Typical timeline: <b>4–8 weeks</b> part-time; faster with prior AWS/IT experience.</li>
+      </ul>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= 11 STUDY PLAN ================= -->
+    <section id="t-plan">
+      <h2>11 · Full Study Plan (≈6 weeks part-time)</h2>
+      <table>
+        <tr><th>Phase</th><th>Focus</th><th>Actions</th></tr>
+        <tr><td><b>Week 1–2</b><br>Foundations</td><td>Global infra, IAM, VPC, EC2, S3</td><td>Work through the first half of your video course. Build: a VPC with public/private subnets, an EC2 in it, an S3 bucket. Learn IAM users/roles/policies hands-on.</td></tr>
+        <tr><td><b>Week 3</b><br>Core services</td><td>Databases, ELB/ASG, decoupling</td><td>Finish the course. Build an ALB + Auto Scaling Group; launch RDS Multi-AZ; wire up an SQS queue + Lambda.</td></tr>
+        <tr><td><b>Week 4</b><br>Depth &amp; breadth</td><td>Security, DR, cost, edge, data</td><td>Study Domains 1 &amp; 4 deeply (highest + trickiest). Read the WAF pillars. Review Tutorials Dojo cheat sheets for service comparisons.</td></tr>
+        <tr><td><b>Week 5</b><br>Practice</td><td>Practice exams (review mode)</td><td>Take Tutorials Dojo sets. For every question (right or wrong) read the explanation. Log weak areas &amp; re-study them.</td></tr>
+        <tr><td><b>Week 6</b><br>Polish</td><td>Consistency &amp; gaps</td><td>Retake exams until <b>consistent 80%+</b>. Do the free official AWS practice questions. Skim FAQs for S3, EC2, VPC, RDS. Light review, then rest.</td></tr>
+      </table>
+      <div class="callout tip"><span class="lbl">Readiness bar</span> You're ready when you consistently score <b>≥80%</b> on <i>fresh</i> practice sets and can explain <i>why</i> the wrong answers are wrong — not just recognize the right one.</div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+    <!-- ================= 12 TIPS ================= -->
+    <section id="t-tips">
+      <h2>12 · Exam-Day Tips &amp; Common Traps</h2>
+      <h4>Technique</h4>
+      <ul>
+        <li><b>Read the last sentence first.</b> Identify what's actually optimized for: <i>cost</i>, <i>least operational overhead</i>, <i>highest availability</i>, <i>lowest latency</i>, <i>most secure</i>. The "best" answer changes with that keyword.</li>
+        <li><b>Eliminate distractors.</b> Usually 2 options are clearly wrong; decide between the last 2 on the optimization keyword.</li>
+        <li><b>"Least operational overhead / managed"</b> → favor <b>serverless/managed</b> (Lambda, Fargate, Aurora Serverless, S3, managed services) over self-managed EC2.</li>
+        <li><b>Flag &amp; move on.</b> 130 min / 65 Q ≈ 2 min each. Don't sink 8 minutes on one — flag it, keep pace, return later.</li>
+        <li><b>Never leave blanks</b> — no penalty for guessing.</li>
+      </ul>
+      <h4>Recurring traps</h4>
+      <ul>
+        <li><b>Multi-AZ ≠ read scaling.</b> Multi-AZ = availability; read replicas/caching = read performance.</li>
+        <li><b>Security Group vs NACL:</b> SG stateful/allow-only/instance; NACL stateless/allow+deny/subnet.</li>
+        <li><b>Gateway endpoint</b> (S3/DynamoDB, free) vs <b>Interface endpoint</b> (PrivateLink, ENI, paid).</li>
+        <li><b>CloudFront</b> (cache content) vs <b>Global Accelerator</b> (route/accelerate traffic, static IPs).</li>
+        <li><b>SCPs don't grant</b> permissions — they cap them. You still need IAM allows.</li>
+        <li><b>Spot</b> only for interruption-tolerant workloads; not for a stateful primary DB.</li>
+        <li><b>KMS</b> for managed keys; <b>CloudHSM</b> only when "dedicated/single-tenant/FIPS 140-2 Level 3."</li>
+        <li><b>EBS is single-AZ</b>; use snapshots (to S3) or EFS for multi-AZ/shared.</li>
+        <li><b>Kinesis Data Streams</b> (custom real-time consumers/replay) vs <b>Firehose</b> (no-code delivery to stores).</li>
+      </ul>
+      <div class="callout note"><span class="lbl">Keyword → intent</span> "decouple/buffer" = SQS · "notify many" = SNS · "highly available" = Multi-AZ/multi-AZ ASG · "durable/archive" = S3/Glacier · "cheapest transfer of PBs" = Snow · "no servers to manage" = serverless · "cross-account guardrails" = SCP · "temporary credentials" = IAM role/STS.</div>
+
+      <div class="footer">
+        <p><b>Sources:</b> AWS official exam page &amp; SAA-C03 exam guide (docs.aws.amazon.com), the four content-domain task statements, and the in-scope services list; study-material recommendations synthesized from r/AWSCertifications community consensus. Always verify service limits &amp; pricing against current AWS docs before the exam — figures here are study aids, not guarantees.</p>
+        <p>Built as a personal study aid for the AWS Certified Solutions Architect – Associate (SAA-C03) exam. Not affiliated with or endorsed by AWS.</p>
+      </div>
+      <p class="backtop"><a href="#top">↑ back to top</a></p>
+    </section>
+
+  </main>
+</div>
+
+<a id="top"></a>
+<script>
+  // Scrollspy: highlight the TOC link for the section currently in view.
+  (function(){
+    var tocLinks = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+    var map = {};
+    tocLinks.forEach(function(a){
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if(el) map[id] = a;
+    });
+    var ids = Object.keys(map);
+    function onScroll(){
+      var pos = window.scrollY + 120;
+      var currentId = ids[0];
+      for(var i=0;i<ids.length;i++){
+        var el = document.getElementById(ids[i]);
+        if(el && el.offsetTop <= pos) currentId = ids[i];
+      }
+      tocLinks.forEach(function(a){ a.classList.remove('active'); });
+      if(map[currentId]){
+        map[currentId].classList.add('active');
+        // keep active link visible in the sidebar
+        var sb = document.getElementById('sidebar');
+        var link = map[currentId];
+        var lt = link.offsetTop, lb = lt + link.offsetHeight;
+        if(lt < sb.scrollTop || lb > sb.scrollTop + sb.clientHeight){
+          sb.scrollTop = lt - sb.clientHeight/2;
+        }
+      }
+    }
+    var ticking=false;
+    window.addEventListener('scroll',function(){
+      if(!ticking){ window.requestAnimationFrame(function(){onScroll();ticking=false;}); ticking=true; }
+    });
+    onScroll();
+  })();
+</script>
+</body>
+</html>
