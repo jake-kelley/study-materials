@@ -32,3 +32,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # Pages deployment queue can be slow; outlast it instead of timing out at the 10-min default
+          timeout: 1800000
+          reporting_interval: 15000
