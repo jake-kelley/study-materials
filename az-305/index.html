@@ -36,6 +36,7 @@
       <a href="#d2-storage" class="lvl2">4.1 Storage accounts</a>
       <a href="#d2-rel" class="lvl2">4.2 Relational</a>
       <a href="#d2-nosql" class="lvl2">4.3 Cosmos DB &amp; NoSQL</a>
+      <a href="#d2-integration" class="lvl2">4.4 Data Integration &amp; Analytics</a>
       <a href="#t-d3">5 · Business Continuity <span class="kbd">15–20%</span></a>
       <a href="#t-d4">6 · Infrastructure <span class="kbd">30–35%</span></a>
       <a href="#d4-compute" class="lvl2">6.1 Compute &amp; app hosting</a>
@@ -173,8 +174,11 @@
         <li><b>Microsoft Entra ID</b> (formerly Azure AD) is Azure's cloud identity provider. Tiers: <b>Free / P1 / P2</b>.</li>
         <li><b>P1</b> adds Conditional Access, dynamic groups, self-service password reset writeback, and hybrid identity features. <b>P2</b> adds <b>Identity Protection</b>, <b>Privileged Identity Management (PIM)</b>, Access Reviews, and entitlement management.</li>
         <li><b>Hybrid identity sync</b> (Entra Connect): <b>Password Hash Sync</b> (simplest), <b>Pass-through Authentication</b>, or <b>Federation (AD FS)</b>.</li>
-        <li><b>Authorization:</b> use <b>RBAC</b> to grant least-privilege access to Azure resources; use <b>Conditional Access</b> for context-aware sign-in (MFA, device/location).</li>
-        <li><b>B2B</b> (guest collaboration) vs <b>B2C</b> (customer-facing identity).</li>
+        <li><b>Authorization:</b> use <b>RBAC</b> to grant least-privilege access to Azure resources; use <b>Conditional Access</b> for context-aware sign-in (MFA, device/location, risk).</li>
+        <li><b>Built-in RBAC roles:</b> <b>Owner</b> (everything incl. granting access), <b>Contributor</b> (everything <i>except</i> granting access), <b>Reader</b>, <b>User Access Administrator</b> (only grants access). Assign at the narrowest useful scope (mgmt group / subscription / RG / resource); create custom roles only when built-ins don't fit.</li>
+        <li><b>Managed identities</b> — let Azure resources authenticate to other services (Key Vault, storage, SQL) <b>without any stored credentials</b>. <b>System-assigned</b> = tied 1:1 to the resource's lifecycle; <b>user-assigned</b> = standalone, shareable across many resources. The default answer to "app needs to access X securely without secrets."</li>
+        <li><b>PIM</b> (P2) — <b>just-in-time, time-boxed, approval-gated</b> elevation for privileged roles, with audit trail. The answer to "admins should have standing access to nothing."</li>
+        <li><b>B2B</b> (guest collaboration into your tenant) vs <b>B2C</b> (customer-facing identity for your apps). <b>Entra Domain Services</b> = managed AD DS domain (Kerberos/NTLM/LDAP) for legacy apps that need domain-join without on-prem DCs.</li>
       </ul>
 
       <h3 id="d1-gov">3.2 · Governance</h3>
@@ -183,14 +187,19 @@
         <li><b>Azure Policy</b> — enforce/audit rules (allowed regions/SKUs, required tags, enforce encryption). <b>Initiatives</b> group policies. <b>Effects</b>: Deny, Audit, Append, DeployIfNotExists.</li>
         <li><b>RBAC vs Policy:</b> RBAC = <b>who can do what</b>; Policy = <b>what resources/config are allowed</b>. Different questions, don't conflate.</li>
         <li><b>Resource locks</b> (CanNotDelete / ReadOnly) and <b>tags</b> (cost/organization). <b>Azure Blueprints</b> package policies/RBAC/templates for repeatable environments.</li>
-        <li><b>Azure Key Vault</b> — store secrets, keys, certificates (Standard vs Premium/HSM-backed). Use managed identities so apps fetch secrets without credentials.</li>
+        <li><b>Azure Key Vault</b> — store secrets, keys, certificates (Standard vs Premium/HSM-backed). Use managed identities so apps fetch secrets without credentials. Enable <b>soft-delete + purge protection</b> so keys/secrets can't be permanently destroyed (required before using customer-managed keys for many services).</li>
+        <li><b>Tags are not inherited</b> by default (use Azure Policy to enforce/append them); <b>locks and policy assignments do inherit</b> down the hierarchy.</li>
+        <li><b>Microsoft Defender for Cloud</b> — cloud security posture management (secure score, recommendations) + workload protection plans. "Assess/improve overall security posture" → Defender for Cloud, not Sentinel.</li>
       </ul>
 
       <h3 id="d1-mon">3.3 · Monitoring</h3>
       <ul>
-        <li><b>Azure Monitor</b> is the umbrella. <b>Log Analytics workspace</b> stores logs; query with <b>KQL</b>. <b>Application Insights</b> for app telemetry/APM.</li>
-        <li><b>Diagnostic settings</b> route resource logs/metrics to Log Analytics, a Storage Account (archive), or Event Hubs (stream to SIEM).</li>
-        <li><b>Alerts + Action Groups</b> for notification/automation. <b>Microsoft Sentinel</b> = cloud SIEM/SOAR built on Log Analytics.</li>
+        <li><b>Azure Monitor</b> is the umbrella — <b>Metrics</b> (fast, numeric, near-real-time alerting) and <b>Logs</b> (rich, queryable with <b>KQL</b> in a <b>Log Analytics workspace</b>).</li>
+        <li><b>Application Insights</b> for app telemetry/APM — request rates, dependencies, failures, availability (URL ping) tests, distributed tracing.</li>
+        <li><b>Diagnostic settings</b> route resource logs/metrics to Log Analytics (analysis), a Storage Account (cheap archive), or <b>Event Hubs (stream to an external SIEM)</b> — that trio is a recurring answer set.</li>
+        <li><b>Workspace design:</b> a <b>centralized workspace</b> simplifies cross-resource queries &amp; RBAC; use resource-context access to scope who sees what. Set retention per table to balance cost.</li>
+        <li><b>Alerts + Action Groups</b> for notification/automation. <b>Microsoft Sentinel</b> = cloud <b>SIEM/SOAR</b> built on Log Analytics (threat detection/hunting/response — a different job than Defender for Cloud's posture management).</li>
+        <li><b>Network Watcher</b> — packet capture, NSG flow logs, connection troubleshooting for network diagnostics.</li>
       </ul>
     </section>
 
@@ -209,6 +218,10 @@
       <ul>
         <li><b>Blob access tiers:</b> <b>Hot → Cool → Cold → Archive</b> (Archive = cheapest storage, but rehydration latency + retrieval cost). Lifecycle management auto-tiers.</li>
         <li><b>Redundancy (cheapest→most resilient):</b> <b>LRS</b> (1 datacenter) → <b>ZRS</b> (across zones) → <b>GRS</b> (paired region, async) → <b>GZRS</b> (zones + region). <b>RA-GRS/RA-GZRS</b> add read access to the secondary.</li>
+        <li><b>Authorizing storage access</b> (a favorite): <b>Entra ID + RBAC</b> = best for apps/users (identities, auditable) · <b>SAS tokens</b> = scoped, time-limited delegated access for external parties (prefer <b>user-delegation SAS</b>, backed by Entra) · <b>account keys</b> = full-account god-mode, avoid handing out. "Grant a partner temporary access to one container" → SAS.</li>
+        <li><b>Immutable storage</b> — time-based retention or <b>legal hold</b> WORM policies on blob containers for compliance ("data must not be modified or deleted for N years").</li>
+        <li><b>Private Endpoints</b> give the storage account a private IP in your VNet (public access can be disabled) — the default answer for "storage must not be reachable from the internet."</li>
+        <li><b>Azure Files extras:</b> identity-based SMB auth via AD DS / Entra Domain Services; <b>Azure File Sync</b> caches shares on on-prem Windows servers (cloud tiering). <b>Azure NetApp Files</b> = high-performance NFS/SMB for demanding workloads (SAP, HPC) when Files/managed disks can't hit the IOPS/latency target.</li>
       </ul>
 
       <h3 id="d2-rel">4.2 · Relational databases</h3>
@@ -220,8 +233,10 @@
         <tr><td><b>Azure DB for MySQL / PostgreSQL</b></td><td>Managed open-source engines.</td></tr>
       </table>
       <ul>
-        <li><b>Purchasing:</b> DTU vs <b>vCore</b>. vCore tiers: <b>General Purpose</b>, <b>Business Critical</b> (local SSD + built-in HA replica, lowest latency), <b>Hyperscale</b> (up to 100 TB, fast scale/restore). <b>Serverless</b> auto-pause for intermittent load.</li>
-        <li><b>HA/scale:</b> active geo-replication, auto-failover groups, read replicas.</li>
+        <li><b>Purchasing:</b> DTU vs <b>vCore</b>. vCore tiers: <b>General Purpose</b>, <b>Business Critical</b> (local SSD + built-in HA replica, lowest latency, free readable secondary), <b>Hyperscale</b> (up to 100 TB, fast scale/restore). <b>Serverless</b> auto-pauses for intermittent load — pay only when active.</li>
+        <li><b>Elastic pools</b> — many databases with variable, non-overlapping usage share one pool of resources; the answer to "dozens of small DBs with spiky individual load."</li>
+        <li><b>HA/scale:</b> zone-redundant deployment; <b>active geo-replication</b> (readable secondaries, per-DB) vs <b>auto-failover groups</b> (group failover + a stable listener endpoint — apps don't change connection strings); read scale-out.</li>
+        <li><b>SQL security stack</b> (asked as "which feature?"): <b>TDE</b> = encryption at rest (on by default) · <b>Always Encrypted</b> = client-side encryption, even DBAs can't read values · <b>Dynamic Data Masking</b> = hides values in query <i>results</i> (display-level, not encryption) · row-level security · auditing → Log Analytics.</li>
       </ul>
 
       <h3 id="d2-nosql">4.3 · Cosmos DB &amp; NoSQL</h3>
@@ -229,7 +244,21 @@
         <li><b>Azure Cosmos DB</b> — globally distributed, multi-model, single-digit-ms latency, elastic. <b>APIs:</b> NoSQL (Core), MongoDB, Cassandra, Gremlin (graph), Table. Pick the API to match an existing app/driver.</li>
         <li><b>5 consistency levels</b> (strongest→weakest): <b>Strong → Bounded Staleness → Session</b> (default) <b>→ Consistent Prefix → Eventual</b>. Stronger = more latency/cost; weaker = faster.</li>
         <li><b>Multi-region writes</b> + global distribution for low-latency global apps.</li>
+        <li><b>Capacity:</b> billed in <b>Request Units (RUs)</b> — <b>provisioned</b> (steady), <b>autoscale</b> (variable, scales 10× band), or <b>serverless</b> (sporadic). A good <b>partition key</b> (high cardinality, even access) is the #1 design lever — hot partitions throttle.</li>
+        <li><b>Change feed</b> streams item changes in order — drives event-driven downstream processing (Functions triggers, materialized views).</li>
       </ul>
+
+      <h3 id="d2-integration">4.4 · Data Integration &amp; Analytics</h3>
+      <table>
+        <tr><th>Service</th><th>Use for</th></tr>
+        <tr><td><b>Azure Data Factory</b></td><td><b>ETL/ELT orchestration</b> — pipelines that move &amp; transform data on schedules/triggers (the Azure "data pipeline" answer).</td></tr>
+        <tr><td><b>Azure Synapse Analytics</b></td><td>Data warehousing + big-data analytics — dedicated or serverless SQL pools + Spark, integrated workspace.</td></tr>
+        <tr><td><b>Azure Databricks</b></td><td>Managed <b>Apache Spark</b> — advanced analytics, ML, when the team already uses Spark/notebooks.</td></tr>
+        <tr><td><b>Azure Stream Analytics</b></td><td><b>Real-time</b> SQL-like queries over streams (pairs with Event Hubs/IoT Hub).</td></tr>
+        <tr><td><b>ADLS Gen2</b></td><td>The data-lake storage layer (hierarchical namespace on Blob) all of these read/write.</td></tr>
+        <tr><td><b>Power BI</b></td><td>Dashboards &amp; visualization on top.</td></tr>
+      </table>
+      <p class="legend">Pattern to recognize: ingest (Event Hubs / Data Factory) → store (ADLS Gen2) → process (Synapse / Databricks / Stream Analytics) → serve (SQL / Power BI).</p>
     </section>
 
     <!-- DOMAIN 3 -->
@@ -244,6 +273,10 @@
         <li><b>RTO</b> = how fast you must recover; <b>RPO</b> = how much data loss is acceptable. Case-study answers hinge on these words.</li>
         <li><b>HA building blocks:</b> <b>Availability Sets</b> (fault + update domains, single datacenter, 99.95%) vs <b>Availability Zones</b> (physically separate datacenters in a region, 99.99%) vs <b>Region pairs</b> (cross-region DR). <b>VM Scale Sets</b> for autoscaling identical VMs.</li>
         <li><b>Data HA:</b> zone-redundant storage (ZRS/GZRS), SQL geo-replication/failover groups, Cosmos multi-region.</li>
+        <li><b>Azure Backup detail:</b> Recovery Services vault with <b>GRS by default</b> (enable <b>cross-region restore</b> to restore in the paired region); <b>soft delete</b> keeps deleted backups 14 days; <b>immutable vaults / MUA</b> protect backups from ransomware &amp; rogue admins; supports VMs, Files, SQL/SAP in VMs, on-prem via MARS/Azure Backup Server.</li>
+        <li><b>SQL PaaS backups:</b> automatic <b>point-in-time restore</b> (default up to 35 days) + <b>long-term retention (LTR)</b> for up to 10 years — don't design VM-style backup for Azure SQL.</li>
+        <li><b>Multi-region app failover:</b> put <b>Front Door</b> (HTTP) or <b>Traffic Manager</b> (DNS) in front of two regional deployments — active/active or active/passive with priority routing + health probes.</li>
+        <li><b>Composite SLA:</b> chained dependencies <i>multiply</i> availability (99.95% × 99.99% &lt; either alone); parallel independent paths raise it. Case studies that state a required "%" are steering you toward zones (99.99%) or multi-region.</li>
       </ul>
       <div class="callout note"><span class="lbl">Backup vs Site Recovery</span> <b>Backup</b> = keep restorable copies (protects against corruption/deletion; RPO). <b>Site Recovery</b> = replicate a running workload and fail it over to another region fast (RTO). They solve different problems and are often used together.</div>
     </section>
@@ -263,6 +296,11 @@
         <tr><td><b>Container Instances (ACI)</b></td><td>Simplest single-container / burst.</td></tr>
         <tr><td><b>Batch</b></td><td>Large-scale parallel/HPC batch jobs.</td></tr>
       </table>
+      <ul>
+        <li><b>App Service plans:</b> Free/Basic (dev) → <b>Standard</b> (autoscale, slots) → <b>Premium</b> (more scale, VNet integration) → <b>Isolated / App Service Environment</b> (dedicated, fully VNet-injected — the "compliance demands network isolation" answer). <b>Deployment slots</b> enable zero-downtime blue/green swaps.</li>
+        <li><b>Functions hosting plans:</b> <b>Consumption</b> (pure pay-per-execution, ~5–10 min cap, cold starts) · <b>Premium</b> (pre-warmed instances = no cold start, VNet access, longer runs) · <b>Dedicated</b> (run on an App Service plan you already own). "Serverless but no cold starts + VNet" → <b>Premium</b>.</li>
+        <li><b>Decision drivers:</b> control ↔ management burden. VM (most control) → AKS → Container Apps / App Service → Functions (least). Case studies pick by: containerized? needs K8s APIs? event-driven? team ops maturity? compliance isolation?</li>
+      </ul>
 
       <h3 id="d4-network">6.2 · Networking &amp; load balancing</h3>
       <p>Memorize the <b>Layer × Scope 2×2</b> — the most-tested networking decision:</p>
@@ -272,8 +310,10 @@
         <tr><td><b>Layer 7 (HTTP/S)</b></td><td><b>Application Gateway</b> (URL routing, WAF, SSL offload)</td><td><b>Azure Front Door</b> (global HTTP LB + CDN + WAF)</td></tr>
       </table>
       <ul>
-        <li><b>Hybrid connectivity:</b> <b>VPN Gateway</b> (encrypted over internet; cheaper; site-to-site / point-to-site) vs <b>ExpressRoute</b> (private dedicated circuit, higher bandwidth/SLA, predictable latency, bypasses public internet). Combine ExpressRoute + VPN for failover.</li>
-        <li><b>VNet</b> segmentation, NSGs (network security groups), Azure Firewall, Private Endpoints/Private Link, VNet peering + hub-spoke.</li>
+        <li><b>Hybrid connectivity:</b> <b>VPN Gateway</b> (encrypted over internet; cheaper; site-to-site / point-to-site) vs <b>ExpressRoute</b> (private dedicated circuit, higher bandwidth/SLA, predictable latency, bypasses public internet). Combine ExpressRoute + VPN for failover. ExpressRoute traffic is <b>not encrypted by default</b>.</li>
+        <li><b>NSG</b> = subnet/NIC-level allow/deny rules; <b>Application Security Groups (ASGs)</b> tag VMs by role so NSG rules read "web-asg → db-asg" instead of IP lists; <b>Azure Firewall</b> = central, stateful, FQDN-aware firewall for the hub (a different layer than NSGs — use both).</li>
+        <li><b>Private Endpoint vs Service Endpoint</b> (heavily tested): <b>Private Endpoint</b> gives the PaaS service a <b>private IP in your VNet</b> — reachable from on-prem via VPN/ER, public access can be fully disabled. <b>Service Endpoint</b> keeps the service's <i>public</i> endpoint but routes your VNet's traffic over the backbone and scopes the firewall to your subnet — no private IP, not reachable from on-prem. "Completely remove public exposure" → Private Endpoint.</li>
+        <li><b>Hub-spoke topology:</b> peering is <b>non-transitive</b>, so spokes talk through a hub (Azure Firewall/NVA + gateways in the hub, workloads in spokes) with <b>UDRs</b> steering traffic. <b>Azure Bastion</b> = browser-based RDP/SSH without public IPs on VMs. <b>NAT Gateway</b> for scalable, predictable outbound egress. <b>Private DNS zones</b> resolve private endpoints; link them to VNets.</li>
       </ul>
 
       <h3 id="d4-app">6.3 · Messaging &amp; application architecture</h3>
@@ -284,13 +324,19 @@
         <tr><td><b>Event Hubs</b></td><td>High-throughput <b>streaming/telemetry</b> ingestion (big data, IoT).</td></tr>
         <tr><td><b>Storage Queues</b></td><td>Simple, large-volume queueing.</td></tr>
       </table>
-      <p><b>Caching:</b> Azure Cache for Redis. <b>API integration:</b> API Management. <b>Config:</b> App Configuration + Key Vault.</p>
+      <div class="callout note"><span class="lbl">Events vs messages</span> An <b>event</b> is a lightweight notification that something happened (consumer decides what to do) → <b>Event Grid</b> (discrete) / <b>Event Hubs</b> (streams). A <b>message</b> is data the producer expects to be <i>processed</i>, often with ordering/transactions → <b>Service Bus</b>. That one distinction answers most integration questions.</div>
+      <ul>
+        <li><b>Caching:</b> Azure Cache for Redis (sessions, DB offload). <b>API Management</b> — publish/secure/throttle/version APIs behind one gateway. <b>Logic Apps</b> — low-code workflow integration with hundreds of connectors ("automate this business process across SaaS/systems"). <b>App Configuration</b> + Key Vault for centralized settings/feature flags.</li>
+        <li><b>Queue-based load leveling:</b> put Service Bus/queues between spiky producers and slower consumers so bursts don't topple the backend — the resiliency pattern case studies fish for.</li>
+        <li><b>Automated deployment:</b> <b>ARM templates / Bicep</b> (declarative IaC; Bicep is the friendlier DSL) via Azure DevOps Pipelines or GitHub Actions; Template Specs to share approved templates.</li>
+      </ul>
 
       <h3 id="d4-migrate">6.4 · Migration</h3>
       <ul>
-        <li><b>Azure Migrate</b> — central hub to assess &amp; migrate servers, databases, and apps.</li>
-        <li><b>Database Migration Service (DMS)</b> for databases; <b>Data Box</b> for offline bulk data transfer.</li>
-        <li>Frame with the <b>CAF</b> and the <b>"R" strategies</b> (rehost/refactor/rearchitect/rebuild).</li>
+        <li><b>Azure Migrate</b> — the central hub: discovery appliance → <b>assessment</b> (readiness, right-sizing, cost estimate) → migration tooling for servers/databases/web apps/VDI.</li>
+        <li><b>Database Migration Service (DMS)</b> — <b>offline</b> (downtime during cutover) vs <b>online</b> (continuous sync, minimal downtime) migrations; pair with SQL assessments (Data Migration Assistant heritage) for compatibility checks.</li>
+        <li><b>Moving bulk data:</b> network (AzCopy, Storage Mover, Data Factory) when bandwidth allows; <b>Data Box family</b> (~8 TB Disk / ~80 TB Data Box / ~800 TB+ Heavy, shipped appliances) when it doesn't.</li>
+        <li>Frame with the <b>CAF</b> and the <b>"R" strategies</b> (rehost/refactor/rearchitect/rebuild/replace).</li>
       </ul>
     </section>
 
