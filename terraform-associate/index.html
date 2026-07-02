@@ -144,6 +144,12 @@
         <li><b>Why Terraform specifically:</b> <b>cloud/provider-agnostic</b> (one workflow across AWS/Azure/GCP + hundreds of providers), a huge <b>provider ecosystem</b>, and <b>state</b> that maps config → real resources so it can plan precise changes.</li>
         <li><b>Purpose of state:</b> track real-world resources, store metadata, improve performance, and enable collaboration.</li>
       </ul>
+      <h4>Terraform vs the alternatives (a stated objective)</h4>
+      <table>
+        <tr><th>Tool</th><th>How Terraform differs</th></tr>
+        <tr><td><b>CloudFormation / ARM-Bicep</b></td><td>Vendor-locked to one cloud; Terraform runs the <b>same workflow across any provider</b> — the answer to "multi-cloud IaC."</td></tr>
+        <tr><td><b>Ansible / Chef / Puppet</b></td><td>Primarily <b>configuration management</b> (software on existing machines, often procedural); Terraform is <b>provisioning</b> (create/modify/destroy the infrastructure itself, declarative). They complement: Terraform builds the VM, Ansible configures it.</td></tr>
+      </table>
     </section>
 
     <section id="t-basics">
@@ -155,7 +161,8 @@
         <li><b>How Terraform finds providers:</b> from the <b>public Terraform Registry</b> by default (namespace/type), downloaded during <code>terraform init</code> into <code>.terraform/</code>.</li>
         <li><b>Version constraints:</b> <code>=</code>, <code>!=</code>, <code>&gt;=</code>, <code>&lt;=</code>, and the <b>pessimistic <code>~&gt;</code></b>: <code>~&gt; 5.1</code> allows 5.x ≥ 5.1 (not 6.0); <code>~&gt; 5.1.2</code> allows 5.1.x only. <code>required_version</code> pins the Terraform CLI.</li>
         <li><b><code>.terraform.lock.hcl</code></b> (dependency lock file) records the exact provider versions selected — commit it.</li>
-        <li>You can use <b>multiple providers</b> (and multiple configurations of one provider via <code>alias</code>).</li>
+        <li>You can use <b>multiple providers</b> (and multiple configurations of one provider via <code>alias</code> — e.g. two AWS regions; select with <code>provider = aws.west</code> on a resource).</li>
+        <li><b>Provider authentication:</b> never hard-code credentials in config. Providers read <b>environment variables</b> (e.g. <code>AWS_ACCESS_KEY_ID</code>), shared credential files/profiles, or ambient identity (instance roles, OIDC). Hard-coded keys end up in VCS — the "which is the secure approach?" answer is always env vars / dynamic credentials.</li>
       </ul>
     </section>
 
@@ -174,8 +181,10 @@
         <tr><td><code>terraform output</code> / <code>show</code> / <code>graph</code> / <code>version</code></td><td>Read outputs; human/JSON view of state or a plan; dependency graph; version.</td></tr>
       </table>
       <ul>
-        <li><b>Verbose logging:</b> set <code>TF_LOG=TRACE|DEBUG|INFO|WARN|ERROR</code> (and <code>TF_LOG_PATH</code> to write to a file) for debugging.</li>
+        <li><b>Verbose logging:</b> set <code>TF_LOG=TRACE|DEBUG|INFO|WARN|ERROR</code> (TRACE is the most verbose; and <code>TF_LOG_PATH</code> to write to a file) for debugging.</li>
         <li><code>taint</code>/<code>untaint</code> mark a resource for recreation but are <b>deprecated</b> — use <code>apply -replace=ADDR</code> instead (know both).</li>
+        <li><b>Plan symbols:</b> <code>+</code> create · <code>-</code> destroy · <code>~</code> update in place · <code>-/+</code> <b>destroy then recreate</b> (a "forces replacement" attribute changed). Reading a plan snippet is a common question format.</li>
+        <li><b>CLI workspaces:</b> <code>terraform workspace new/select/list/show/delete</code> — multiple state files for one configuration (e.g. dev/stage); interpolate the current one with <code>terraform.workspace</code>. Every config starts in the <b>default</b> workspace, which can't be deleted.</li>
       </ul>
     </section>
 
@@ -183,6 +192,7 @@
       <h2>5 · State</h2>
       <ul>
         <li><b>Default backend is local</b> (<code>terraform.tfstate</code> on disk). <b>Remote backends</b> (S3, azurerm, gcs, consul, pg, kubernetes, HCP Terraform via the <code>cloud</code> block) enable team collaboration.</li>
+        <li><b>Backend syntax:</b> declared inside the <code>terraform</code> block — <code>terraform { backend "s3" { bucket = "…", key = "…", region = "…" } }</code>. Backend config <b>can't use variables/interpolation</b>; missing values can be supplied at <code>init</code> time (<b>partial configuration</b> via <code>-backend-config</code>). Changing backends requires re-running <code>init</code> (<code>-migrate-state</code> to carry state over).</li>
         <li><b>State locking</b> prevents concurrent writes from corrupting state. Remote backends support it (e.g. S3 historically used a DynamoDB lock table; HCP Terraform locks automatically). <code>-lock=false</code> and <code>terraform force-unlock</code> exist for edge cases.</li>
         <li><b>Secrets in state:</b> state stores values in <b>plaintext</b>, including secrets. <b>Never commit state to VCS</b>; use an encrypted remote backend and restrict access. <code>sensitive = true</code> only hides values in CLI output — they're still in state.</li>
         <li><b><code>terraform_remote_state</code></b> data source reads outputs from another config's state (cross-config wiring).</li>
@@ -197,10 +207,12 @@
         <tr><td><code>state rm ADDR</code></td><td>Remove from state; the <b>real resource is NOT destroyed</b> — Terraform just "forgets" it.</td></tr>
         <tr><td><code>import ADDR ID</code></td><td>Bring existing infra <b>into state</b>. The CLI form does <b>NOT generate configuration</b> — you must write the resource block yourself.</td></tr>
       </table>
-      <h4>Config-driven import (the modern way)</h4>
+      <h4>Config-driven import &amp; refactoring (the modern way)</h4>
       <ul>
         <li>Declare an <code>import { to = aws_x.this, id = "…" }</code> block in your configuration, then run <code>terraform plan</code> / <code>apply</code>. Unlike the CLI command, this is reviewable in a plan and version-controlled.</li>
         <li><code>terraform plan -generate-config-out=generated.tf</code> will <b>scaffold the resource configuration</b> for imported resources so you don't hand-write it.</li>
+        <li><b><code>moved { from = aws_x.old, to = aws_x.new }</code></b> blocks are the config-driven equivalent of <code>state mv</code> — rename/move resources (including into modules) without destroy/recreate, reviewable in the plan.</li>
+        <li><b><code>removed</code></b> blocks are the config-driven <code>state rm</code> — stop managing a resource without destroying it.</li>
       </ul>
     </section>
 
@@ -211,6 +223,9 @@
         <li><b>Sources:</b> local paths (<code>./modules/x</code>), the <b>Terraform Registry</b> (<code>namespace/name/provider</code>), Git/GitHub (<code>git::https://…</code>, <code>?ref=v1.2.0</code>), Bitbucket, S3/GCS buckets, HTTP.</li>
         <li><b>Versioning:</b> <code>version = "~&gt; 3.0"</code> works for <b>registry</b> modules; for Git, pin with <code>?ref=&lt;tag&gt;</code>. Local paths don't take a version.</li>
         <li><b>Inputs</b> = input variables (<code>variable</code> blocks); <b>outputs</b> = <code>output</code> blocks that expose values to the parent. Variables are <b>scoped to their module</b> — there are no global variables.</li>
+        <li><b>Calling a module:</b> <code>module "vpc" { source = "terraform-aws-modules/vpc/aws", version = "~&gt; 5.0", cidr = "10.0.0.0/16" }</code> — arguments map to the module's input variables. Read its outputs as <code>module.vpc.vpc_id</code>. After adding/changing a module, run <code>terraform init</code> (or <code>get</code>) to download it.</li>
+        <li>A module can only see what's passed in and only exposes what it outputs — parents can't reach arbitrary resources inside a child. That encapsulation is the tested concept behind "variable scope within modules."</li>
+        <li>Registry modules marked <b>verified</b> are reviewed by HashiCorp; the registry documents inputs/outputs and gives the version constraint to copy.</li>
       </ul>
     </section>
 
@@ -224,7 +239,13 @@
         <li><code>*.auto.tfvars</code> / <code>*.auto.tfvars.json</code> (alphabetical)</li>
         <li><code>-var</code> and <code>-var-file</code> on the CLI (<b>highest</b>; last one wins)</li>
       </ol>
-      <p><b>Variable types.</b> Primitives (<code>string</code>, <code>number</code>, <code>bool</code>); <b>complex types</b> — collection (<code>list</code>, <code>set</code>, <code>map</code>) and structural (<code>object</code>, <code>tuple</code>). Modifiers: <code>default</code>, <code>sensitive</code>, <code>nullable</code>, <code>validation</code>.</p>
+      <p><b>Variable types.</b> Primitives (<code>string</code>, <code>number</code>, <code>bool</code>); <b>complex types</b> — collection (<code>list</code>, <code>set</code>, <code>map</code>) and structural (<code>object</code>, <code>tuple</code>). Modifiers: <code>default</code>, <code>sensitive</code>, <code>nullable</code>, <code>validation</code>. A variable with no default and no supplied value → Terraform <b>prompts interactively</b>.</p>
+      <h4>Named values — how you reference things</h4>
+      <ul>
+        <li><code>var.name</code> = input variable · <code>local.name</code> = local value · <code>module.name.output</code> = child-module output · <code>type.name.attr</code> = resource attribute · <code>data.type.name.attr</code> = data source.</li>
+        <li><b><code>locals</code></b> define named expressions computed once and reused (<code>locals { common_tags = { env = var.env } }</code> → <code>local.common_tags</code>) — DRY for repeated expressions; unlike variables, they can't be set from outside.</li>
+        <li><b>Outputs:</b> <code>output "ip" { value = aws_instance.web.public_ip }</code> — shown after apply, read with <code>terraform output</code>, and the interface between modules. <code>sensitive = true</code> redacts it in CLI output.</li>
+      </ul>
       <h4>Resources, data sources &amp; references</h4>
       <ul>
         <li><code>resource "type" "name" {}</code> manages infra; <code>data "type" "name" {}</code> is a read-only lookup refreshed during plan.</li>
