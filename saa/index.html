@@ -42,6 +42,7 @@
       <a href="#d2-scale" class="lvl2">5.2 Scaling, Serverless, Containers</a>
       <a href="#d2-ha" class="lvl2">5.3 High Availability &amp; Fault Tolerance</a>
       <a href="#d2-dr" class="lvl2">5.4 Disaster Recovery</a>
+      <a href="#d2-mon" class="lvl2">5.5 Monitoring, Auditing &amp; IaC</a>
 
       <a href="#t-d3">6 · Domain 3 — High-Performing</a>
       <a href="#d3-storage" class="lvl2">6.1 Storage</a>
@@ -237,11 +238,19 @@
         <li><b>Roles</b> — temporary credentials assumed by trusted principals (EC2, Lambda, other accounts, federated users). <b>Prefer roles over long-lived access keys.</b> An EC2 <b>instance profile</b> passes a role to an instance so apps never store keys.</li>
         <li><b>Policies</b> — JSON documents (<code>Effect</code>, <code>Action</code>, <code>Resource</code>, optional <code>Condition</code>). Types: <b>identity-based</b> (on users/groups/roles), <b>resource-based</b> (on S3 buckets, SQS, KMS, etc., with a <code>Principal</code>), <b>permissions boundaries</b>, and <b>SCPs</b> (org guardrails).</li>
       </ul>
+      <h4>Policy anatomy</h4>
+      <p>Every policy statement is built from the same four elements — being able to read one fast pays off across many questions:</p>
+      <ul>
+        <li><code>Effect</code> — <code>Allow</code> or <code>Deny</code>. &nbsp;<code>Action</code> — the API calls covered (<code>s3:GetObject</code>, <code>ec2:*</code>). &nbsp;<code>Resource</code> — the ARNs it applies to (<code>arn:aws:s3:::my-bucket/*</code>).</li>
+        <li><code>Condition</code> (optional) — context tests: <code>aws:SourceIp</code> (restrict by IP), <code>aws:MultiFactorAuthPresent</code> (require MFA), <code>aws:PrincipalOrgID</code> (only principals from your Organization), <code>s3:x-amz-server-side-encryption</code> (require encrypted uploads).</li>
+      </ul>
       <h4>Evaluation logic (know this cold)</h4>
       <ul>
         <li><b>Explicit Deny</b> always wins over any Allow.</li>
         <li>Default is <b>implicit deny</b>; you need an explicit Allow somewhere.</li>
         <li>Effective permissions = intersection of SCPs, permissions boundaries, and identity/resource policies. An SCP that doesn't allow an action blocks it even if IAM allows it.</li>
+        <li>Same-account: access is granted if <i>either</i> the identity policy <i>or</i> the resource policy allows it. <b>Cross-account: both sides must allow</b> (identity policy in the caller's account <i>and</i> the resource policy / trust policy in the target account).</li>
+        <li><b>IAM Access Analyzer</b> continuously finds resources (buckets, roles, KMS keys) shared with external entities — the answer to "identify unintended external access."</li>
       </ul>
       <h4>Federation &amp; temporary access</h4>
       <ul>
@@ -306,6 +315,15 @@
         <li><b>VPC endpoints</b> keep traffic to AWS services on the AWS network: <b>Gateway endpoints</b> (S3, DynamoDB — free, route-table based) and <b>Interface endpoints / PrivateLink</b> (ENI in your subnet, most other services).</li>
         <li><b>AWS Network Firewall</b> — managed stateful network firewall for a VPC. <b>Firewall Manager</b> — central management of WAF/Shield/SG rules across accounts.</li>
       </ul>
+      <h4>VPC facts worth memorizing</h4>
+      <ul>
+        <li>VPC CIDR size: <b>/16 (65,536 IPs) down to /28 (16 IPs)</b>; you can add secondary CIDR blocks.</li>
+        <li>Each subnet reserves <b>5 IP addresses</b> (network, VPC router, DNS, future use, broadcast) — a /28 subnet has 11 usable hosts.</li>
+        <li><b>Security groups can reference other security groups</b> — the standard tier-to-tier pattern (app-tier SG allows MySQL only <i>from the web-tier SG</i>), no IP lists to maintain.</li>
+        <li><b>VPC Flow Logs</b> capture accepted/rejected IP traffic <i>metadata</i> (not packet contents) at VPC, subnet, or ENI level → CloudWatch Logs or S3. The answer to "analyze / troubleshoot network traffic."</li>
+        <li>Admin access to private instances: prefer <b>SSM Session Manager</b> (no inbound ports, no bastion host, sessions logged) when the ask is "most secure / least management."</li>
+        <li><b>Egress-only Internet Gateway</b> — outbound-only internet for <b>IPv6</b> (the IPv6 equivalent of a NAT gateway).</li>
+      </ul>
       <h4>Application &amp; threat protection</h4>
       <table>
         <tr><th>Service</th><th>Protects against / does</th></tr>
@@ -337,6 +355,15 @@
         <tr><td><b>Amazon MQ</b></td><td>Managed message broker</td><td>For <b>existing apps using standard protocols</b> (JMS, AMQP, MQTT) migrating to AWS. Otherwise prefer SQS/SNS.</td></tr>
         <tr><td><b>Amazon API Gateway</b></td><td>Managed API front door</td><td>REST/HTTP/WebSocket APIs, throttling, auth, caching; fronts Lambda/HTTP backends.</td></tr>
       </table>
+      <h4>Know the numbers &amp; variants</h4>
+      <table>
+        <tr><th>Service</th><th>Details the exam actually tests</th></tr>
+        <tr><td><b>SQS</b></td><td>Max message <b>256 KB</b>. Messages aren't deleted on read — the consumer must delete after processing; the <b>visibility timeout</b> hides in-flight messages (too short → duplicates, too long → slow retry). FIFO: 300 msg/s (3,000 batched), requires message group ID.</td></tr>
+        <tr><td><b>API Gateway</b></td><td><b>REST API</b> = full features (API keys, usage plans, request validation, per-stage caching). <b>HTTP API</b> = cheaper &amp; lower latency, fewer features — default for simple Lambda proxying. <b>29-second</b> integration timeout — long jobs should go async (SQS/Step Functions), not through API GW.</td></tr>
+        <tr><td><b>Step Functions</b></td><td><b>Standard</b>: up to 1 year, exactly-once — long-running, auditable workflows. <b>Express</b>: up to 5 min, at-least-once, high-volume/cheap — event processing at scale.</td></tr>
+        <tr><td><b>SNS</b></td><td><b>Subscription filter policies</b> deliver only matching messages per subscriber — filter at SNS instead of in consumer code. FIFO topics pair with SQS FIFO for ordered fan-out.</td></tr>
+        <tr><td><b>Lambda + SQS</b></td><td>Lambda polls SQS for you (event source mapping) — the classic serverless buffer: API → SQS → Lambda, with a <b>DLQ</b> for poison messages.</td></tr>
+      </table>
       <div class="callout note"><span class="lbl">Signal words</span> "Decouple", "buffer", "absorb spikes", "process later" → <b>SQS</b>. "Notify multiple systems", "fan-out" → <b>SNS</b> (often + SQS). "React to events / route by content / from SaaS" → <b>EventBridge</b>. "Coordinate multi-step workflow with retries" → <b>Step Functions</b>. "Exactly-once &amp; ordered" → <b>SQS FIFO</b>.</div>
 
       <!-- 5.2 scaling -->
@@ -346,11 +373,13 @@
         <li><b>Vertical scaling</b> — bigger instance (scale up); limited, requires downtime.</li>
         <li><b>Horizontal scaling</b> — more instances (scale out); preferred for resilience &amp; elasticity.</li>
         <li><b>EC2 Auto Scaling Group (ASG)</b> — maintains desired capacity across AZs, replaces unhealthy instances, and scales on policies: <b>target tracking</b> (keep CPU at 50%), <b>step</b>, <b>simple</b>, and <b>scheduled</b>. Combine with ELB health checks. <b>Predictive scaling</b> uses ML.</li>
-        <li>Design instances to be <b>stateless</b> — externalize session state to <b>DynamoDB/ElastiCache</b> so any instance can serve any request.</li>
+        <li>ASG details that get tested: min/desired/max capacity; <b>launch templates</b> (preferred over legacy launch configurations); <b>lifecycle hooks</b> run custom actions while instances launch/terminate; a default <b>cooldown/warm-up</b> prevents thrashing; set the ASG to use <b>ELB health checks</b> so app-level failures (not just instance failures) trigger replacement.</li>
+        <li>Design instances to be <b>stateless</b> — externalize session state to <b>DynamoDB/ElastiCache</b> so any instance can serve any request. Use <b>sticky sessions</b> on the ALB only when you can't (it fights even load distribution).</li>
       </ul>
       <h4>Serverless</h4>
       <ul>
         <li><b>AWS Lambda</b> — run code without servers; pay per request &amp; ms. Max <b>15-min</b> timeout, memory 128 MB–10,240 MB (CPU scales with memory). Event-driven from S3, API Gateway, SQS, EventBridge, etc. Watch cold starts &amp; concurrency limits.</li>
+        <li>Lambda facts that show up: default <b>regional concurrency ~1,000</b> (soft limit); <b>reserved concurrency</b> caps/guarantees a function; <b>provisioned concurrency</b> eliminates cold starts; ephemeral <code>/tmp</code> storage; to reach resources in a VPC (e.g. RDS) attach the function to the VPC — and use <b>RDS Proxy</b> to avoid exhausting DB connections.</li>
         <li><b>AWS Fargate</b> — serverless compute for containers (ECS/EKS); no EC2 to manage.</li>
         <li>Serverless data stores that pair well: <b>DynamoDB</b>, <b>S3</b>, <b>Aurora Serverless</b>.</li>
       </ul>
@@ -368,9 +397,10 @@
       <ul>
         <li><b>Eliminate single points of failure:</b> multiple AZs, ASG across AZs behind an ELB, Multi-AZ databases.</li>
         <li><b>Elastic Load Balancing</b> distributes traffic and runs health checks; deregisters unhealthy targets. See <a href="#d3-net">§6.4</a> for ALB/NLB/GWLB differences.</li>
-        <li><b>Amazon Route 53</b> health checks + <b>failover routing</b> reroute traffic when a region/endpoint is unhealthy.</li>
-        <li><b>RDS Multi-AZ</b> — synchronous standby in another AZ; automatic failover (HA, not read scaling). <b>Read replicas</b> — async, for read scaling (can be cross-region).</li>
-        <li><b>Aurora</b> — 6 copies of data across 3 AZs, self-healing storage, up to 15 low-lag read replicas, automatic failover.</li>
+        <li><b>Amazon Route 53</b> health checks + <b>failover routing</b> reroute traffic when a region/endpoint is unhealthy. Health checks can monitor endpoints, other health checks (calculated), or CloudWatch alarms.</li>
+        <li><b>RDS Multi-AZ</b> — synchronous standby in another AZ; automatic failover, typically ~1–2 minutes (HA, not read scaling — the standby serves no reads). <b>Read replicas</b> — async, for read scaling (can be cross-region), and can be promoted to standalone DBs in DR.</li>
+        <li>RDS operations: <b>automated backups</b> enable point-in-time restore (retention 0–35 days, transaction logs every 5 min); <b>manual snapshots</b> persist until deleted; encryption must be chosen <b>at creation</b> — to encrypt an existing DB, snapshot → copy the snapshot with encryption → restore.</li>
+        <li><b>Aurora</b> — 6 copies of data across 3 AZs, self-healing storage, up to 15 low-lag read replicas, automatic failover (a replica is promoted, typically &lt;30s). <b>Aurora Global Database</b> — cross-region storage-level replication with ~1s typical lag; secondary regions promote in about a minute — the "global relational DB with fast regional DR" answer.</li>
         <li><b>S3</b> — 99.999999999% (11 nines) durability, stored across ≥3 AZs (except One Zone-IA). <b>EFS</b> is multi-AZ; <b>EBS</b> is single-AZ (snapshot to S3 for durability).</li>
         <li><b>Immutable infrastructure</b> — replace rather than patch instances (via ASG + new launch template/AMI) for consistency &amp; easy rollback.</li>
       </ul>
@@ -390,7 +420,28 @@
         <li><b>AWS Backup</b> — centralized, policy-based backups across services (EBS, RDS, DynamoDB, EFS, etc.) with cross-region/cross-account copy.</li>
         <li><b>S3 Cross-Region Replication (CRR)</b> and <b>DynamoDB Global Tables</b> support active-active data.</li>
         <li><b>Elastic Disaster Recovery (DRS)</b> replicates servers for fast recovery.</li>
+        <li><b>AWS Backup Vault Lock</b> makes backups immutable (WORM) — the answer to "protect backups from ransomware / accidental deletion."</li>
       </ul>
+
+      <!-- 5.5 monitoring -->
+      <h3 id="d2-mon">5.5 · Monitoring, Auditing &amp; Infrastructure as Code</h3>
+      <p>These management services thread through every domain and are constantly tested as "which tool answers this question?"</p>
+      <table>
+        <tr><th>Service</th><th>Answers the question…</th><th>Key facts</th></tr>
+        <tr><td><b>Amazon CloudWatch</b></td><td>"How is it performing?" (metrics, logs, alarms)</td><td>EC2 basic metrics every <b>5 min</b> free; <b>detailed monitoring</b> = 1 min ($). <b>Memory &amp; disk-space are NOT default metrics</b> — they need the CloudWatch agent (custom metrics). Alarms trigger SNS/Auto Scaling/EC2 actions. CloudWatch Logs centralizes app/system logs; metric filters turn log patterns into alarms.</td></tr>
+        <tr><td><b>AWS CloudTrail</b></td><td>"<b>Who did what, when?</b>" (API audit)</td><td>Records every API call (console, CLI, SDK). 90-day event history by default; create a <b>trail to S3</b> for long-term retention; log-file integrity validation; <b>data events</b> (S3 object-level, Lambda invoke) cost extra and are off by default.</td></tr>
+        <tr><td><b>AWS Config</b></td><td>"<b>What changed, and is it compliant?</b>"</td><td>Records resource configuration history; <b>Config Rules</b> evaluate compliance (e.g. "EBS volumes must be encrypted") and can auto-remediate via SSM. Not a permissions tool — a compliance/inventory tool.</td></tr>
+        <tr><td><b>AWS X-Ray</b></td><td>"Where is the latency in my distributed app?"</td><td>Distributed tracing across microservices/Lambda/API GW — service map + per-request traces.</td></tr>
+        <tr><td><b>Amazon EventBridge</b></td><td>"React when something happens"</td><td>Route AWS/SaaS/custom events to targets; cron/rate schedules for periodic jobs.</td></tr>
+        <tr><td><b>AWS Trusted Advisor</b></td><td>"What am I doing wrong overall?"</td><td>Best-practice checks across cost, performance, security, fault tolerance, service limits. Full checks need Business/Enterprise support.</td></tr>
+      </table>
+      <h4>Infrastructure as Code &amp; ops tooling</h4>
+      <ul>
+        <li><b>AWS CloudFormation</b> — declarative templates (JSON/YAML) that create/update/delete resources as a <b>stack</b>. Repeatable environments across accounts/regions (StackSets); <b>drift detection</b> spots manual changes; deleting a stack cleans up everything. The default answer to "provision infrastructure repeatably / avoid manual console changes."</li>
+        <li><b>AWS Systems Manager (SSM)</b> — fleet ops: <b>Session Manager</b> (shell without SSH/bastion), <b>Patch Manager</b>, <b>Run Command</b>, <b>Parameter Store</b>. Requires the SSM agent + instance role.</li>
+        <li><b>AWS Elastic Beanstalk</b> — PaaS: upload code, it provisions ELB/ASG/EC2 for you; you keep full control of the underlying resources. "Deploy a web app quickly without managing infrastructure (but still on EC2)."</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">Classic discriminator</span> <b>CloudWatch</b> = performance/metrics/logs · <b>CloudTrail</b> = API audit ("who deleted the bucket?") · <b>Config</b> = configuration state &amp; compliance ("was this SG ever open to 0.0.0.0/0?") · <b>X-Ray</b> = request tracing · <b>Inspector</b> = vulnerabilities. Exam questions hinge on picking the right one.</div>
       <p class="backtop"><a href="#top">↑ back to top</a></p>
     </section>
 
@@ -414,6 +465,9 @@
         <li>Security: <b>Block Public Access</b> (on by default), bucket policies, ACLs (legacy), <b>presigned URLs</b> for temporary access, encryption (SSE-S3/SSE-KMS/SSE-C).</li>
         <li><b>Versioning</b> protects against overwrite/delete; <b>MFA Delete</b> adds protection. <b>S3 Object Lock</b> = WORM for compliance.</li>
         <li>Performance: <b>3,500 PUT / 5,500 GET requests per second per prefix</b>; parallelize across prefixes. <b>S3 Transfer Acceleration</b> uses edge locations for fast long-distance uploads. <b>Multipart</b> for large objects.</li>
+        <li><b>Replication:</b> <b>CRR</b> (cross-region — DR, compliance, latency) and <b>SRR</b> (same-region — log aggregation, prod/test copies). Both require <b>versioning enabled on source and destination</b>; existing objects need Batch Replication (new objects only by default).</li>
+        <li><b>Event notifications</b> — S3 can trigger <b>Lambda, SQS, SNS, or EventBridge</b> on object events (the classic "process every uploaded image" pattern).</li>
+        <li><b>Static website hosting</b> — host a static site from a bucket; pair with <b>CloudFront + OAC</b> for HTTPS, caching, and keeping the bucket private.</li>
         <li><b>S3 storage classes</b> — see <a href="#d4-storage">§7.1</a> for the full cost/retrieval table.</li>
       </ul>
       <h4>Amazon EBS volume types</h4>
@@ -424,12 +478,22 @@
         <tr><td><b>st1</b></td><td>HDD (throughput optimized)</td><td>Big sequential workloads: big data, log processing, data warehouses.</td></tr>
         <tr><td><b>sc1</b></td><td>HDD (cold)</td><td>Infrequently accessed, lowest cost block storage.</td></tr>
       </table>
-      <p>EBS volumes are <b>AZ-locked</b>; snapshots go to S3 and can be copied across regions. Encrypt at creation. <b>Instance store</b> = ephemeral local disk (lost on stop/terminate) for very high IOPS scratch data.</p>
+      <p>EBS volumes are <b>AZ-locked</b>; snapshots are <b>incremental</b>, stored in S3, and can be copied across regions (that's how you "move" a volume). Automate snapshot schedules with <b>Data Lifecycle Manager</b> or AWS Backup. Encrypt at creation — encrypting an existing volume means snapshot → copy-encrypted → restore. <b>Instance store</b> = ephemeral local disk (lost on stop/terminate) for very high IOPS scratch data.</p>
       <h4>Shared file systems</h4>
       <ul>
-        <li><b>Amazon EFS</b> — elastic NFS for Linux, multi-AZ, scales automatically, pay per use. Lifecycle to IA class for cost.</li>
-        <li><b>Amazon FSx</b> — <b>Windows File Server</b> (SMB/AD), <b>Lustre</b> (HPC/ML, S3-integrated), <b>NetApp ONTAP</b>, <b>OpenZFS</b>.</li>
+        <li><b>Amazon EFS</b> — elastic NFS for Linux, multi-AZ, scales automatically, pay per use; mounts to <b>thousands of instances concurrently</b> (and Lambda). Lifecycle to <b>EFS-IA</b> cuts cost ~90% for cold files; One Zone classes are cheaper still. Performance modes (General Purpose vs Max I/O) and throughput modes (Elastic/Bursting/Provisioned).</li>
+        <li><b>Amazon FSx</b> — <b>Windows File Server</b> (SMB + Active Directory — the answer for Windows shared drives; Multi-AZ option), <b>Lustre</b> (HPC/ML scratch at GB/s; can present S3 data as a file system), <b>NetApp ONTAP</b> (multi-protocol NFS/SMB/iSCSI), <b>OpenZFS</b>.</li>
       </ul>
+      <h4>Hybrid storage &amp; moving data</h4>
+      <table>
+        <tr><th>Service</th><th>Use for</th></tr>
+        <tr><td><b>Storage Gateway — S3 File Gateway</b></td><td>On-prem apps write NFS/SMB → objects land in S3, with a local cache for hot data. "Extend on-prem file storage to the cloud."</td></tr>
+        <tr><td><b>Storage Gateway — Volume Gateway</b></td><td>iSCSI block volumes: <b>Cached</b> (primary data in S3, cache on-prem) vs <b>Stored</b> (primary on-prem, async snapshots to S3).</td></tr>
+        <tr><td><b>Storage Gateway — Tape Gateway</b></td><td>Virtual tape library — replace physical backup tapes; archives to Glacier.</td></tr>
+        <tr><td><b>AWS DataSync</b></td><td>Fast <b>online</b> transfer/sync (NFS/SMB/HDFS/S3 API ↔ S3/EFS/FSx) with scheduling, bandwidth throttling &amp; verification — the "migrate/sync file data over the network" answer.</td></tr>
+        <tr><td><b>AWS Snow Family</b></td><td><b>Offline</b> bulk transfer — Snowball Edge (~80 TB usable each) shipped to you. Choose when data volume ÷ bandwidth = weeks (rule of thumb: ≥ tens of TB on a constrained link).</td></tr>
+        <tr><td><b>AWS Transfer Family</b></td><td>Managed <b>SFTP/FTPS/FTP/AS2</b> endpoints backed by S3 or EFS — keep legacy file-transfer clients working, unchanged.</td></tr>
+      </table>
 
       <!-- 6.2 compute -->
       <h3 id="d3-compute">6.2 · Compute</h3>
@@ -439,6 +503,9 @@
         <li><b>Auto Scaling + ELB</b> for elastic horizontal scaling (see <a href="#d2-scale">§5.2</a>).</li>
         <li><b>AWS Lambda</b> for event-driven/serverless; right-size <b>memory</b> (also sets CPU). <b>Fargate</b> for serverless containers.</li>
         <li><b>AWS Batch</b> for batch jobs; <b>Amazon EMR</b> for big-data frameworks (Spark/Hadoop); <b>Elastic Beanstalk</b> to deploy apps with managed provisioning.</li>
+        <li><b>EC2 networking bits:</b> an <b>Elastic IP</b> is a static public IPv4 you keep across stop/start (a normal public IP changes); an <b>ENI</b> is a virtual NIC you can detach and move between instances in the same AZ; <b>enhanced networking (ENA)</b> gives high throughput/low jitter for network-bound workloads.</li>
+        <li><b>AMIs are regional</b> — copy an AMI to another region to launch there (the standard "golden image" multi-region pattern with ASG launch templates).</li>
+        <li><b>EC2 hibernation</b> preserves RAM to EBS — fast resume for long-boot instances; you pay storage, not compute, while hibernated.</li>
       </ul>
       <div class="callout tip"><span class="lbl">Right service</span> Unpredictable/spiky &amp; short tasks → <b>Lambda</b>. Steady long-running → <b>EC2</b> (with Savings Plans). Containerized microservices, no server mgmt → <b>ECS/EKS on Fargate</b>. Batch/HPC → <b>Batch / EMR</b>.</div>
 
@@ -460,6 +527,24 @@
         <li><b>RDS Proxy</b> pools connections — great for Lambda/serverless hitting relational DBs.</li>
         <li>Choose SQL vs NoSQL by access pattern: relational/joins/ACID → RDS/Aurora; high-scale key lookups &amp; flexible schema → DynamoDB.</li>
       </ul>
+      <h4>DynamoDB specifics that get tested</h4>
+      <ul>
+        <li>Item size limit <b>400 KB</b> — store large blobs in S3, keep a pointer in the table.</li>
+        <li><b>On-demand</b> capacity for unpredictable traffic; <b>provisioned (+ auto scaling)</b> is cheaper for steady load. Choose a <b>high-cardinality partition key</b> to avoid hot partitions.</li>
+        <li><b>Global Tables</b> — multi-region, <b>multi-active</b> replication (read <i>and</i> write anywhere). <b>Streams</b> capture item-level changes (→ Lambda triggers). <b>TTL</b> deletes expired items at no cost.</li>
+        <li><b>GSI</b> (query on alternate keys) vs <b>LSI</b> (same partition key, alternate sort key — must be created at table creation).</li>
+      </ul>
+      <h4>ElastiCache: Redis vs Memcached</h4>
+      <table>
+        <tr><th>Redis</th><th>Memcached</th></tr>
+        <tr><td>Replication + Multi-AZ failover, persistence/snapshots, pub/sub, sorted sets (leaderboards)</td><td>Simplest possible cache — multithreaded, no persistence, no replication</td></tr>
+        <tr><td>Default pick when the question mentions durability, HA, or data structures</td><td>Pick when the question stresses "simplest / multithreaded / no persistence needed"</td></tr>
+      </table>
+      <h4>Migrating databases</h4>
+      <ul>
+        <li><b>AWS DMS</b> (Database Migration Service) migrates with <b>minimal downtime</b> — the source stays live (supports full load + ongoing change data capture).</li>
+        <li><b>Homogeneous</b> (Oracle→Oracle): DMS alone. <b>Heterogeneous</b> (Oracle→Aurora PostgreSQL): use <b>SCT (Schema Conversion Tool)</b> first to convert the schema, then DMS to move the data.</li>
+      </ul>
       <div class="callout trap"><span class="lbl">Trap</span> "Improve read performance / reduce read load" → <b>read replica</b> or <b>ElastiCache</b>, NOT Multi-AZ. "Survive an AZ outage" → <b>Multi-AZ</b>. "Microsecond reads for DynamoDB" → <b>DAX</b>, not ElastiCache.</div>
 
       <!-- 6.4 networking -->
@@ -476,6 +561,8 @@
         <li><b>Amazon CloudFront</b> — CDN caching content at edge locations; supports dynamic + static, OAC to lock S3 origins, signed URLs/cookies, Lambda@Edge / CloudFront Functions, WAF integration, DDoS mitigation.</li>
         <li><b>AWS Global Accelerator</b> — anycast static IPs routing over the AWS backbone to the nearest healthy endpoint; great for TCP/UDP, gaming, non-HTTP, fast regional failover. (CloudFront caches content; Global Accelerator accelerates/routes traffic.)</li>
         <li><b>Amazon Route 53</b> — DNS + health checks. Routing policies: <b>Simple, Weighted, Latency, Failover, Geolocation, Geoproximity, Multivalue answer, IP-based</b>. Alias records point to AWS resources for free.</li>
+        <li><b>Record types:</b> <b>A</b>/<b>AAAA</b> (name → IPv4/IPv6), <b>CNAME</b> (name → another name; <b>not allowed at the zone apex</b>), <b>Alias</b> (AWS extension — points at ELB/CloudFront/S3/etc., <b>works at the apex</b>, free queries). "Point example.com at an ALB" → <b>Alias</b>, not CNAME.</li>
+        <li><b>Routing policy signals:</b> A/B or gradual migration by percentage → <b>Weighted</b> · send users to the lowest-latency region → <b>Latency</b> · compliance/content by user country → <b>Geolocation</b> · active-passive DR → <b>Failover</b> (+ health check) · simple client-side load spread → <b>Multivalue</b>.</li>
       </ul>
       <h4>Hybrid &amp; private connectivity</h4>
       <table>
@@ -484,8 +571,13 @@
         <tr><td><b>AWS Direct Connect</b></td><td>Dedicated private line to AWS — consistent low latency &amp; bandwidth. Weeks to provision; pair with VPN for encryption/backup.</td></tr>
         <tr><td><b>AWS PrivateLink / Interface Endpoints</b></td><td>Private access to AWS/partner services without internet exposure.</td></tr>
         <tr><td><b>VPC Peering</b></td><td>Connect two VPCs privately (non-transitive).</td></tr>
-        <tr><td><b>AWS Transit Gateway</b></td><td>Hub-and-spoke connecting many VPCs &amp; on-prem — scales past peering mesh.</td></tr>
+        <tr><td><b>AWS Transit Gateway</b></td><td>Hub-and-spoke connecting many VPCs &amp; on-prem — scales past peering mesh. Supports <b>inter-region peering</b> for global networks.</td></tr>
       </table>
+      <ul>
+        <li><b>Site-to-Site VPN</b>: two tunnels per connection (HA built in), ~<b>1.25 Gbps per tunnel</b>. Fast to set up (hours).</li>
+        <li><b>Direct Connect</b> is <b>not encrypted by default</b> — run a VPN over it (or MACsec) when the question demands a private <i>and</i> encrypted link. Dedicated 1/10/100 Gbps; hosted connections from ~50 Mbps via partners; takes weeks-to-months to provision, so "need it now" scenarios start with VPN and migrate to DX.</li>
+        <li><b>VPC peering doesn't scale</b>: it's non-transitive, so N VPCs need a full mesh (N×(N−1)/2 connections) — the moment a question has "dozens of VPCs" or "simplify connectivity," the answer is <b>Transit Gateway</b>.</li>
+      </ul>
 
       <!-- 6.5 data -->
       <h3 id="d3-data">6.5 · Data Ingestion, Streaming &amp; Analytics</h3>
@@ -502,7 +594,14 @@
         <tr><td><b>Amazon QuickSight</b></td><td>BI dashboards &amp; visualization.</td></tr>
         <tr><td><b>AWS DataSync</b></td><td>Fast, automated data transfer on-prem ↔ AWS (over network).</td></tr>
       </table>
-      <div class="callout note"><span class="lbl">Streaming signals</span> "Deliver streaming data to S3 with no code" → <b>Firehose</b>. "Real-time processing with custom consumers / replay" → <b>Kinesis Data Streams</b>. "Query S3 with SQL, no servers" → <b>Athena</b>. "Serverless ETL" → <b>Glue</b>.</div>
+      <ul>
+        <li><b>Kinesis shard math:</b> each shard ingests <b>1 MB/s or 1,000 records/s</b> and serves <b>2 MB/s</b> out — scale by adding shards. Firehose needs no shard management at all.</li>
+        <li><b>Kinesis vs MSK:</b> Kinesis = AWS-native, simplest ops; <b>MSK</b> = managed <b>Apache Kafka</b> — pick it when the scenario already uses Kafka APIs/ecosystem.</li>
+        <li><b>Athena cost/perf lever:</b> store data <b>compressed, partitioned, and columnar (Parquet/ORC)</b> — Athena bills per data scanned, so converting CSV→Parquet cuts both cost and query time dramatically (use Glue to convert).</li>
+        <li><b>Glue crawlers</b> scan S3 and auto-populate the <b>Data Catalog</b> tables that Athena/EMR/Redshift Spectrum query. <b>Redshift Spectrum</b> queries S3 data from Redshift without loading it.</li>
+        <li><b>Amazon AppFlow</b> — no-code SaaS→AWS data transfer (Salesforce → S3/Redshift).</li>
+      </ul>
+      <div class="callout note"><span class="lbl">Streaming signals</span> "Deliver streaming data to S3 with no code" → <b>Firehose</b>. "Real-time processing with custom consumers / replay" → <b>Kinesis Data Streams</b>. "Query S3 with SQL, no servers" → <b>Athena</b>. "Serverless ETL" → <b>Glue</b>. "Kafka" → <b>MSK</b>.</div>
       <p class="backtop"><a href="#top">↑ back to top</a></p>
     </section>
 
@@ -525,9 +624,11 @@
         <tr><td><b>Glacier Deep Archive</b></td><td>Lowest cost, long-term (7–10 yr)</td><td>~12–48 h</td></tr>
       </table>
       <ul>
-        <li><b>Lifecycle policies</b> auto-transition objects to cheaper tiers and expire them on a schedule.</li>
+        <li><b>Lifecycle policies</b> auto-transition objects to cheaper tiers and expire them on a schedule (also: abort incomplete multipart uploads, expire old versions).</li>
+        <li><b>Minimum-duration gotchas</b> (billed even if you delete/transition earlier): Standard-IA &amp; One Zone-IA <b>30 days</b>; Glacier Instant &amp; Flexible <b>90 days</b>; Deep Archive <b>180 days</b>. IA classes also bill a <b>128 KB minimum object size</b> — lifecycle-ing millions of tiny objects to IA can cost <i>more</i>.</li>
         <li>Pick <b>Intelligent-Tiering</b> when access patterns are unknown/variable — it avoids retrieval-fee surprises.</li>
-        <li><b>EBS/EFS</b>: use gp3 over gp2 (cheaper + tunable); EFS lifecycle to IA; delete unattached volumes &amp; old snapshots.</li>
+        <li><b>Requester Pays</b> buckets shift download costs to the downloader — for sharing large datasets.</li>
+        <li><b>EBS/EFS</b>: use gp3 over gp2 (~20% cheaper + tunable IOPS/throughput); EFS lifecycle to IA; delete unattached volumes &amp; old snapshots; remember <b>unused Elastic IPs are billed</b>.</li>
         <li>Move data with the cheapest fit: <b>DataSync</b> (online), <b>Snow Family</b> (offline, large/limited-bandwidth), <b>Storage Gateway</b> (hybrid).</li>
       </ul>
 
@@ -563,8 +664,9 @@
         <li><b>Data transfer</b> is a top hidden cost. <b>Same-AZ private-IP traffic is free</b>; cross-AZ &amp; cross-region &amp; internet egress cost money. Keep chatty components in the same AZ where availability allows.</li>
         <li><b>VPC endpoints</b> (esp. free <b>Gateway endpoints</b> for S3/DynamoDB) avoid NAT Gateway data-processing charges and internet egress.</li>
         <li><b>NAT Gateway</b> costs per hour + per GB — a single shared NAT is cheaper but less HA than one-per-AZ; balance cost vs resilience.</li>
-        <li><b>CloudFront</b> reduces origin egress cost and improves performance for repeat content.</li>
+        <li><b>CloudFront</b> reduces origin egress cost and improves performance for repeat content — and <b>S3 → CloudFront origin fetches are free</b>, so serving S3 content through CloudFront is usually cheaper than direct S3 egress.</li>
         <li><b>Direct Connect</b> can lower data-transfer rates vs internet for large sustained volumes.</li>
+        <li><b>Data transfer IN from the internet is free</b>; you pay going out and between AZs/regions — architecture questions about "minimize transfer cost" are really asking you to keep traffic private, local, and cached.</li>
       </ul>
 
       <!-- 7.5 cost tools -->
@@ -656,6 +758,28 @@
         <tr><td>Quick encrypted tunnel over internet</td><td>Site-to-Site VPN</td></tr>
         <tr><td>Private access to a service, no internet</td><td>PrivateLink / Interface endpoint</td></tr>
         <tr><td>Connect many VPCs + on-prem centrally</td><td>Transit Gateway</td></tr>
+      </table>
+
+      <h4>Monitoring &amp; audit by question</h4>
+      <table>
+        <tr><th>Question being asked</th><th>Service</th></tr>
+        <tr><td>"How is it performing?" — metrics, alarms, logs</td><td>CloudWatch</td></tr>
+        <tr><td>"Who made this API call / who deleted it?"</td><td>CloudTrail</td></tr>
+        <tr><td>"What changed / is the config compliant?"</td><td>AWS Config</td></tr>
+        <tr><td>"Where's the latency across my microservices?"</td><td>X-Ray</td></tr>
+        <tr><td>"Check my account against best practices"</td><td>Trusted Advisor</td></tr>
+        <tr><td>"Analyze VPC network traffic"</td><td>VPC Flow Logs</td></tr>
+      </table>
+
+      <h4>Migration strategies (the 7 Rs)</h4>
+      <table>
+        <tr><th>Strategy</th><th>Meaning</th></tr>
+        <tr><td><b>Rehost</b> ("lift &amp; shift")</td><td>Move as-is to EC2 — fastest, no code changes (Application Migration Service).</td></tr>
+        <tr><td><b>Replatform</b> ("lift, tinker &amp; shift")</td><td>Minor optimizations — e.g. self-managed MySQL → RDS.</td></tr>
+        <tr><td><b>Repurchase</b></td><td>Move to SaaS (drop the app, buy a product).</td></tr>
+        <tr><td><b>Refactor / Re-architect</b></td><td>Redesign cloud-native (microservices/serverless) — most effort, most benefit.</td></tr>
+        <tr><td><b>Relocate</b></td><td>Move at the hypervisor level (VMware Cloud on AWS).</td></tr>
+        <tr><td><b>Retain</b> / <b>Retire</b></td><td>Keep on-prem for now / decommission entirely.</td></tr>
       </table>
 
       <h4>Security service by job</h4>
