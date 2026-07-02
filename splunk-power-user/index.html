@@ -165,6 +165,11 @@
         <tr><td><code>top</code> / <code>rare</code></td><td>Most/least common values; <code>top</code> auto-adds <code>count</code> &amp; <code>percent</code>; default <code>limit=10</code>.</td></tr>
       </table>
       <p>Common <code>stats</code> functions: <code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code>, <code>max</code>, <code>values</code> (unique, multivalue), <code>list</code> (all, ordered), <code>dc</code>/<code>distinct_count</code>, <code>first</code>, <code>last</code>, <code>stdev</code>, <code>perc95</code>.</p>
+      <ul>
+        <li><b>Worked examples:</b> <code>... | timechart span=1h count by status</code> (hourly trend, one line per status) vs <code>... | chart count over host by status</code> (hosts on x-axis, one series per status) vs <code>... | stats avg(bytes) by host, status</code> (plain table, two group-by fields — something chart/timechart can't split twice).</li>
+        <li><code>values()</code> returns <b>unique</b> values (deduped, lexicographic); <code>list()</code> returns <b>all</b> values in event order (up to 100) — a favorite distinction.</li>
+        <li><code>bin</code> (alias <code>bucket</code>) manually groups a numeric/time field into buckets when you want stats-style control: <code>... | bin _time span=5m | stats count by _time</code>.</li>
+      </ul>
       <div class="callout note"><span class="lbl">Exam signal</span> Trend over time → <b>timechart</b>. Compare one field split by another → <b>chart … over … by</b>. Aggregate without a time axis → <b>stats</b>.</div>
     </section>
 
@@ -174,9 +179,16 @@
         <li><b><code>eval</code></b> — computes a new (or overwrites a) field with an expression. Functions include <code>if()</code>, <code>case()</code>, <code>coalesce()</code>, <code>round()</code>, <code>len()</code>, <code>lower()/upper()</code>, <code>tostring()</code>, <code>strftime()</code>. <code>eval</code> does <b>not</b> filter — it creates fields.</li>
         <li><b><code>search</code></b> — matches keywords/literal terms; can appear again mid-pipeline to filter results.</li>
         <li><b><code>where</code></b> — evaluates a <b>boolean eval expression</b>. It's the one that can compare <b>field-to-field</b> (e.g. <code>| where bytes_in &gt; bytes_out</code>) and use eval functions like <code>like()</code>, <code>cidrmatch()</code>, <code>isnull()</code>.</li>
-        <li><b><code>fillnull</code></b> — replaces null values; <b>default replacement is <code>0</code></b>. Override: <code>| fillnull value="N/A"</code>.</li>
+        <li><b><code>fillnull</code></b> — replaces null values; <b>default replacement is <code>0</code></b>. Override: <code>| fillnull value="N/A"</code>; limit to specific fields: <code>| fillnull value="-" status host</code>.</li>
       </ul>
-      <div class="callout trap"><span class="lbl">search vs where</span> Use <b>search</b> to match values/keywords; use <b>where</b> to compare <b>two fields</b> or use eval functions. "Keep events where field A &gt; field B" → <b>where</b>.</div>
+      <h4>eval patterns you should be able to read</h4>
+      <ul>
+        <li><code>| eval speed = round(bytes/1024, 2)</code> — arithmetic + rounding.</li>
+        <li><code>| eval level = if(status&gt;=500, "error", "ok")</code> — two-way branch; <code>case()</code> for multi-way: <code>case(status&gt;=500,"error", status&gt;=400,"warn", true(), "ok")</code> (the <code>true()</code> arm is the catch-all).</li>
+        <li><code>| eval user = coalesce(username, userid, "unknown")</code> — first non-null wins (great for merging inconsistent fields).</li>
+        <li>Strings concatenate with a period: <code>| eval endpoint = host . ":" . port</code>.</li>
+      </ul>
+      <div class="callout trap"><span class="lbl">search vs where</span> Use <b>search</b> to match values/keywords; use <b>where</b> to compare <b>two fields</b> or use eval functions. "Keep events where field A &gt; field B" → <b>where</b>. Also: <code>search</code> treats bare terms case-insensitively; <code>where</code> field values are case-sensitive comparisons.</div>
     </section>
 
     <section id="t-correlate">
@@ -192,6 +204,13 @@
       <ul>
         <li><code>stats … by &lt;id&gt;</code> groups by a common field and is <b>far faster / scalable</b>.</li>
       </ul>
+      <h4>The same question, both ways</h4>
+      <ul>
+        <li>Session duration with transaction: <code>... | transaction JSESSIONID maxpause=15m | table JSESSIONID duration eventcount</code></li>
+        <li>Equivalent with stats: <code>... | stats range(_time) as duration, count as eventcount by JSESSIONID</code> — same numbers, far cheaper. Being able to rewrite one as the other is exactly what the 15% domain tests.</li>
+        <li>Example with boundaries (where transaction IS right): <code>... | transaction clientip startswith="login" endswith="purchase"</code> — start/end conditions can't be expressed with stats.</li>
+        <li>Other transaction behaviors: events must share the transaction field(s); results are returned with the events <b>reverse-time-ordered inside each transaction</b>; orphaned/incomplete groups can be kept or discarded (<code>keepevicted</code>).</li>
+      </ul>
       <div class="callout trap"><span class="lbl">The #1 exam trap</span> Prefer <b>stats</b> for performance. Use <b>transaction</b> ONLY when you truly need to: (a) keep the raw event text, (b) group by <b>start/end</b> conditions, or (c) constrain a group by time (<code>maxspan</code>/<code>maxpause</code>). Otherwise <code>stats ... by</code> is the correct answer.</div>
     </section>
 
@@ -204,9 +223,22 @@
         <tr><td><b>Delimiters</b></td><td>Structured data — pick a delimiter (comma/tab/space/pipe) then name the fields.</td><td>—</td></tr>
       </table>
       <ul>
-        <li><code>rex field=_raw "(?&lt;user&gt;\w+)"</code> extracts on the fly with a named capture group.</li>
-        <li><code>erex</code> lets you give example values and generates the regex for you.</li>
-        <li>Extractions can be private (personal) or shared to an app/all users with appropriate permissions.</li>
+        <li><code>rex field=_raw "(?&lt;user&gt;\w+)"</code> extracts on the fly with a <b>named capture group</b> <code>(?&lt;name&gt;pattern)</code> — the group name becomes the field name. <code>rex</code> defaults to <code>_raw</code> if no field is given; it can also <code>mode=sed</code> to mask/replace values.</li>
+        <li><code>erex</code> lets you give example values and generates the regex for you — then shows the regex so you can reuse it with <code>rex</code> (more efficient).</li>
+        <li>The FX is reached from Settings ▸ Fields ▸ Field extractions, or straight from search results ("Extract New Fields"). Extractions are tied to a <b>sourcetype</b> (or source/host).</li>
+      </ul>
+      <h4>Lookups — enriching events with external data</h4>
+      <ul>
+        <li>A <b>lookup</b> adds fields from an external table (usually a CSV) to your events — e.g. map <code>status=404</code> → <code>description="Not Found"</code>, or product IDs → names/prices.</li>
+        <li>Setup order: upload the <b>lookup table file</b> (CSV) → create a <b>lookup definition</b> (names it for SPL) → optionally make it an <b>automatic lookup</b> (applied to a sourcetype at search time, no SPL needed).</li>
+        <li><code>| lookup products product_id OUTPUT product_name price</code> — enrich events by matching <code>product_id</code>.</li>
+        <li><code>| inputlookup products.csv</code> — <b>read the table itself</b> (starts a search from the file, no events needed). <code>| outputlookup mytable.csv</code> — <b>write search results to a lookup file</b> (build/refresh reference tables from searches).</li>
+        <li>The lookup's matching field doesn't have to share the event field's name — map it in the lookup command/definition. Case sensitivity is configurable in the definition.</li>
+      </ul>
+      <h4>Knowledge object permissions</h4>
+      <ul>
+        <li>Every knowledge object (extraction, alias, tag, event type, macro, lookup, data model) has a sharing level: <b>Private</b> (owner only) → <b>App</b> (users of that app) → <b>Global</b> (all apps).</li>
+        <li>The <b>Power role</b> can create and <b>share knowledge objects at the app level</b> — that's the role this cert maps to; regular Users create only private objects by default. Admins manage global sharing and reassign orphaned objects.</li>
       </ul>
     </section>
 
@@ -238,7 +270,10 @@
         <li>A <b>macro</b> is reusable SPL saved under <b>Settings ▸ Advanced Search ▸ Search macros</b> (backed by <code>macros.conf</code>).</li>
         <li><b>Invoke with backticks:</b> <code>`mymacro`</code> or with arguments <code>`mymacro(arg1,arg2)`</code>.</li>
         <li><b>Arguments</b> are referenced inside the definition as <code>$argname$</code>. Set the number of args in the macro name, e.g. <code>mymacro(2)</code>.</li>
-        <li>Macros can include a <b>validation expression</b> to check argument values before running.</li>
+        <li>Macros can include a <b>validation expression</b> to check argument values before running (with a custom error message on failure).</li>
+        <li><b>Worked example:</b> define <code>convert_bytes(1)</code> as <code>eval mb = round($field$/1024/1024, 2)</code>, then call <code>`convert_bytes(bytes)`</code> in any search. Change the definition once and every search using it updates — the whole point of macros.</li>
+        <li>Preview what a macro expands to <b>before running</b>: expand the search with <code>Ctrl+Shift+E</code> (Cmd+Shift+E on Mac) in the search bar.</li>
+        <li>Macros can contain full or partial SPL — a filter fragment, an eval, or an entire base search shared across dashboards.</li>
       </ul>
       <div class="callout note"><span class="lbl">Signals</span> Backticks = a macro call. <code>$arg$</code> = a macro argument placeholder. Macro name <code>foo(2)</code> means it takes two arguments.</div>
     </section>
@@ -252,6 +287,11 @@
         <tr><td><b>POST</b></td><td>Sends an HTTP POST request with field values.</td></tr>
         <tr><td><b>Search</b></td><td>Launches a secondary Splunk search built from field values.</td></tr>
       </table>
+      <ul>
+        <li>Field values are inserted with <code>$field$</code> tokens — e.g. a GET action opening <code>https://whois.example.com/lookup?ip=$clientip$</code>, or a Search action running <code>index=security src=$src$</code> over a chosen time range.</li>
+        <li>Actions appear in the <b>event actions / field-value dropdown</b> in search results; you scope where they show (which fields/event types) and whether they open in a new window.</li>
+        <li>Classic exam scenario: "analyst clicks an IP in results and it opens an external threat-intel page" → <b>GET</b>. "…submits the value to an internal ticketing API" → <b>POST</b>. "…pivots to a second search for that value" → <b>Search</b>.</li>
+      </ul>
     </section>
 
     <section id="t-datamodels">
@@ -260,9 +300,11 @@
         <li>A <b>data model</b> is a hierarchical, semantic mapping of your data, made of <b>datasets/objects</b> (types: <b>event</b>, <b>search</b>, <b>transaction</b>) with <b>attributes</b> (auto-extracted, eval-based, lookup, regex, or geo-IP). Child objects inherit the parent's <b>constraints</b>.</li>
         <li><b>Pivot</b> is the point-and-click reporting/visualization UI that runs <b>on top of a data model</b> — no SPL required.</li>
         <li><b>The relationship (heavily tested):</b> a <b>data model is required to use Pivot</b>; Pivot is the front-end for the model.</li>
-        <li><b>Acceleration</b> builds a high-performance summary; accelerated models are queried with <code>tstats</code> for speed.</li>
+        <li><b>Acceleration</b> builds a high-performance summary; accelerated models are queried with <code>tstats</code> for speed (e.g. <code>| tstats count from datamodel=Web by Web.status</code>).</li>
+        <li>Acceleration trade-offs: it consumes disk/CPU to maintain the summary, and an <b>accelerated model can't be edited</b> without disabling acceleration first. Only <b>event</b> and <b>search</b>-rooted datasets accelerate — not transaction-rooted ones.</li>
+        <li>Build hierarchy: root dataset defines the base constraint (e.g. <code>index=web sourcetype=access_*</code>); child datasets narrow it (e.g. "purchases" = parent + <code>action=purchase</code>) and inherit all parent attributes.</li>
       </ul>
-      <div class="callout trap"><span class="lbl">Trap</span> You <b>cannot use Pivot without a data model.</b> Object types are <b>event, search, transaction</b>. Acceleration → query with <code>tstats</code>.</div>
+      <div class="callout trap"><span class="lbl">Trap</span> You <b>cannot use Pivot without a data model.</b> Object types are <b>event, search, transaction</b>. Acceleration → query with <code>tstats</code>; editing requires disabling acceleration.</div>
     </section>
 
     <section id="t-cim">
@@ -270,7 +312,10 @@
       <ul>
         <li>The <b>CIM (Splunk_SA_CIM add-on)</b> is a shared, standardized set of <b>field names + tags + prebuilt data models</b> (e.g. Authentication, Network Traffic, Web, Malware).</li>
         <li>Purpose: <b>normalize data at search time</b> so dashboards and apps (like Enterprise Security) work across many different data sources.</li>
-        <li>You make data CIM-compliant by <b>mapping your fields to CIM field names</b> and applying the CIM <b>tags</b>.</li>
+        <li>You make data CIM-compliant by <b>mapping your fields to CIM field names</b> (via aliases/calculated fields/extractions) and applying the CIM <b>tags</b> (via event types) — all <b>search-time</b>, so no re-indexing is ever needed.</li>
+        <li>Example mapping: your firewall logs call the source <code>src_ip</code>, the CIM's Network Traffic model expects <code>src</code> → create a <b>field alias</b>; then an event type + tags (<code>network</code>, <code>communicate</code>) make the events land in the model.</li>
+        <li>The add-on ships <b>~20+ predefined data models</b> — common ones: Authentication, Network Traffic, Web, Malware, Endpoint, Email, Change, Intrusion Detection. Each model documents its <b>required fields and tags</b>.</li>
+        <li>CIM data models are <b>disabled/unaccelerated by default</b>; you constrain them to relevant indexes and accelerate the ones your dashboards use.</li>
       </ul>
       <div class="callout note"><span class="lbl">Why it matters</span> CIM = a common vocabulary. Normalize once, and any CIM-aware dashboard/app understands your data regardless of its original format.</div>
     </section>
